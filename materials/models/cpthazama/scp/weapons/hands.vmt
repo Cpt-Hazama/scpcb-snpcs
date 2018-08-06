@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\weapons\hands"
+	$bumpmap "models\cpthazama\scp\weapons\hands_n"
+}

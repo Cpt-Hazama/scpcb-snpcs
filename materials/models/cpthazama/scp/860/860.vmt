@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\860\860"
+
+	$emissiveBlendEnabled 1
+    $emissiveBlendTexture    "dev/null"
+    $emissiveBlendBaseTexture    "models\cpthazama\scp\860\860_g"
+    $emissiveBlendFlowTexture    "dev/null"
+    $emissiveBlendTint "[0.65 0.65 0]"
+    $emissiveBlendStrength 1
+    $emissiveBlendScrollVector "[0 0]"
+}

@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\966\966"
+    $bumpmap "models\cpthazama\scp\966\966_n"
+
+    $model "1"
+    "$halflambert" "0"
+    $diffuseexp 1.5
+    "$phong" "1"
+    $phongboost 1.5
+    $phongtint "[.85 .85 1]"
+    $phongfresnelranges "[0.2 0.1 0.1]"
+    $ambientocclusion 1
+}

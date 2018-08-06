@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\178\178"
+	$translucent 1
+}

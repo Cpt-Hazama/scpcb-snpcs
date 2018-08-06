@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\860\leaf"
+	$alphatest "1"
+}

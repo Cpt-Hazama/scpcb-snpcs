@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\106\106"
+    $bumpmap "models\cpthazama\scp\106\106_n"
+
+	$emissiveBlendEnabled 1
+    $emissiveBlendTexture    "dev/null"
+    $emissiveBlendBaseTexture    "models\cpthazama\scp\106\106_g"
+    $emissiveBlendFlowTexture    "dev/null"
+    $emissiveBlendTint "[1.3 1.3 1.3]"
+    $emissiveBlendStrength 1
+    $emissiveBlendScrollVector "[0 0]"
+
+    $phong "1"
+    $phongboost 3
+    $phongtint "[.85 .85 1]"
+    $phongfresnelranges "[0.4 0.3 0.1]"
+    $ambientocclusion 1
+}

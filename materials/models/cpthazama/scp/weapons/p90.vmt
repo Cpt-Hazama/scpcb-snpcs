@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\weapons\p90"
+	$bumpmap "models\cpthazama\scp\weapons\p90_n"
+
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.01 0.01 0.01]"
+}

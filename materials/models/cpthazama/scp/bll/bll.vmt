@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\bll\bll"
+    $bumpmap "models\cpthazama\scp\bll\bll_n"
+}

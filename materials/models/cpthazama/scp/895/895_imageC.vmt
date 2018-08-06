@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+    $basetexture "models\cpthazama\scp\895\895_imageC"
+	"$nolod" 1
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+}
