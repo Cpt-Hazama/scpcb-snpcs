@@ -15,11 +15,12 @@ ENT.Faction = "FACTION_NONE"
 
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
-ENT.IsEssental = true
+ENT.IsEssential = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
 	self:SetHullType(HULL_TINY)
 	self:SetMovementType(MOVETYPE_NONE)
+	self:SetModelScale(1.5,0)
 	self.NextUseT = 0
 	self.Possessor_CanMove = false
 	self.IsPickedUp = false
@@ -33,17 +34,23 @@ function ENT:OnThink()
 		self:SetNoDraw(true)
 		self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 		if IsValid(self.Wearer) then
-			self:SetPos(self.Wearer:GetPos())
-			if CurTime() > self.NextHealT then
-				self.Wearer:SetHealth(self.Wearer:Health() +50)
-				self.NextHealT = CurTime() +10
-			end
-			if CurTime() > self.NextKillT then
-				self.Wearer:Kill()
+			if !self.Wearer:Alive() then
+				self:SetPos(self.Wearer:GetPos())
 				self.Wearer = NULL
 			end
+			if IsValid(self.Wearer) then
+				self:SetPos(self.Wearer:GetPos())
+				if CurTime() > self.NextHealT then
+					self.Wearer:SetHealth(self.Wearer:Health() +5)
+					self.NextHealT = CurTime() +0.1
+				end
+				if CurTime() > self.NextKillT then
+					self.Wearer:Kill()
+					self.Wearer = NULL
+				end
+			end
 		else
-			self:SetPos(self:GetPos())
+			self:SetClearPos(self:GetPos())
 			self.IsPickedUp = false
 			self:SetNoDraw(false)
 			self:SetCollisionGroup(COLLISION_GROUP_NPC)

@@ -95,7 +95,7 @@ if CLIENT then
 					light.g = 255
 					light.b = 0
 					light.Brightness = 0
-					light.Size = 600
+					light.Size = 850
 					light.Decay = 1800
 					light.DieTime = CurTime() +0.2
 					light.Style = 0

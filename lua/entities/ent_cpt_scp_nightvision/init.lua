@@ -16,7 +16,7 @@ ENT.Possessor_CanBePossessed = false
 
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
-ENT.IsEssental = true
+ENT.IsEssential = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
 	self:SetHullType(HULL_TINY)
