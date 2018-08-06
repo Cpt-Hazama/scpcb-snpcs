@@ -15,7 +15,7 @@ ENT.Faction = "FACTION_NONE"
 
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
-ENT.IsEssental = false
+ENT.IsEssential = false
 
 ENT.tbl_Diseases = {
 	"Asthma", // Slow speed

@@ -1,6 +1,6 @@
 "UnlitGeneric"
 {
-	"$basetexture" "vgui/entities/ent_cpt_scp_nvg"
+	"$basetexture" "vgui/entities/ent_cpt_scp_nightvision"
 	"$nolod" 1
 	"$vertexalpha" 1
 	"$vertexcolor" 1

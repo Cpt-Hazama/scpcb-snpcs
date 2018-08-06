@@ -15,7 +15,7 @@ ENT.Faction = "FACTION_NONE"
 
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
-ENT.IsEssental = false
+ENT.IsEssential = false
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
 	self:SetHullType(HULL_LARGE)

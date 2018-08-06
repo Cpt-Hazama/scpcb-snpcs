@@ -88,6 +88,7 @@ if CLIENT then
 	hook.Add("Think","CPTBase_SCP_Nightvision966",function()
 		if CLIENT then
 			if CLIENT_SCP_NV then
+				local tbl = {}
 				local light = DynamicLight(LocalPlayer():EntIndex())
 				if (light) and CLIENT_SCP_NV then
 					light.Pos = LocalPlayer():GetPos() +Vector(0,0,30)
@@ -104,7 +105,11 @@ if CLIENT then
 					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
 						v:SetNoDraw(false)
 					end
+					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_895" then
+						table.insert(tbl,v)
+					end
 				end
+				halo.Add(tbl,Color(255,0,0),15,15,15,true,true)
 			else
 				for _,v in ipairs(ents.GetAll()) do
 					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
@@ -132,6 +137,7 @@ hook.Add("PlayerDeath","CPTBase_SCP_DeathData",function(ply)
 		ply:SetNWBool("SCP_Touched1123_Horror",false)
 		ply:SetNWInt("SCP_BlinkTime",CurTime() +math.random(4,7))
 		ply:SetNWInt("SCP_LastBlinkAmount",0)
+		CLIENT_SCP_NV = false
 	-- end
 end)
 

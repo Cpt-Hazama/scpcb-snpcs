@@ -7,7 +7,7 @@ ENT.StartHealth = 5000
 ENT.CanMutate = false
 ENT.CollisionBounds = Vector(16,16,75)
 
-ENT.CorrosionCheckDistance = 40
+ENT.CorrosionCheckDistance = 50
 
 ENT.Faction = "FACTION_SCP"
 
@@ -17,6 +17,7 @@ ENT.MeleeAttackType = DMG_SLASH
 ENT.MeleeAttackDamage = 40
 
 ENT.BloodEffect = {"blood_impact_black"}
+-- ENT.BloodDecal = {"CPTBase_BlackBlood"}
 
 ENT.tbl_Animations = {
 	["Walk"] = {ACT_WALK},
