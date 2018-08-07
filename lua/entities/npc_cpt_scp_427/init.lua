@@ -72,6 +72,12 @@ function ENT:OnInputAccepted(event,activator)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:WhenRemoved()
+	if IsValid(self.Wearer) then
+		self.Wearer.SCP_Has427 = false
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 end

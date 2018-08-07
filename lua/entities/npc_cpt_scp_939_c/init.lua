@@ -2,7 +2,11 @@ if !CPTBase then return end
 AddCSLuaFile('shared.lua')
 include('shared.lua')
 
+ENT.StartHealth = 2500
 ENT.MonsterType = 2
+ENT.MeleeAttackDamage = 160
+ENT.AttackFinishTime = 0.9
+ENT.HearingDistance = 1300
 
 ENT.tbl_Sounds = {
 	["Alert"] = {"cpthazama/scp/939/2Alert1.wav","cpthazama/scp/939/2Alert2.wav","cpthazama/scp/939/2Alert3.wav"},

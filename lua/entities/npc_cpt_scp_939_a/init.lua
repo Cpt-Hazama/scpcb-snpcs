@@ -7,12 +7,14 @@ ENT.StartHealth = 1500
 ENT.CanMutate = false
 
 ENT.Faction = "FACTION_SCP"
+ENT.ViewAngle = 160
 ENT.MonsterType = 0
 
 ENT.MeleeAttackDistance = 50
 ENT.MeleeAttackDamageDistance = 110
-ENT.MeleeAttackType = DMG_SLASH
+ENT.MeleeAttackType = DMG_CRUSH
 ENT.MeleeAttackDamage = 90
+ENT.AttackFinishTime = 0.4
 
 ENT.BloodEffect = {"blood_impact_red"}
 
@@ -38,6 +40,7 @@ ENT.tbl_Sounds = {
 	},
 	["Voice_Random"] = {"vo/npc/male01/overhere01.wav","vo/npc/male01/onyourside.wav","vo/npc/male01/question06.wav","vo/npc/male01/question09.wav","vo/npc/male01/question11.wav","vo/npc/male01/question23.wav","vo/npc/male01/question25.wav","vo/npc/male01/squad_reinforce_single04.wav","vo/npc/male01/stopitfm.wav","vo/npc/male01/vquestion01.wav"},
 	["Strike"] = {"cpthazama/scp/D9341/Damage4.wav"},
+	["Crunch"] = {"physics/body/body_medium_break2.wav"},
 	["Spot"] = {"cpthazama/scp/939/0Attack1.wav","cpthazama/scp/939/0Attack2.wav","cpthazama/scp/939/0Attack3.wav"},
 }
 
@@ -90,6 +93,19 @@ function ENT:Possess_Reload(possessor)
 			self.NextHearSoundT = CurTime() +SoundDuration(self.CurrentPlayingSound)
 		end
 	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:OnHitEntity(hitents,hitpos)
+	for _,v in ipairs(hitents) do
+		v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Crunch"]),90,100)
+		if v:IsPlayer() then
+			v:SetDSP(32,false)
+			v:Freeze(true)
+			timer.Simple(0.6,function() if IsValid(v) then v:Freeze(false) end end)
+			ParticleEffect("blood_impact_red_01",v:GetAttachment(v:LookupAttachment("eyes")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
+		end
+	end
+	self:EmitSound(self:SelectFromTable(self.tbl_Sounds["Strike"]),90,100)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:LocateEnemies()
@@ -206,7 +222,7 @@ function ENT:DoAttack()
 	end
 	self:PlayNPCGesture("attack",2,1)
 	self.IsAttacking = true
-	timer.Simple(0.4,function()
+	timer.Simple(self.AttackFinishTime,function()
 		if self:IsValid() then
 			self.IsAttacking = false
 		end
