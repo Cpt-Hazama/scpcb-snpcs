@@ -195,6 +195,12 @@ function ENT:OnKilledEnemy(v)
 			if v:GetClass() == "npc_cpt_scp_ntf" then
 				zombie = ents.Create("npc_cpt_scp_049_2_ntf")
 				setskin = true
+			elseif v:GetClass() == "npc_cpt_scp_lambda" then
+				zombie = ents.Create("npc_cpt_scp_049_2_ntf")
+				setskin = 2
+			elseif v:GetClass() == "npc_cpt_scp_nu" then
+				zombie = ents.Create("npc_cpt_scp_049_2_ntf")
+				setskin = 3
 			else
 				zombie = ents.Create("npc_cpt_scp_049_2")
 			end
@@ -223,7 +229,11 @@ function ENT:OnKilledEnemy(v)
 		zombie.WasInfected = true
 		zombie:Spawn()
 		if setskin != false then
-			zombie:SetSkin(setskin)
+			if setskin == true then
+				zombie:SetSkin(v:GetSkin())
+			else
+				zombie:SetSkin(setskin)
+			end
 		end
 		zombie:SetColor(v:GetColor())
 		zombie:SetMaterial(v:GetMaterial())
