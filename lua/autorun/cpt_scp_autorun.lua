@@ -28,7 +28,7 @@ CPTBase.AddNPC("SCP-106","npc_cpt_scp_106",category)
 CPTBase.AddNPC("SCP-173","npc_cpt_scp_173",category)
 -- CPTBase.AddNPC("SCP-173 (Box)","npc_cpt_scp_173_box",category) // Shouldn't be spawnable
 CPTBase.AddNPC("SCP-178","npc_cpt_scp_178specs",category)
--- CPTBase.AddNPC("SCP-178-1","npc_cpt_scp_178",category) // No longer spawnable
+CPTBase.AddNPC("SCP-178-1","npc_cpt_scp_178",category) // No longer spawnable
 -- CPTBase.AddNPC("SCP-205","npc_cpt_scp_205",category) // Stupid
 -- CPTBase.AddNPC("SCP-205-A","npc_cpt_scp_205a",category)
 -- CPTBase.AddNPC("SCP-205-B","npc_cpt_scp_205b",category)
@@ -298,7 +298,7 @@ if CLIENT then
 
 	hook.Add("Think","CPTBase_SCP_178",function()
 		if CLIENT then
-			if CLIENT_SCP_178 then
+			-- if CLIENT_SCP_178 then
 				-- if CurTime() > CLIENT_SCP_178SPAWNTIME && CLIENT_SCP_178SPAWNAMOUNT <= 10 then
 					-- local ent = ents.Create("npc_cpt_scp_178")
 					-- local pos = ent:SetClearPos(VectorRand())
@@ -313,19 +313,19 @@ if CLIENT then
 						-- v:SetNoDraw(false)
 					-- end
 				-- end
-			else
-				CLIENT_SCP_178SPAWNAMOUNT = 0
-				for _,v in ipairs(ents.GetAll()) do
-					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_178" then
+			-- else
+				-- CLIENT_SCP_178SPAWNAMOUNT = 0
+				-- for _,v in ipairs(ents.GetAll()) do
+					-- if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_178" then
 						-- v:SetNoDraw(true)
-						timer.Simple(10,function()
-							if IsValid(v) then
-								v:Remove()
-							end
-						end)
-					end
-				end
-			end
+						-- timer.Simple(10,function()
+							-- if IsValid(v) then
+								-- v:Remove()
+							-- end
+						-- end)
+					-- end
+				-- end
+			-- end
 		end
 	end)
 end
