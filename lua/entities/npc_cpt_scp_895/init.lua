@@ -23,6 +23,9 @@ function ENT:SetInit()
 	self.NextUseT = 0
 	self.NextScareT = 0
 	self.Possessor_CanMove = false
+	self.ThemeSong = CreateSound(self,"cpthazama/scp/music/895.mp3")
+	self.ThemeSong:SetSoundLevel(100)
+	self.NextThemeSongT = 0
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetRandomImage()
@@ -50,11 +53,11 @@ function ENT:CreateGrossImage(v)
 		v:TakeDamageInfo(dmginfo)
 		v:SetDSP(32,false)
 		if math.random(1,3) == 1 then
-			v:EmitSound("cpthazama/scp/music/Horror16.wav",45,100)
+			v:EmitSound("cpthazama/scp/music/Horror16.mp3",45,100)
 		elseif math.random(1,3) == 2 then
-			v:EmitSound("cpthazama/scp/music/Horror1.wav",45,100)
+			v:EmitSound("cpthazama/scp/music/Horror1.mp3",45,100)
 		else
-			v:EmitSound("cpthazama/scp/music/Horror6.wav",45,100)
+			v:EmitSound("cpthazama/scp/music/Horror6.mp3",45,100)
 		end
 		v:SetNWBool("SCP_895Horror",true)
 		v:SetNWString("SCP_895HorrorID",self:SetRandomImage())
@@ -69,7 +72,18 @@ function ENT:CreateGrossImage(v)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:WhenRemoved()
+	self.ThemeSong:Stop()
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
+	if GetConVarNumber("cpt_scp_usemusic") == 1 then
+		if CurTime() > self.NextThemeSongT then
+			self.ThemeSong:Stop()
+			self.ThemeSong:Play()
+			self.NextThemeSongT = CurTime() +20
+		end
+	end
 	if CurTime() > self.NextScareT then
 		for _,v in ipairs(player.GetAll()) do
 			if v:IsValid() && v:Alive() && GetConVarNumber("ai_ignoreplayers") == 0 && v:GetNWBool("SCP_895Horror") == false then

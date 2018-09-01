@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\008\008_pipe"
+
+	"$phong" "1"
+	"$phongboost" "5"
+	"$phongfresnelranges"	"[0.1 1 1]"
+
+	"$envcubemap" "env_cubemap"
+	"$envcubemaptint" "[0.00115 0.00115 0.00115]"
+}

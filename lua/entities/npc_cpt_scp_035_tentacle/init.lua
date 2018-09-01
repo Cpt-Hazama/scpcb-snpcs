@@ -23,8 +23,8 @@ ENT.tbl_Animations = {
 }
 // npc_create npc_cpt_scp_035_tentacle
 ENT.tbl_Sounds = {
-	["Attack"] = {"cpthazama/scp/035_tentacle/TentacleAttack1.wav","cpthazama/scp/035_tentacle/TentacleAttack2.wav"},
-	["Idle"] = {"cpthazama/scp/035_tentacle/Whispers1.wav"},
+	["Attack"] = {"cpthazama/scp/035_tentacle/TentacleAttack1.mp3","cpthazama/scp/035_tentacle/TentacleAttack2.mp3"},
+	["Idle"] = {"cpthazama/scp/035_tentacle/Whispers1.mp3"},
 }
 
 ENT.IdleSoundVolume = 50
@@ -34,14 +34,14 @@ ENT.IdleSoundChanceB = 14
 function ENT:SetInit()
 	self:SetHullType(HULL_HUMAN)
 	self:SetMovementType(MOVETYPE_NONE)
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/035_tentacle/TentacleIdle.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/035_tentacle/TentacleIdle.mp3")
 	self.IdleLoop:SetSoundLevel(75)
 	self.NextIdleLoopT = 0
 	self:SetNoDraw(true)
 	timer.Simple(0.02,function()
 		if IsValid(self) then
 			self:SetNoDraw(false)
-			self:EmitSound(Sound("cpthazama/scp/035_tentacle/TentacleSpawn.wav"),75,100)
+			self:EmitSound(Sound("cpthazama/scp/035_tentacle/TentacleSpawn.mp3"),75,100)
 			self:PlaySequence("rise",1)
 		end
 	end)

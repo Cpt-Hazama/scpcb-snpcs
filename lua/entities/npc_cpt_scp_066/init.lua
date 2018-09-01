@@ -18,8 +18,8 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/066/Eric1.wav","cpthazama/scp/066/Eric2.wav","cpthazama/scp/066/Eric3.wav"},
-	["OnIdle"] = {"cpthazama/scp/066/Notes1.wav","cpthazama/scp/066/Notes2.wav","cpthazama/scp/066/Notes3.wav","cpthazama/scp/066/Notes4.wav","cpthazama/scp/066/Notes5.wav","cpthazama/scp/066/Notes6.wav"},
+	["Idle"] = {"cpthazama/scp/066/Eric1.mp3","cpthazama/scp/066/Eric2.mp3","cpthazama/scp/066/Eric3.mp3"},
+	["OnIdle"] = {"cpthazama/scp/066/Notes1.mp3","cpthazama/scp/066/Notes2.mp3","cpthazama/scp/066/Notes3.mp3","cpthazama/scp/066/Notes4.mp3","cpthazama/scp/066/Notes5.mp3","cpthazama/scp/066/Notes6.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -28,7 +28,7 @@ function ENT:SetInit()
 	self:SetHullType(HULL_TINY)
 	self:SetMovementType(MOVETYPE_STEP)
 	self:SetModelScale(1.5,0)
-	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/066/Rolling.wav")
+	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/066/Rolling.mp3")
 	self.IdleMoveSound:SetSoundLevel(75)
 	self.NextIdleLoopT = 0
 	self.SelectedTarget = NULL
@@ -57,7 +57,7 @@ function ENT:OnThink()
 			self.CanWander = false
 			-- self.LastSelectedTarget = self.SelectedTarget
 			if self:GetClosestPoint(self.SelectedTarget) <= 50 then
-				sound.Play("cpthazama/scp/066/Beethoven.wav",self:GetPos(),160,100)
+				sound.Play("cpthazama/scp/066/Beethoven.mp3",self:GetPos(),160,100)
 				util.ShakeWorld(self:GetPos(),16,23,1500)
 				self.SelectedTarget = NULL
 				for _,v in ipairs(ents.FindInSphere(self:GetPos(),500)) do
@@ -80,7 +80,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Primary(possessor)
 	if CurTime() > self.NextEarRapeT then
-		sound.Play("cpthazama/scp/066/Beethoven.wav",self:GetPos(),160,100)
+		sound.Play("cpthazama/scp/066/Beethoven.mp3",self:GetPos(),160,100)
 		util.ShakeWorld(self:GetPos(),16,23,1500)
 		self.SelectedTarget = NULL
 		for _,v in ipairs(ents.FindInSphere(self:GetPos(),500)) do

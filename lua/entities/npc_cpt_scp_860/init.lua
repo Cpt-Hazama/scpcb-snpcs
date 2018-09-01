@@ -24,15 +24,15 @@ ENT.tbl_Animations = {
 
 ENT.tbl_Sounds = {
 	["Alert"] = {
-		"cpthazama/scp/860/Cancer0.wav",
-		"cpthazama/scp/860/Cancer1.wav",
-		"cpthazama/scp/860/Cancer2.wav",
-		"cpthazama/scp/860/Cancer3.wav",
-		"cpthazama/scp/860/Cancer4.wav",
-		"cpthazama/scp/860/Cancer5.wav",
+		"cpthazama/scp/860/Cancer0.mp3",
+		"cpthazama/scp/860/Cancer1.mp3",
+		"cpthazama/scp/860/Cancer2.mp3",
+		"cpthazama/scp/860/Cancer3.mp3",
+		"cpthazama/scp/860/Cancer4.mp3",
+		"cpthazama/scp/860/Cancer5.mp3",
 	},
-	["Horror"] = {"cpthazama/scp/860/Chase1.wav","cpthazama/scp/860/Chase2.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage4.wav"},
+	["Horror"] = {"cpthazama/scp/860/Chase1.mp3","cpthazama/scp/860/Chase2.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage4.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}

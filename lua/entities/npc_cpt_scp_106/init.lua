@@ -27,11 +27,11 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/StepPD1.wav","cpthazama/scp/StepPD2.wav","cpthazama/scp/StepPD3.wav"},
-	["Alert"] = {"cpthazama/scp/106/Laugh.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
-	["Corrosion"] = {"cpthazama/scp/106/Corrosion1.wav","cpthazama/scp/106/Corrosion2.wav","cpthazama/scp/106/Corrosion3.wav"},
-	["Decay"] = {"cpthazama/scp/106/Decay0.wav"}
+	["FootStep"] = {"cpthazama/scp/StepPD1.mp3","cpthazama/scp/StepPD2.mp3","cpthazama/scp/StepPD3.mp3"},
+	["Alert"] = {"cpthazama/scp/106/Laugh.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
+	["Corrosion"] = {"cpthazama/scp/106/Corrosion1.mp3","cpthazama/scp/106/Corrosion2.mp3","cpthazama/scp/106/Corrosion3.mp3"},
+	["Decay"] = {"cpthazama/scp/106/Decay0.mp3"}
 }
 
 ENT.tbl_Capabilities = {CAP_USE}
@@ -66,9 +66,9 @@ function ENT:SetInit()
 	self.NextTeleportT = 0
 	self.NextThemeSongT = 0
 	self.NextIdleLoopT = 0
-	self.ThemeSong = CreateSound(self,"cpthazama/scp/music/106.wav")
+	self.ThemeSong = CreateSound(self,"cpthazama/scp/music/106.mp3")
 	self.ThemeSong:SetSoundLevel(110)
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/106/Breathing.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/106/Breathing.mp3")
 	self.IdleLoop:SetSoundLevel(68)
 	self.NextCorrosionEffectT = 0
 	self.NextDoorT = 0
@@ -100,8 +100,8 @@ function ENT:Teleport(pos)
 			self:SetCollisionGroup(COLLISION_GROUP_NPC)
 		end
 	end)
-	self:EmitSound("cpthazama/scp/106/Laugh.wav",110,100)
-	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".wav",70,100)
+	self:EmitSound("cpthazama/scp/106/Laugh.mp3",110,100)
+	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",70,100)
 	self:PlaySound("Decay",100)
 	local tr = util.TraceLine({
 		start = self:GetPos(),
@@ -134,7 +134,7 @@ function ENT:BeContained()
 		ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 	end
 	self:SetPos(FEMURBREAKER +self:GetUp() *15)
-	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".wav",70,100)
+	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",70,100)
 	self:PlaySound("Decay",100)
 	ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
 	for i = 1,math.random(60,70) do
@@ -170,8 +170,8 @@ function ENT:Possess_Secondary(possessor)
 					self:SetCollisionGroup(COLLISION_GROUP_NPC)
 				end
 			end)
-			self:EmitSound("cpthazama/scp/106/Laugh.wav",110,100)
-			self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".wav",70,100)
+			self:EmitSound("cpthazama/scp/106/Laugh.mp3",110,100)
+			self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",70,100)
 			self:PlaySound("Decay",100)
 			if CurTime() > self.P_NextTeleportParticleT then
 				ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
@@ -306,12 +306,12 @@ function ENT:OnHitEntity(hitents,hitpos)
 			for i = 0,v:GetBoneCount() -1 do
 				if math.random(1,3) == 1 then
 					ParticleEffect("blood_impact_black",v:GetBonePosition(i),Angle(0,0,0),nil)
-					v:EmitSound("cpthazama/scp/106/Decay" .. math.random(0,3) .. ".wav",35,200)
+					v:EmitSound("cpthazama/scp/106/Decay" .. math.random(0,3) .. ".mp3",35,200)
 				end
 			end
 			if util.IsSCPMap() && v:IsValid() && v:Alive() then
 				v:SetPos(POCKETDIMENSION)
-				v:EmitSound("cpthazama/scp/106/Enter.wav",40,100)
+				v:EmitSound("cpthazama/scp/106/Enter.mp3",40,100)
 			end
 		end
 	end
@@ -325,7 +325,7 @@ function ENT:OnThink()
 			if self.WasContained == false then
 				self.WasContained = true
 				for _,v in ipairs(player.GetAll()) do
-					v:SendLua("surface.PlaySound('cpthazama/scp/106Contain.wav')")
+					v:SendLua("surface.PlaySound('cpthazama/scp/106Contain.mp3')")
 				end
 			end
 		else
@@ -396,7 +396,7 @@ function ENT:OnThink()
 						util.Decal("MetalStain3",trace.HitPos +trace.HitNormal,trace.HitPos -trace.HitNormal)
 					end
 				end
-				sound.Play("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".wav",self:GetPos(),70,130)
+				sound.Play("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",self:GetPos(),70,130)
 				for i = 0,self:GetBoneCount() -1 do
 					if math.random(1,8) == 1 then
 						ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
@@ -428,7 +428,7 @@ function ENT:WhenRemoved()
 	end
 	if util.IsSCPMap() then
 		for _,v in ipairs(player.GetAll()) do
-			v:SendLua("surface.PlaySound('cpthazama/scp/106Contain.wav')")
+			v:SendLua("surface.PlaySound('cpthazama/scp/106Contain.mp3')")
 		end
 	end
 end

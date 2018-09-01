@@ -19,9 +19,9 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/035/Idle3.wav","cpthazama/scp/035/Idle4.wav","cpthazama/scp/035/Idle5.wav","cpthazama/scp/035/Idle6.wav","cpthazama/scp/035/Idle7.wav"},
-	["Alert"] = {"cpthazama/scp/035/GasedKilled1.wav"},
-	["Pain"] = {"cpthazama/scp/D9341/breath0.wav","cpthazama/scp/D9341/breath1.wav","cpthazama/scp/D9341/breath2.wav","cpthazama/scp/D9341/breath3.wav","cpthazama/scp/D9341/breath4.wav"}
+	["Idle"] = {"cpthazama/scp/035/Idle3.mp3","cpthazama/scp/035/Idle4.mp3","cpthazama/scp/035/Idle5.mp3","cpthazama/scp/035/Idle6.mp3","cpthazama/scp/035/Idle7.mp3"},
+	["Alert"] = {"cpthazama/scp/035/GasedKilled1.mp3"},
+	["Pain"] = {"cpthazama/scp/D9341/breath0.mp3","cpthazama/scp/D9341/breath1.mp3","cpthazama/scp/D9341/breath2.mp3","cpthazama/scp/D9341/breath3.mp3","cpthazama/scp/D9341/breath4.mp3"}
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
@@ -31,7 +31,7 @@ function ENT:SetInit()
 	self.NextSummonT = 0
 	self.tbl_Tentacles = {}
 	self.NextDoorT = 0
-	self:EmitSound("cpthazama/scp/035/GetUp.wav",85,100)
+	self:EmitSound("cpthazama/scp/035/GetUp.mp3",85,100)
 	timer.Simple(0.02,function()
 		if IsValid(self) then
 			self:PlaySequence("standup",1)

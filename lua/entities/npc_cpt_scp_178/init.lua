@@ -66,9 +66,9 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
 	if self.IsStarter && CurTime() > self.NextThemeT then
-		for _,v in ipairs(player.GetAll()) do
-			v:SendLua("surface.PlaySound('cpthazama/scp/music/178.wav')")
-		end
+		-- for _,v in ipairs(player.GetAll()) do
+			-- v:SendLua("surface.PlaySound('cpthazama/scp/music/178.mp3')")
+		-- end
 		self.NextThemeT = CurTime() +17
 	end
 end

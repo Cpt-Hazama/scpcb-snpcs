@@ -68,7 +68,7 @@ function ENT:OnInputAccepted(event,activator)
 				-- end
 			end
 			activator:ChatPrint("You pick a random page and you get " .. disease .. "..")
-			activator:SendLua("surface.PlaySound('cpthazama/scp/1162/NostalgiaCancer" .. math.random(1,10) .. ".wav')")
+			activator:SendLua("surface.PlaySound('cpthazama/scp/1162/NostalgiaCancer" .. math.random(1,10) .. ".mp3')")
 		end
 		self.NextUseT = CurTime() +5
 	end
@@ -76,29 +76,29 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetupCough(dodie,ply,disease)
 	local deaths = ply:Deaths()
-	ply:EmitSound("cpthazama/scp/D9341/Cough3.wav",75,100)
+	ply:EmitSound("cpthazama/scp/D9341/Cough3.mp3",75,100)
 	timer.Simple(4,function()
 		if ply:IsValid() && ply.SCP_Has714 == false  then
 			if ply:Deaths() > deaths then return end
-			ply:EmitSound("cpthazama/scp/D9341/Cough3.wav",75,100)
+			ply:EmitSound("cpthazama/scp/D9341/Cough3.mp3",75,100)
 		end
 	end)
 	timer.Simple(7,function()
 		if ply:IsValid() && ply.SCP_Has714 == false  then
 			if ply:Deaths() > deaths then return end
-			ply:EmitSound("cpthazama/scp/D9341/Cough1.wav",75,100)
+			ply:EmitSound("cpthazama/scp/D9341/Cough1.mp3",75,100)
 		end
 	end)
 	timer.Simple(14,function()
 		if ply:IsValid() && ply.SCP_Has714 == false  then
 			if ply:Deaths() > deaths then return end
-			ply:EmitSound("cpthazama/scp/D9341/Cough2.wav",75,100)
+			ply:EmitSound("cpthazama/scp/D9341/Cough2.mp3",75,100)
 		end
 	end)
 	timer.Simple(20,function()
 		if ply:IsValid() && ply.SCP_Has714 == false  then
 			if ply:Deaths() > deaths then return end
-			ply:EmitSound("cpthazama/scp/D9341/Cough1.wav",75,100)
+			ply:EmitSound("cpthazama/scp/D9341/Cough1.mp3",75,100)
 			if dodie == true then
 				ply:Kill()
 			end
@@ -109,11 +109,11 @@ end
 function ENT:SetupHeartAttack()
 	if IsValid(ply) then
 		local deaths = ply:Deaths()
-		ply:EmitSound("cpthazama/scp/D9341/breath0.wav",75,100)
+		ply:EmitSound("cpthazama/scp/D9341/breath0.mp3",75,100)
 		timer.Simple(8,function()
 			if ply:IsValid() && ply.SCP_Has714 == false then
 				if ply:Deaths() > deaths then return end
-				ply:EmitSound("cpthazama/scp/D9341/Cough1.wav",75,100)
+				ply:EmitSound("cpthazama/scp/D9341/Cough1.mp3",75,100)
 				ply:Kill()
 			end
 		end)

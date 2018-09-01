@@ -8,9 +8,11 @@ include('server/cpt_utilities.lua')
 CPTBase.RegisterMod("SCP:CB SNPCs","0.1.7")
 
 CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
+-- CPTBase.DefineDecal("SCP_457Scorch",{"decals/decal_footprint_scorch"})
 CPTBase.AddParticleSystem("particles/cpt_scp_pocketdimension.pcf",{})
 
 local category = "SCP:CB"
+CPTBase.AddNPC("SCP-008","npc_cpt_scp_008",category)
 CPTBase.AddNPC("SCP-008-1","npc_cpt_scp_008_1",category)
 CPTBase.AddNPC("SCP-012","npc_cpt_scp_012",category)
 CPTBase.AddNPC("SCP-035","npc_cpt_scp_035",category)
@@ -25,15 +27,17 @@ CPTBase.AddNPC("SCP-096","npc_cpt_scp_096",category)
 CPTBase.AddNPC("SCP-106","npc_cpt_scp_106",category)
 CPTBase.AddNPC("SCP-173","npc_cpt_scp_173",category)
 -- CPTBase.AddNPC("SCP-173 (Box)","npc_cpt_scp_173_box",category) // Shouldn't be spawnable
-CPTBase.AddNPC("SCP-178","npc_cpt_scp_178",category)
+CPTBase.AddNPC("SCP-178","npc_cpt_scp_178specs",category)
+-- CPTBase.AddNPC("SCP-178-1","npc_cpt_scp_178",category) // No longer spawnable
 -- CPTBase.AddNPC("SCP-205","npc_cpt_scp_205",category) // Stupid
 -- CPTBase.AddNPC("SCP-205-A","npc_cpt_scp_205a",category)
 -- CPTBase.AddNPC("SCP-205-B","npc_cpt_scp_205b",category)
 -- CPTBase.AddNPC("SCP-205-C","npc_cpt_scp_205c",category)
--- CPTBase.AddNPC("SCP-205-D","npc_cpt_scp_205d",category) // H o t
+-- CPTBase.AddNPC("SCP-205-D","npc_cpt_scp_205d",category)
 CPTBase.AddNPC("SCP-372","npc_cpt_scp_372",category) // Should this even be here lol
 CPTBase.AddNPC("SCP-420-J","npc_cpt_scp_420",category)
 CPTBase.AddNPC("SCP-427","npc_cpt_scp_427",category)
+CPTBase.AddNPC("SCP-457","npc_cpt_scp_457",category)
 CPTBase.AddNPC("SCP-500","npc_cpt_scp_500",category)
 CPTBase.AddNPC("SCP-513","npc_cpt_scp_513",category)
 -- CPTBase.AddNPC("SCP-513-1","npc_cpt_scp_513_1",category) // Shouldn't be spawnable
@@ -57,11 +61,140 @@ CPTBase.AddNPC("MTF Lambda-5 White Rabbits","npc_cpt_scp_lambda",category)
 CPTBase.AddNPC("MTF Nu-7 Hammer Down","npc_cpt_scp_nu",category)
 
 CPTBase.AddNPC("Class D Subject","npc_cpt_scp_dclass",category)
-CPTBase.AddNPC("Scientist","npc_cpt_scp_scientist",category)
+CPTBase.AddNPC("Scientist","npc_cpt_scp_scientist",category) // STAHP! NO!
 
-CPTBase.AddNPC("Nightvision Goggles","ent_cpt_scp_nightvision",category)
+CPTBase.AddNPC("Nightvision Goggles","ent_cpt_scp_nightvision",category) // The object itself isn't a NPC but technically speaking, it is a NPC since well, it's running on my SNPC base
 
 if CLIENT then
+	local CPT_SCP_TBL_939_MOVERS = {}
+	local CPT_SCP_TBL_939_MOVERNUM = 0
+	hook.Add("PreDrawHalos","CPTBase_SCP_939Possession",function() -- Currently Disabled
+		-- if !game.SinglePlayer() then return end
+		-- for _,possessor in ipairs(player.GetAll()) do
+			-- if IsValid(possessor) && possessor:GetNWBool("CPTBase_IsPossessing") == true && string.find(possessor:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+				-- print(possessor:Nick(),possessor:GetNWBool("CPTBase_IsPossessing"))
+				-- for _,v in ipairs(player.GetAll()) do
+					-- if IsValid(v) then
+						-- if v:GetMoveType() == MOVETYPE_WALK && !v:Crouching() && (v:KeyDown(IN_FORWARD) or v:KeyDown(IN_BACK) or v:KeyDown(IN_MOVELEFT) or v:KeyDown(IN_MOVERIGHT) or v:KeyDown(IN_JUMP)) then
+							-- CPT_SCP_TBL_939_MOVERNUM = CPT_SCP_TBL_939_MOVERNUM +1
+							-- CPT_SCP_TBL_939_MOVERS[CPT_SCP_TBL_939_MOVERNUM] = v
+							-- if IsValid(v:GetActiveWeapon()) then
+								-- CPT_SCP_TBL_939_MOVERNUM = CPT_SCP_TBL_939_MOVERNUM +1
+								-- CPT_SCP_TBL_939_MOVERS[CPT_SCP_TBL_939_MOVERNUM] = v:GetActiveWeapon()
+							-- end
+						-- end
+					-- end
+				-- end
+				
+				/*			-- for _,ply in ipairs(player.GetAll()) do
+								if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+									v:SetNoDraw(false)
+									if IsValid(v:GetActiveWeapon()) then
+										v:GetActiveWeapon():SetNoDraw(false)
+									end
+								end
+							end
+						else
+							for _,ply in ipairs(player.GetAll()) do
+								if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+									v:SetNoDraw(true)
+									if IsValid(v:GetActiveWeapon()) then
+										v:GetActiveWeapon():SetNoDraw(true)
+									end
+								end
+							end
+						end
+					end
+				end*/
+
+				-- for _,v in ipairs(ents.GetAll()) do
+					-- if IsValid(v) && v:IsNPC() then
+						-- if v:GetVelocity():Length() > 0 then
+							-- if !string.find(v:GetClass(),"scp_939") then
+								-- CPT_SCP_TBL_939_MOVERNUM = CPT_SCP_TBL_939_MOVERNUM +1
+								-- CPT_SCP_TBL_939_MOVERS[CPT_SCP_TBL_939_MOVERNUM] = v
+								-- if IsValid(v:GetActiveWeapon()) then
+									-- CPT_SCP_TBL_939_MOVERNUM = CPT_SCP_TBL_939_MOVERNUM +1
+									-- CPT_SCP_TBL_939_MOVERS[CPT_SCP_TBL_939_MOVERNUM] = v:GetActiveWeapon()
+								-- end
+							-- end
+						-- end
+					-- end
+				-- end
+				/*			-- for _,ply in ipairs(player.GetAll()) do
+								if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+									v:SetNoDraw(false)
+									if IsValid(v:GetActiveWeapon()) then
+										v:GetActiveWeapon():SetNoDraw(false)
+									end
+								end
+							end
+						else
+							for _,ply in ipairs(player.GetAll()) do
+								if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+									if !string.find(v:GetClass(),"scp_939") then
+										v:SetNoDraw(true)
+										if IsValid(v:GetActiveWeapon()) then
+											v:GetActiveWeapon():SetNoDraw(true)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+
+				for _,ply in ipairs(player.GetAll()) do
+					if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") == true && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
+						halo.Add(CPT_SCP_TBL_939_MOVERS,Color(255,191,0),2,2,2,true,true)
+					end
+				end*/
+				
+				-- for _,move in ipairs(CPT_SCP_TBL_939_MOVERS) do
+					-- if IsValid(move) then
+						-- move:SetNoDraw(true)
+					-- else
+						-- table.remove(CPT_SCP_TBL_939_MOVERS,CPT_SCP_TBL_939_MOVERS[move])
+					-- end
+				-- end
+				-- halo.Add(CPT_SCP_TBL_939_MOVERS,Color(255,191,0),2,2,2,true,true)
+			-- end
+		-- end
+	end)
+
+	hook.Add("PreDrawHalos","CPTBase_SCP_106Possession",function()
+		if !game.SinglePlayer() then return end
+		if CLIENT then
+			local tb = {}
+			local tb_point = {}
+			for _,v in ipairs(ents.GetAll()) do
+				if v:GetClass() == "prop_physics" && v:GetNWBool("SCP106_Point") then
+					table.insert(tb_point,v)
+				end
+			end
+
+			for _,ply in ipairs(player.GetAll()) do
+				if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && ply:GetNWBool("CPTBase_PossessedNPCClass") == "npc_cpt_scp_106" then
+					halo.Add(tb_point,Color(127,0,0),4,4,3,true,true)
+					for _,others in ipairs(ents.GetAll()) do
+						if (others:IsNPC() && others:GetClass() != "npc_cpt_scp_106") or (others:IsPlayer() && others != v) then
+							for _,point in ipairs(tb_point) do
+								if others:GetPos():Distance(point:GetPos()) <= 250 then
+									table.insert(tb,others)
+								else
+									if table.HasValue(tb,others) then
+										tb[others] = nil
+									end
+								end
+							end
+						end
+					end
+					halo.Add(tb,Color(127,0,0),4,4,3,true,true)
+				end
+			end
+		end
+	end)
+
 	local tab_nightvision = {
 		["$pp_colour_addr"] = 0,
 		["$pp_colour_addg"] = 0,
@@ -74,14 +207,50 @@ if CLIENT then
 		["$pp_colour_mulb"] = 0
 	}
 
+	local tab_computer = {
+		["$pp_colour_addr"] = 0,
+		["$pp_colour_addg"] = 0,
+		["$pp_colour_addb"] = 0,
+		["$pp_colour_brightness"] = 0.2,
+		["$pp_colour_contrast"] = 1,
+		["$pp_colour_colour"] = 0,
+		["$pp_colour_mulr"] = 0,
+		["$pp_colour_mulg"] = 0,
+		["$pp_colour_mulb"] = 0
+	}
+
 	local CLIENT_SCP_NV = false
 	concommand.Add("cpt_scp_togglenightvision", function(ply,cmd,args)
 		CLIENT_SCP_NV = not CLIENT_SCP_NV
 	end)
 
+	local CLIENT_SCP_PC = false
+	concommand.Add("cpt_scp_togglepcvision", function(ply,cmd,args)
+		CLIENT_SCP_PC = not CLIENT_SCP_PC
+	end)
+
 	hook.Add("RenderScreenspaceEffects","CPTBase_SCP_Nightvision",function(ply)
 		if CLIENT_SCP_NV == true then
 			DrawColorModify(tab_nightvision)
+		end
+		if CLIENT_SCP_PC == true then
+			DrawColorModify(tab_computer)
+		end
+	end)
+	
+	hook.Add("RenderScreenspaceEffects","CPTBase_SCP_079Possessor",function()
+		if !game.SinglePlayer() then return end
+		local tbl = {}
+		for _,ply in ipairs(player.GetAll()) do
+			if ply:IsValid() && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_079") then
+				for _,v in ipairs(ents.GetAll()) do
+					if v:IsValid() && (v:IsNPC() || v:IsPlayer() && v != ply) then
+						table.insert(tbl,v)
+					end
+				end
+				-- if !(ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_079")) then return end
+				halo.Add(tbl,Color(255,191,0),15,15,15,true,true)
+			end
 		end
 	end)
 	
@@ -102,18 +271,58 @@ if CLIENT then
 					light.Style = 0
 				end
 				for _,v in ipairs(ents.GetAll()) do
-					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
-						v:SetNoDraw(false)
-					end
+					-- if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
+						-- v:SetNoDraw(false)
+					-- end
 					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_895" then
 						table.insert(tbl,v)
 					end
 				end
 				halo.Add(tbl,Color(255,0,0),15,15,15,true,true)
+			-- else
+				-- for _,v in ipairs(ents.GetAll()) do
+					-- if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
+						-- v:SetNoDraw(true)
+					-- end
+				-- end
+			end
+		end
+	end)
+
+	local CLIENT_SCP_178 = false
+	local CLIENT_SCP_178SPAWNTIME = CurTime()
+	local CLIENT_SCP_178SPAWNAMOUNT = 0
+	concommand.Add("cpt_scp_toggle178", function(ply,cmd,args)
+		CLIENT_SCP_178 = not CLIENT_SCP_178
+	end)
+
+	hook.Add("Think","CPTBase_SCP_178",function()
+		if CLIENT then
+			if CLIENT_SCP_178 then
+				-- if CurTime() > CLIENT_SCP_178SPAWNTIME && CLIENT_SCP_178SPAWNAMOUNT <= 10 then
+					-- local ent = ents.Create("npc_cpt_scp_178")
+					-- local pos = ent:SetClearPos(VectorRand())
+					-- if util.IsInWorld(pos) then
+						-- ent:Spawn()
+						-- CLIENT_SCP_178SPAWNAMOUNT = CLIENT_SCP_178SPAWNAMOUNT +1
+					-- end
+					-- CLIENT_SCP_178SPAWNTIME = CurTime() +math.Rand(5,14)
+				-- end
+				-- for _,v in ipairs(ents.GetAll()) do
+					-- if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_178" then
+						-- v:SetNoDraw(false)
+					-- end
+				-- end
 			else
+				CLIENT_SCP_178SPAWNAMOUNT = 0
 				for _,v in ipairs(ents.GetAll()) do
-					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_966" then
-						v:SetNoDraw(true)
+					if v:IsValid() && v:IsNPC() && v:GetClass() == "npc_cpt_scp_178" then
+						-- v:SetNoDraw(true)
+						timer.Simple(10,function()
+							if IsValid(v) then
+								v:Remove()
+							end
+						end)
 					end
 				end
 			end
@@ -130,6 +339,7 @@ SCP_DoorOpenDistance = 100
 hook.Add("PlayerDeath","CPTBase_SCP_DeathData",function(ply)
 	-- if CLIENT then
 		ply:SetNWBool("SCP_HasNightvision",false)
+		ply:SetNWBool("SCP_Has178",false)
 		ply:SetNWBool("SCP_895Horror",false)
 		ply:SetNWString("SCP_895HorrorID",nil)
 		ply:SetNWBool("SCP_IsBlinking",false)
@@ -143,14 +353,44 @@ end)
 
 hook.Add("OnEntityCreated","CPTBase_SCP_SpawnData_NPCs",function(ent)
 	if ent:IsNPC() then
+		ent.SCP_Infected_008 = false
 		ent.SCP_IsBlinking = false
 		ent.SCP_BlinkTime = CurTime() +math.random(4,7)
+	end
+end)
+
+hook.Add("Think","CPTBase_SCP_ZombieDeathFollow",function()
+	for _,v in ipairs(player.GetAll()) do
+		if !v:Alive() then
+			if IsValid(v.CPTBase_SCP_Zombie) then
+				-- v:SetPos(v.CPTBase_SCP_Zombie:GetPos() +v.CPTBase_SCP_Zombie:OBBCenter())
+				if v.SCP_SpawnedZombieEntity == false then
+					v.SCP_ZombieEntity = ents.Create("prop_dynamic")
+					v.SCP_ZombieEntity:SetPos(v.CPTBase_SCP_Zombie:GetPos() +v.CPTBase_SCP_Zombie:OBBCenter())
+					v.SCP_ZombieEntity:SetModel("models/props_junk/watermelon01_chunk02c.mdl")
+					v.SCP_ZombieEntity:SetParent(v.CPTBase_SCP_Zombie)
+					v.SCP_ZombieEntity:SetRenderMode(RENDERMODE_TRANSALPHA)
+					v.SCP_ZombieEntity:Spawn()
+					v.SCP_ZombieEntity:SetColor(Color(0,0,0,0))
+					v.SCP_ZombieEntity:SetNoDraw(false)
+					v.SCP_ZombieEntity:DrawShadow(false)
+					v.SCP_ZombieEntity:DeleteOnRemove(v.CPTBase_SCP_Zombie)
+					v.SCP_SpawnedZombieEntity = true
+				end
+				if IsValid(v.SCP_ZombieEntity) then
+					v:Spectate(OBS_MODE_CHASE)
+					v:SpectateEntity(v.SCP_ZombieEntity)
+					v:SetMoveType(MOVETYPE_OBSERVER)
+				end
+			end
+		end
 	end
 end)
 
 hook.Add("PlayerSpawn","CPTBase_SCP_SpawnData",function(ply)
 	if CLIENT then
 		ply:SetNWBool("SCP_HasNightvision",false)
+		ply:SetNWBool("SCP_Has178",false)
 		ply:SetNWBool("SCP_895Horror",false)
 		ply:SetNWString("SCP_895HorrorID",nil)
 		ply:SetNWBool("SCP_IsBlinking",false)
@@ -172,6 +412,8 @@ hook.Add("PlayerSpawn","CPTBase_SCP_SpawnData",function(ply)
 	ply.SCP_Has427 = false
 	ply.SCP_NextUse1123T = CurTime()
 	ply.SCP_Using420 = false
+	ply.CPTBase_SCP_Zombie = NULL
+	ply.SCP_SpawnedZombieEntity = false
 end)
 
 if SERVER then
@@ -228,116 +470,6 @@ hook.Add("PlayerUse","CPTBase_SCP_106Containtment",function(ply,ent)
 					end
 					NEXTFMT = CurTime() +1
 				end
-			end
-		end
-	end
-end)
-
-hook.Add("PreDrawHalos","CPTBase_SCP_939Possession",function()
-	if !game.SinglePlayer() then return end
-	if CLIENT then
-		local movers = {}
-		local movernum = 0
-		for _,v in ipairs(player.GetAll()) do
-			if IsValid(v) then
-				if v:GetMoveType() == MOVETYPE_WALK && !v:Crouching() && (v:KeyDown(IN_FORWARD) or v:KeyDown(IN_BACK) or v:KeyDown(IN_MOVELEFT) or v:KeyDown(IN_MOVERIGHT) or v:KeyDown(IN_JUMP)) then
-					movernum = movernum +1
-					movers[movernum] = v
-					if IsValid(v:GetActiveWeapon()) then
-						movernum = movernum +1
-						movers[movernum] = v:GetActiveWeapon()
-					end
-					for _,ply in ipairs(player.GetAll()) do
-						if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
-							v:SetNoDraw(false)
-							if IsValid(v:GetActiveWeapon()) then
-								v:GetActiveWeapon():SetNoDraw(false)
-							end
-						end
-					end
-				else
-					for _,ply in ipairs(player.GetAll()) do
-						if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
-							v:SetNoDraw(true)
-							if IsValid(v:GetActiveWeapon()) then
-								v:GetActiveWeapon():SetNoDraw(true)
-							end
-						end
-					end
-				end
-			end
-		end
-
-		for _,v in ipairs(ents.GetAll()) do
-			if IsValid(v) && v:IsNPC() then
-				if v:GetVelocity():Length() > 0 then
-					if !string.find(v:GetClass(),"scp_939") then
-						movernum = movernum +1
-						movers[movernum] = v
-						if IsValid(v:GetActiveWeapon()) then
-							movernum = movernum +1
-							movers[movernum] = v:GetActiveWeapon()
-						end
-					end
-					for _,ply in ipairs(player.GetAll()) do
-						if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
-							v:SetNoDraw(false)
-							if IsValid(v:GetActiveWeapon()) then
-								v:GetActiveWeapon():SetNoDraw(false)
-							end
-						end
-					end
-				else
-					for _,ply in ipairs(player.GetAll()) do
-						if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
-							if !string.find(v:GetClass(),"scp_939") then
-								v:SetNoDraw(true)
-								if IsValid(v:GetActiveWeapon()) then
-									v:GetActiveWeapon():SetNoDraw(true)
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-
-		for _,ply in ipairs(player.GetAll()) do
-			if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") == true && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_939") then
-				halo.Add(movers,Color(255,191,0),2,2,2,true,true)
-			end
-		end
-	end
-end)
-
-hook.Add("PreDrawHalos","CPTBase_SCP_106Possession",function()
-	if !game.SinglePlayer() then return end
-	if CLIENT then
-		local tb = {}
-		local tb_point = {}
-		for _,v in ipairs(ents.GetAll()) do
-			if v:GetClass() == "prop_physics" && v:GetNWBool("SCP106_Point") then
-				table.insert(tb_point,v)
-			end
-		end
-
-		for _,ply in ipairs(player.GetAll()) do
-			if IsValid(ply) && ply:GetNWBool("CPTBase_IsPossessing") && ply:GetNWBool("CPTBase_PossessedNPCClass") == "npc_cpt_scp_106" then
-				halo.Add(tb_point,Color(127,0,0),4,4,3,true,true)
-				for _,others in ipairs(ents.GetAll()) do
-					if (others:IsNPC() && others:GetClass() != "npc_cpt_scp_106") or (others:IsPlayer() && others != v) then
-						for _,point in ipairs(tb_point) do
-							if others:GetPos():Distance(point:GetPos()) <= 250 then
-								table.insert(tb,others)
-							else
-								if table.HasValue(tb,others) then
-									tb[others] = nil
-								end
-							end
-						end
-					end
-				end
-				halo.Add(tb,Color(127,0,0),4,4,3,true,true)
 			end
 		end
 	end
@@ -406,6 +538,13 @@ hook.Add("HUDPaint","CPTBase_SCP_SetBlinkTexture",function()
 			surface.SetDrawColor(255,255,255,0)
 			surface.DrawRect(0,0,ScrW(),ScrH())
 		end
+		if ply:Alive() && ply:GetNWBool("SCP_IsBlinking") == false && ply:GetNWBool("SCP_Has178") == true then
+			surface.SetDrawColor(255,255,255,100)
+			surface.SetTexture(surface.GetTextureID("models/cpthazama/scp/178/178_view"))
+			surface.DrawTexturedRect(0,0,ScrW(),ScrH())
+			surface.SetDrawColor(255,255,255,0)
+			surface.DrawRect(0,0,ScrW(),ScrH())
+		end
 		if !ply:GetNWBool("SCP_IsBlinking") && ply:GetNWBool("SCP_Touched1123") && ply:GetNWBool("SCP_Touched1123_Horror") == false then
 			surface.SetDrawColor(255,255,255,255)
 			surface.SetMaterial(Material("engine/singlecolor"))
@@ -415,7 +554,7 @@ hook.Add("HUDPaint","CPTBase_SCP_SetBlinkTexture",function()
 		end
 		if !ply:GetNWBool("SCP_IsBlinking") && ply:GetNWBool("SCP_Touched1123") && ply:GetNWBool("SCP_Touched1123_Horror") == true then
 			surface.SetDrawColor(255,255,255,255)
-			surface.SetMaterial(Material("overlay/1123"))
+			surface.SetTexture(surface.GetTextureID("overlay/1123"))
 			surface.DrawTexturedRect(0,0,ScrW(),ScrH())
 			surface.SetDrawColor(255,255,255,0)
 			surface.DrawRect(0,0,ScrW(),ScrH())
@@ -426,9 +565,22 @@ end)
 hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 	if GetConVarNumber("ai_ignoreplayers") == 0 then
 		local canevenblink = false
+		local scps = {}
 		for _,scp in ipairs(ents.GetAll()) do
 			if scp:IsNPC() && (scp:GetClass() == "npc_cpt_scp_173" or scp:GetClass() == "npc_cpt_scp_087_b" or scp:GetClass() == "npc_cpt_scpunity_173") then
 				canevenblink = true
+				if !table.HasValue(scps,scp) then
+					table.insert(scps,scp)
+				end
+			end
+		end
+		local function AllSCPs(ply)
+			for _,v in ipairs(scps) do
+				if IsValid(v) && v:Visible(ply) then
+					return true
+				else
+					return false
+				end
 			end
 		end
 		if canevenblink == true then
@@ -443,7 +595,7 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 			for i = 0, table.Count(tb) do
 				if tb[i] != nil then
 					if tb[i] == nil then return end
-					if tb[i]:GetNWBool("CPTBase_IsPossessing") == false && tb[i].IsPossessing == false && tb[i]:Alive() && CurTime() > tb[i]:GetNWInt("SCP_BlinkTime") && tb[i]:GetNWBool("SCP_IsBlinking") == false then
+					if tb[i]:GetNWBool("CPTBase_IsPossessing") == false && tb[i].IsPossessing == false && AllSCPs(tb[i]) && tb[i]:Alive() && CurTime() > tb[i]:GetNWInt("SCP_BlinkTime") && tb[i]:GetNWBool("SCP_IsBlinking") == false then
 						local deaths = tb[i]:Deaths()
 						if tb[i]:Deaths() > deaths then return end
 						tb[i]:SetNWBool("SCP_IsBlinking",true)
@@ -554,6 +706,7 @@ CPTBase.AddConVar("cpt_scp_usemusic","1")
 CPTBase.AddConVar("cpt_scp_939smallcollision","0")
 CPTBase.AddConVar("cpt_scp_mtfhiding","1")
 CPTBase.AddConVar("cpt_scp_895attack","0")
+CPTBase.AddConVar("cpt_scp_halloween","0")
 CPTBase.AddClientVar("cpt_scp_blinkmessage","0",true)
 
 local function CPTBase_SCP_ResetFemurBreaker(ply)
@@ -661,8 +814,12 @@ GATOR_3 = Vector(1104.790894,-661.958618,-767.968750)
 
 hook.Add("PlayerSay","CPTBase_SCP_CommandsChat",function(ply,spoke)
 	local lowered = string.lower(spoke)
-	if lowered == "!removenvg" then
+	if ply:GetNWBool("SCP_HasNightvision") && lowered == "!removenvg" then
 		ply:SetNWBool("SCP_HasNightvision",false)
 		ply:ChatPrint("You take off the nightvision goggles.")
+	end
+	if ply:GetNWBool("SCP_Has178") && lowered == "!remove178" then
+		ply:SetNWBool("SCP_Has178",false)
+		ply:ChatPrint("You take off the 3D glasses.")
 	end
 end)

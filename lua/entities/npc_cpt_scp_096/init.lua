@@ -25,7 +25,7 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Strike"] = {"cpthazama/scp/D9341/Damage4.wav"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage4.mp3"},
 	["FootStep"] = {"npc/zombie/foot1.wav","npc/zombie/foot2.wav","npc/zombie/foot3.wav"}
 }
 
@@ -35,11 +35,11 @@ function ENT:SetInit()
 	self:SetMovementType(MOVETYPE_STEP)
 	self.CanAttack = false
 	self.IsAttacking = false
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/music/096.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/music/096.mp3")
 	self.IdleLoop:SetSoundLevel(90)
-	self.TriggerLoop = CreateSound(self,"cpthazama/scp/music/096Angered.wav")
+	self.TriggerLoop = CreateSound(self,"cpthazama/scp/music/096Angered.mp3")
 	self.TriggerLoop:SetSoundLevel(95)
-	self.ChaseLoop = CreateSound(self,"cpthazama/scp/music/096Chase.wav")
+	self.ChaseLoop = CreateSound(self,"cpthazama/scp/music/096Chase.mp3")
 	self.ChaseLoop:SetSoundLevel(110)
 	self.NextDoorT = 0
 	self.NextCanTriggerT = 0
@@ -216,7 +216,7 @@ function ENT:TriggerConfigure()
 		end
 		if IsValid(self:GetEnemy()) && self.CanAttack then
 			if CurTime() > self.NextScreamT then
-				self:EmitSound("cpthazama/scp/096/Scream.wav",105,100)
+				self:EmitSound("cpthazama/scp/096/Scream.mp3",105,100)
 				self.NextScreamT = CurTime() +10
 			end
 		end
@@ -279,9 +279,9 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnTriggered(v,triggertime,usepanic)
 	if usepanic == true then
-		self:EmitSound("cpthazama/scp/096/Panic.wav",100,100)
+		self:EmitSound("cpthazama/scp/096/Panic.mp3",100,100)
 	else
-		self:EmitSound("cpthazama/scp/096/Triggered.wav",100,100)
+		self:EmitSound("cpthazama/scp/096/Triggered.mp3",100,100)
 	end
 	if v:IsPlayer() then
 		local hb = 0.5
@@ -289,11 +289,11 @@ function ENT:OnTriggered(v,triggertime,usepanic)
 			hb = hb +0.5
 			timer.Simple(hb,function()
 				if v:IsValid() && v:Alive() then
-					v:SendLua("surface.PlaySound('cpthazama/scp/D9341/Heartbeat.wav')")
+					v:SendLua("surface.PlaySound('cpthazama/scp/D9341/Heartbeat.mp3')")
 				end
 			end)
 		end
-		v:EmitSound("cpthazama/scp/D9341/breath0.wav",65,100)
+		v:EmitSound("cpthazama/scp/D9341/breath0.mp3",65,100)
 	end
 	self:PlayActivity(ACT_SPECIAL_ATTACK1)
 	self:SetMaxYawSpeed(0)

@@ -23,26 +23,26 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/Step1.wav","cpthazama/scp/Step2.wav","cpthazama/scp/Step3.wav"},
+	["FootStep"] = {"cpthazama/scp/Step1.mp3","cpthazama/scp/Step2.mp3","cpthazama/scp/Step3.mp3"},
 	["Idle"] = {
-		"cpthazama/scp/008/Voices0.wav",
-		"cpthazama/scp/008/Voices1.wav",
-		"cpthazama/scp/008/Voices2.wav",
-		"cpthazama/scp/008/Voices3.wav",
-		"cpthazama/scp/008/Voices4.wav",
-		"cpthazama/scp/008/Voices5.wav",
-		"cpthazama/scp/008/Voices6.wav",
+		"cpthazama/scp/008/Voices0.mp3",
+		"cpthazama/scp/008/Voices1.mp3",
+		"cpthazama/scp/008/Voices2.mp3",
+		"cpthazama/scp/008/Voices3.mp3",
+		"cpthazama/scp/008/Voices4.mp3",
+		"cpthazama/scp/008/Voices5.mp3",
+		"cpthazama/scp/008/Voices6.mp3",
 	},
 	["Alert"] = {
-		"cpthazama/scp/008/Voices0.wav",
-		"cpthazama/scp/008/Voices1.wav",
-		"cpthazama/scp/008/Voices2.wav",
-		"cpthazama/scp/008/Voices3.wav",
-		"cpthazama/scp/008/Voices4.wav",
-		"cpthazama/scp/008/Voices5.wav",
-		"cpthazama/scp/008/Voices6.wav",
+		"cpthazama/scp/008/Voices0.mp3",
+		"cpthazama/scp/008/Voices1.mp3",
+		"cpthazama/scp/008/Voices2.mp3",
+		"cpthazama/scp/008/Voices3.mp3",
+		"cpthazama/scp/008/Voices4.mp3",
+		"cpthazama/scp/008/Voices5.mp3",
+		"cpthazama/scp/008/Voices6.mp3",
 	},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -82,21 +82,21 @@ function ENT:OnHitEntity(hitents,hitpos)
 	for _,v in ipairs(hitents) do
 		if v:IsValid() && v:IsPlayer() && v:Alive() && v.SCP_Has714 == false && v.SCP_Infected_008 == false then
 			v.SCP_Infected_008 = true
-			v:EmitSound("cpthazama/scp/008/Voices0.wav",50,100)
+			v:EmitSound("cpthazama/scp/008/Voices0.mp3",50,100)
 			v:ChatPrint("You feel like something is wrong..")
 			local deaths = v:Deaths()
 			local time = GetConVarNumber("cpt_scp_008infectiontime")
 			timer.Simple(time /3,function()
 				if v:IsValid() && v.SCP_Infected_008 then
 					if v:Deaths() > deaths then return end
-					v:EmitSound("cpthazama/scp/008/Voices5.wav",50,100)
+					v:EmitSound("cpthazama/scp/008/Voices5.mp3",50,100)
 					v:ChatPrint("You start to feel dizzy..")
 				end
 			end)
 			timer.Simple(time /2,function()
 				if v:IsValid() && v.SCP_Infected_008 then
 					if v:Deaths() > deaths then return end
-					v:EmitSound("cpthazama/scp/008/Voices1.wav",50,100)
+					v:EmitSound("cpthazama/scp/008/Voices1.mp3",50,100)
 					v:ChatPrint("You have an unsationable urge to eat flesh..")
 				end
 			end)
@@ -112,6 +112,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 					zombie:SetModelScale(v:GetModelScale(),0)
 					CreateUndo(zombie,v:Nick() .. " (008 Infected)",v)
 					v:Kill()
+					v.CPTBase_SCP_Zombie = zombie
 					v:GetRagdollEntity():Remove()
 				end
 			end)

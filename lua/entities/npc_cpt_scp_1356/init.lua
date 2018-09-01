@@ -18,7 +18,7 @@ ENT.TurnsOnDamage = false
 ENT.IsEssential = false
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/Joke/Saxophone.wav"}
+	["Idle"] = {"cpthazama/scp/Joke/Saxophone.mp3"}
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()

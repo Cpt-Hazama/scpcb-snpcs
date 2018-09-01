@@ -15,7 +15,7 @@ ENT.Bleeds = false
 ENT.TurnsOnDamage = false
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/513/Light1.wav","cpthazama/scp/513/Light2.wav","cpthazama/scp/513/Light3.wav"},
+	["Idle"] = {"cpthazama/scp/513/Light1.mp3","cpthazama/scp/513/Light2.mp3","cpthazama/scp/513/Light3.mp3"},
 }
 
 ENT.IdleSoundVolume = 100

@@ -21,7 +21,7 @@ ENT.Faction = "FACTION_NONE"
 ENT.BloodEffect = {"blood_impact_white"}
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/372/Rustle0.wav","cpthazama/scp/372/Rustle1.wav","cpthazama/scp/372/Rustle2.wav"},
+	["Idle"] = {"cpthazama/scp/372/Rustle0.mp3","cpthazama/scp/372/Rustle1.mp3","cpthazama/scp/372/Rustle2.mp3"},
 }
 
 ENT.IdleSoundChanceA = 4

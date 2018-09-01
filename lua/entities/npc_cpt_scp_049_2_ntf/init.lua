@@ -8,6 +8,6 @@ ENT.StartHealth = 500
 ENT.MeleeAttackDamage = 28
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/ntf/Step1.wav","cpthazama/scp/ntf/Step2.wav","cpthazama/scp/ntf/Step3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
+	["FootStep"] = {"cpthazama/scp/ntf/Step1.mp3","cpthazama/scp/ntf/Step2.mp3","cpthazama/scp/ntf/Step3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 }

@@ -29,26 +29,26 @@ ENT.tbl_Animations = {
 
 ENT.tbl_Sounds = {
 	["Horror"] = {
-		"cpthazama/scp/music/Horror0.wav",
-		"cpthazama/scp/music/Horror1.wav",
-		"cpthazama/scp/music/Horror2.wav",
-		"cpthazama/scp/music/Horror3.wav",
-		"cpthazama/scp/music/Horror4.wav",
-		"cpthazama/scp/music/Horror5.wav",
-		"cpthazama/scp/music/Horror8.wav",
-		"cpthazama/scp/music/Horror9.wav",
-		"cpthazama/scp/music/Horror10.wav",
-		"cpthazama/scp/music/Horror13.wav",
-		"cpthazama/scp/music/Horror14.wav",
-		"cpthazama/scp/music/Horror0.wav",
-		"cpthazama/scp/music/Horror0.wav",
+		"cpthazama/scp/music/Horror0.mp3",
+		"cpthazama/scp/music/Horror1.mp3",
+		"cpthazama/scp/music/Horror2.mp3",
+		"cpthazama/scp/music/Horror3.mp3",
+		"cpthazama/scp/music/Horror4.mp3",
+		"cpthazama/scp/music/Horror5.mp3",
+		"cpthazama/scp/music/Horror8.mp3",
+		"cpthazama/scp/music/Horror9.mp3",
+		"cpthazama/scp/music/Horror10.mp3",
+		"cpthazama/scp/music/Horror13.mp3",
+		"cpthazama/scp/music/Horror14.mp3",
+		"cpthazama/scp/music/Horror0.mp3",
+		"cpthazama/scp/music/Horror0.mp3",
 	},
-	["Strike"] = {"cpthazama/scp/173/NeckSnap1.wav","cpthazama/scp/173/NeckSnap2.wav","cpthazama/scp/173/NeckSnap3.wav"},
-	["Idle"] = {"cpthazama/scp/173/Rattle1.wav","cpthazama/scp/173/Rattle2.wav","cpthazama/scp/173/Rattle3.wav"},
-	["Alert"] = {"cpthazama/scp/173/Rattle1.wav","cpthazama/scp/173/Rattle2.wav","cpthazama/scp/173/Rattle3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage2.wav"},
-	["Miss"] = {"common/null.wav"},
-	["NeckBreak"] = {"cpthazama/scp/173/NeckSnap1.wav","cpthazama/scp/173/NeckSnap2.wav","cpthazama/scp/173/NeckSnap3.wav"}
+	["Strike"] = {"cpthazama/scp/173/NeckSnap1.mp3","cpthazama/scp/173/NeckSnap2.mp3","cpthazama/scp/173/NeckSnap3.mp3"},
+	["Idle"] = {"cpthazama/scp/173/Rattle1.mp3","cpthazama/scp/173/Rattle2.mp3","cpthazama/scp/173/Rattle3.mp3"},
+	["Alert"] = {"cpthazama/scp/173/Rattle1.mp3","cpthazama/scp/173/Rattle2.mp3","cpthazama/scp/173/Rattle3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage2.mp3"},
+	["Miss"] = {"common/null.mp3"},
+	["NeckBreak"] = {"cpthazama/scp/173/NeckSnap1.mp3","cpthazama/scp/173/NeckSnap2.mp3","cpthazama/scp/173/NeckSnap3.mp3"}
 }
 ENT.IdleSoundVolume = 100
 ENT.IdleSoundChanceA = 3
@@ -67,7 +67,7 @@ function ENT:SetInit()
 	self:SetHullType(HULL_HUMAN)
 	self:SetMovementType(MOVETYPE_STEP)
 	self.IsAttacking = false
-	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/173/StoneDrag.wav") // 5
+	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/173/StoneDrag.mp3") // 5
 	self.IdleMoveSound:SetSoundLevel(75)
 	-- self:SetModelScale(0.88,0)
 	self.WasSeen = false
@@ -77,6 +77,7 @@ function ENT:SetInit()
 	self.P_NextVentT = CurTime() +2
 	self.NextAlertSoundShitT = 0
 	self.LastVent = Vector(0,0,0)
+	self:SetSkin(GetConVarNumber("cpt_scp_halloween"))
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:ContainSCP(ntf)
@@ -190,7 +191,7 @@ function ENT:OnThink()
 		else
 			if self:IsMoving() then
 				if CurTime() > self.NextMoveSoundT then
-					self:EmitSound(Sound("cpthazama/scp/173/Rattle" .. math.random(1,3) .. ".wav"),72,100)
+					self:EmitSound(Sound("cpthazama/scp/173/Rattle" .. math.random(1,3) .. ".mp3"),72,100)
 					self.NextMoveSoundT = CurTime() +0.2
 				end
 			end

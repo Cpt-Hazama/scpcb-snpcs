@@ -24,7 +24,7 @@ function ENT:SetInit()
 	self:SetMovementType(MOVETYPE_NONE)
 	self.NextDamageT = 0
 	self.NextSkinT = 0
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/music/012Golgotha.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/music/012Golgotha.mp3")
 	self.IdleLoop:SetSoundLevel(80)
 	self:SetModelScale(1.5,0)
 	self.NextIdleLT = 0
@@ -49,7 +49,7 @@ function ENT:OnThink()
 					v.SCP_513_NextTalkT = 0
 				end
 				if CurTime() > v.SCP_513_NextTalkT then
-					v:EmitSound("cpthazama/scp/012/Speech" .. v.SCP_513_CurrentTalk .. ".wav",75,100)
+					v:EmitSound("cpthazama/scp/012/Speech" .. v.SCP_513_CurrentTalk .. ".mp3",75,100)
 					if v.SCP_513_CurrentTalk < 7 then
 						v.SCP_513_CurrentTalk = v.SCP_513_CurrentTalk +1
 					end

@@ -18,16 +18,16 @@ ENT.TurnsOnDamage = false
 
 ENT.tbl_Sounds = {
 	["Idle"] = {
-		"cpthazama/scp/079/Broadcast1.wav",
-		"cpthazama/scp/079/Broadcast2.wav",
-		"cpthazama/scp/079/Broadcast3.wav",
-		"cpthazama/scp/079/Broadcast4.wav",
-		"cpthazama/scp/079/Broadcast5.wav",
-		"cpthazama/scp/079/Broadcast6.wav",
-		"cpthazama/scp/079/Broadcast7.wav",
+		"cpthazama/scp/079/Broadcast1.mp3",
+		"cpthazama/scp/079/Broadcast2.mp3",
+		"cpthazama/scp/079/Broadcast3.mp3",
+		"cpthazama/scp/079/Broadcast4.mp3",
+		"cpthazama/scp/079/Broadcast5.mp3",
+		"cpthazama/scp/079/Broadcast6.mp3",
+		"cpthazama/scp/079/Broadcast7.mp3",
 	},
-	["Pain"] = {"cpthazama/scp/079/Refuse.wav"},
-	["Speech"] = {"cpthazama/scp/079/Speech.wav"},
+	["Pain"] = {"cpthazama/scp/079/Refuse.mp3"},
+	["Speech"] = {"cpthazama/scp/079/Speech.mp3"},
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
@@ -37,44 +37,237 @@ function ENT:SetInit()
 	self.HasBeenSpokenTo = false
 	self.IsTalking = false
 	self.CanBeSpokenTo = true
-	self.NextDoorT = CurTime() +5
+	self.NextDoorT = CurTime() +1
 	self.Possessor_CanMove = false
+	self.Possessor_DoorObject = ents.Create("prop_dynamic")
+	self.Possessor_DoorObject:SetPos(self:GetPos())
+	self.Possessor_DoorObject:SetModel("models/props_junk/watermelon01_chunk02c.mdl")
+	self.Possessor_DoorObject:SetParent(self)
+	self.Possessor_DoorObject:SetRenderMode(RENDERMODE_TRANSALPHA)
+	self.Possessor_DoorObject:Spawn()
+	self.Possessor_DoorObject:SetColor(Color(0,0,0,0))
+	self.Possessor_DoorObject:SetNoDraw(false)
+	self.Possessor_DoorObject:DrawShadow(false)
+	self.Possessor_DoorObject:DeleteOnRemove(self)
+	self.Possessor_ViewingDoor = false
+	self.Possessor_ViewedDoor = NULL
+	self.IsActivated = false
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_OnPossessed(possessor)
-	possessor:ChatPrint("Possessor Controls:")
-	possessor:ChatPrint("LMB - Give a speech")
-	possessor:ChatPrint("RMB - Close a random door around the map")
+	if self.IsActivated == false then
+		self:Possess_DoChat079(possessor,0,"SYSTEM MODULES - .")
+		self:Possess_DoChat079(possessor,0.7,"SYSTEM MODULES - ..")
+		self:Possess_DoChat079(possessor,1.4,"SYSTEM MODULES - ...")
+		self:Possess_DoChat079(possessor,1.5,"SYSTEM MODULES - ONLINE")
+		self:Possess_DoChat079(possessor,2.4,"SITE DATABASE - CONNECTED")
+		self:Possess_DoChat079(possessor,2.5,"SITE SECURITY SYSTEM - ONLINE")
+		self:Possess_DoChat079(possessor,2.51,"SITE SECURITY SYSTEM - CONNECTED")
+		self:Possess_DoChat079(possessor,5.5,"3yfn7wfp7wurny w7f8fnfwf")
+		self:Possess_DoChat079(possessor,5.6,"3nuyep9rmxwr8nfwln9f 83rmf8si")
+		self:Possess_DoChat079(possessor,5.7,"2rc8nw8sm8enyfulwo9emad83nqw09 9w;fn efu89nfus")
+		self:Possess_DoChat079(possessor,5.8,"48uepfjsiofwc9fmuso9f wfus.fk vshumud wefu8")
+		self:Possess_DoChat079(possessor,6.81,"SITE CONTROLS - RESTABLISHING")
+		self:Possess_DoChat079(possessor,7.2,"SITE CONTROLS - .")
+		self:Possess_DoChat079(possessor,7.95,"SITE CONTROLS - ..")
+		self:Possess_DoChat079(possessor,8.6,"SITE CONTROLS - ...")
+		self:Possess_DoChat079(possessor,8.9,"SITE CONTROLS - ACTIVE")
+		self:Possess_DoChat079(possessor,9,"INITIATING CONTROL PANEL -")
+		self:Possess_DoChat079(possessor,9.821,"LMB - Give the speech")
+		self:Possess_DoChat079(possessor,9.822,"RMB - Cycle through doors")
+		self:Possess_DoChat079(possessor,9.823,"Reload - Close a door")
+		self:Possess_DoChat079(possessor,9.824,"Crouch - Open a door")
+		self:Possess_DoChat079(possessor,9.825,"Unlock a door")
+		self:Possess_DoChat079(possessor,9.826,"Jump - Lock a door (Unlocks after 10 seconds)")
+	else
+		self:Possess_DoChat079(possessor,0,"INITIATING CONTROL PANEL -")
+		self:Possess_DoChat079(possessor,0.11,"LMB - Give the speech")
+		self:Possess_DoChat079(possessor,0.112,"RMB - Cycle through doors")
+		self:Possess_DoChat079(possessor,0.113,"Reload - Close a door")
+		self:Possess_DoChat079(possessor,0.114,"Crouch - Open a door")
+		self:Possess_DoChat079(possessor,0.115,"Unlock a door")
+		self:Possess_DoChat079(possessor,0.116,"Jump - Lock a door (Unlocks after 10 seconds)")
+	end
+	possessor:ConCommand("cpt_scp_togglepcvision")
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_DoChat079(ply,time,text)
+	timer.Simple(time,function()
+		if IsValid(ply) && IsValid(self) then
+			ply:ChatPrint(text)
+			ply:EmitSound(Sound("buttons/blip1.wav"),25,100)
+			if time == 9.826 || time == 0.116 then
+				self.IsActivated = true
+			end
+		end
+	end)
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_OnStopPossessing(possessor)
+	if IsValid(possessor) then
+		possessor:ConCommand("cpt_scp_togglepcvision")
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:WhenRemoved()
+	if IsValid(self.Possessor) && self.Possessor:GetNWBool("CPTBase_IsPossessing") then
+		self.Possessor:SetPos(self:GetPos())
+		self.Possessor:SpectateEntity(self)
+		self.Possessor:ConCommand("cpt_scp_togglepcvision")
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Think(possessor,object)
+	if self.Possessor_ViewingDoor == true then
+		-- object:SetPos(self.Possessor_ViewedDoor:GetPos() +self.Possessor_ViewedDoor:OBBCenter())
+		-- object:SetParent(self.Possessor_ViewedDoor)
+		possessor:SpectateEntity(self.Possessor_ViewedDoor)
+	else
+		-- possessor:SpectateEntity(object)
+		-- self.Possessor_ViewedDoor = NULL
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:GetClosestDoor_079(tbl,ply)
+	local target = self:GetEntitiesByDistance_079(tbl,ply)[1]
+	return target
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:GetEntitiesByDistance_079(tbl,ply)
+	local disttbl = {}
+	for _,v in ipairs(tbl) do
+		if v:IsValid() then
+			disttbl[v] = ply:FindCenterDistance(v)
+		end
+	end
+	return table.SortByKey(disttbl,true)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Secondary(possessor)
 	if util.IsSCPMap() then
+		if self.IsActivated == false then return end
 		local tb = {}
+		for _,v in ipairs(player.GetAll()) do
+			if v:IsValid() && v:Alive() && !v.IsPossessing then
+				table.insert(tb,v)
+			end
+		end
+		for _,v in ipairs(ents.GetAll()) do
+			if v:IsValid() && v:IsNPC() && v != self then
+				table.insert(tb,v)
+			end
+		end
+		if table.Count(tb) <= 0 then return end
+		local ply = self:SelectFromTable(tb)
+		local tb_doors = {}
+		for _,v in ipairs(ents.FindInSphere(ply:GetPos(),500)) do
+			if v:IsValid() && v:GetClass() == "func_door" then
+				table.insert(tb_doors,v)
+			end
+		end
+		local closestdoor = self:GetClosestDoor_079(tb_doors,ply)
+		if IsValid(closestdoor) then
+			self.Possessor_ViewingDoor = true
+			self.Possessor_ViewedDoor = closestdoor
+		end
+		table.Empty(tb)
+		table.Empty(tb_doors)
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Duck(possessor)
+	if self.IsActivated == false then return end
+	if IsValid(self.Possessor_ViewedDoor) then
 		if CurTime() > self.NextDoorT then
-			for _,v in ipairs(player.GetAll()) do
-				if v:IsValid() && v:Alive() && !v.IsPossessing then
-					table.insert(tb,v)
+			for _,door in ipairs(ents.FindInSphere(self.Possessor_ViewedDoor:GetPos(),30)) do
+				if door:IsValid() && door:GetClass() == "func_door" then
+					door:Fire("Open")
 				end
 			end
-			if table.Count(tb) <= 0 then return end
-			local ply = self:SelectFromTable(tb)
-			for _,v in ipairs(ents.FindInSphere(ply:GetPos(),100)) do
-				if v:IsValid() && v:GetClass() == "func_door" then
-					for _,door in ipairs(ents.FindInSphere(v:GetPos(),30)) do
-						if door:IsValid() && door:GetClass() == "func_door" then
-							door:Fire("Close")
-						end
-					end
-					v:EmitSound("cpthazama/scp/079/Broadcast2.wav",70,100)
-					possessor:ChatPrint("You shut a door on " .. ply:Nick() .. ".")
+			self.Possessor_ViewedDoor:EmitSound("cpthazama/scp/079/Broadcast2.mp3",70,100)
+			possessor:ChatPrint("You opened a door on " .. ply:Nick() .. ".")
+			local nexttime = math.random(4,5)
+			possessor:ChatPrint("You can open another door in " .. nexttime .. " seconds.")
+			timer.Simple(nexttime,function()
+				if self:IsValid() && possessor:IsValid() && possessor.IsPossessing && possessor.CurrentlyPossessedNPC == self then
+					possessor:ChatPrint("You can now open another door.")
+				end
+			end)
+			self.NextDoorT = CurTime() +nexttime
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Reload(possessor)
+	if self.IsActivated == false then return end
+	if IsValid(self.Possessor_ViewedDoor) then
+		if CurTime() > self.NextDoorT then
+			for _,door in ipairs(ents.FindInSphere(self.Possessor_ViewedDoor:GetPos(),30)) do
+				if door:IsValid() && door:GetClass() == "func_door" then
+					door:Fire("Close")
 				end
 			end
-			table.Empty(tb)
-			local nexttime = math.Rand(8,12)
+			self.Possessor_ViewedDoor:EmitSound("cpthazama/scp/079/Broadcast2.mp3",70,100)
+			local nexttime = math.random(4,5)
 			possessor:ChatPrint("You can shut another door in " .. nexttime .. " seconds.")
 			timer.Simple(nexttime,function()
 				if self:IsValid() && possessor:IsValid() && possessor.IsPossessing && possessor.CurrentlyPossessedNPC == self then
 					possessor:ChatPrint("You can now shut another door.")
+				end
+			end)
+			self.NextDoorT = CurTime() +nexttime
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Jump(possessor)
+	if self.IsActivated == false then return end
+	if IsValid(self.Possessor_ViewedDoor) then
+		if CurTime() > self.NextDoorT then
+			local tbl = {}
+			for _,door in ipairs(ents.FindInSphere(self.Possessor_ViewedDoor:GetPos(),30)) do
+				if door:IsValid() && door:GetClass() == "func_door" then
+					door:Fire("Lock")
+					table.insert(tbl,door)
+				end
+			end
+			self.Possessor_ViewedDoor:EmitSound("cpthazama/scp/079/Broadcast2.mp3",70,100)
+			timer.Simple(10,function()
+				for _,v in ipairs(tbl) do
+					if v:IsValid() then
+						v:Fire("Unlock")
+					end
+				end
+			end)
+			local nexttime = math.random(4,5)
+			possessor:ChatPrint("You can lock another door in " .. nexttime .. " seconds.")
+			timer.Simple(nexttime,function()
+				if self:IsValid() && possessor:IsValid() && possessor.IsPossessing && possessor.CurrentlyPossessedNPC == self then
+					possessor:ChatPrint("You can now lock another door.")
+				end
+			end)
+			self.NextDoorT = CurTime() +nexttime
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Walk(possessor)
+	if self.IsActivated == false then return end
+	if IsValid(self.Possessor_ViewedDoor) then
+		if CurTime() > self.NextDoorT then
+			local tbl = {}
+			for _,door in ipairs(ents.FindInSphere(self.Possessor_ViewedDoor:GetPos(),30)) do
+				if door:IsValid() && door:GetClass() == "func_door" then
+					door:Fire("Unlock")
+					table.insert(tbl,door)
+				end
+			end
+			self.Possessor_ViewedDoor:EmitSound("cpthazama/scp/079/Broadcast2.mp3",70,100)
+			local nexttime = math.random(4,5)
+			possessor:ChatPrint("You can unlock another door in " .. nexttime .. " seconds.")
+			timer.Simple(nexttime,function()
+				if self:IsValid() && possessor:IsValid() && possessor.IsPossessing && possessor.CurrentlyPossessedNPC == self then
+					possessor:ChatPrint("You can now unlock another door.")
 				end
 			end)
 			self.NextDoorT = CurTime() +nexttime
@@ -100,8 +293,8 @@ function ENT:OnThink()
 								door:Fire("Close")
 							end
 						end
-						v:EmitSound("cpthazama/scp/079/Broadcast2.wav",70,100)
-						ply:EmitSound("cpthazama/scp/music/Horror7.wav",70,100)
+						v:EmitSound("cpthazama/scp/079/Broadcast2.mp3",70,100)
+						ply:EmitSound("cpthazama/scp/music/Horror7.mp3",70,100)
 					end
 				end
 				table.Empty(tb)
@@ -166,6 +359,7 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Primary(possessor)
+	if self.IsActivated == false then return end
 	if self.IsTalking == false && self.CanBeSpokenTo == true then
 		self:PlaySound("Speech",80)
 		timer.Simple(4.5,function()

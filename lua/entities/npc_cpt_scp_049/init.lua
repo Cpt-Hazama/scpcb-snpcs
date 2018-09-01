@@ -23,12 +23,25 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/049/Detected1.wav","cpthazama/scp/049/Detected2.wav","cpthazama/scp/049/Detected3.wav","cpthazama/scp/049/Detected4.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage1.wav"},
+	["Idle"] = {"cpthazama/scp/049/Detected1.mp3","cpthazama/scp/049/Detected2.mp3","cpthazama/scp/049/Detected3.mp3","cpthazama/scp/049/Detected4.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage1.mp3"},
 	["Miss"] = {"common/null.wav"},
-	["HearSound"] = {"cpthazama/scp/049/Room2SLEnter.wav"},
-	["714"] = {"cpthazama/scp/049/714Equipped.wav"},
-	["Alert"] = {"cpthazama/scp/049/Greeting1.wav","cpthazama/scp/049/Greeting2.wav","cpthazama/scp/049/Spotted1.wav","cpthazama/scp/049/Spotted2.wav"},
+	["HearSound"] = {"cpthazama/scp/049/Room2SL1.mp3","cpthazama/scp/049/Room2SL2.mp3"},
+	["714"] = {"cpthazama/scp/049/714Equipped.mp3"},
+	["Hazmat"] = {"cpthazama/scp/049/TakeOffHazmat.mp3"},
+	["Infect"] = {"cpthazama/scp/049/Kidnap1.mp3","cpthazama/scp/049/Kidnap2.mp3"},
+	["Alert"] = {
+		"cpthazama/scp/049/Greeting1.mp3",
+		"cpthazama/scp/049/Greeting2.mp3",
+		"cpthazama/scp/049/Spotted1.mp3",
+		"cpthazama/scp/049/Spotted2.mp3",
+		"cpthazama/scp/049/Spotted3.mp3",
+		"cpthazama/scp/049/Spotted4.mp3",
+		"cpthazama/scp/049/Spotted5.mp3",
+		"cpthazama/scp/049/Spotted6.mp3",
+		"cpthazama/scp/049/Spotted7.mp3",
+		"cpthazama/scp/049/DetectedInChamber.mp3"
+	},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -43,22 +56,23 @@ function ENT:SetInit()
 	self:SetHullType(HULL_HUMAN)
 	self:SetMovementType(MOVETYPE_STEP)
 	self.IsAttacking = false
-	-- self:SetModelScale(1.15)
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/049/0492Breath.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/049/0492Breath.mp3")
 	self.IdleLoop:SetSoundLevel(60)
-	self.ThemeSong = CreateSound(self,"cpthazama/scp/music/Room049.wav")
-	self.ThemeSong:SetSoundLevel(100)
-	self.ChaseSong = CreateSound(self,"cpthazama/scp/music/049Chase.wav")
-	self.ChaseSong:SetSoundLevel(110)
+	-- self.ThemeSong = CreateSound(self,"cpthazama/scp/music/Room049.mp3")
+	self.ThemeSong = CreateSound(self,"cpthazama/scp/music/SaveMeFrom.mp3")
+	self.ThemeSong:SetSoundLevel(130)
+	-- self.ChaseSong = CreateSound(self,"cpthazama/scp/music/049Chase.mp3")
+	self.ChaseSong = CreateSound(self,"cpthazama/scp/music/HaveMercyOnMe(NoChoir).mp3")
+	self.ChaseSong:SetSoundLevel(140)
 	self.TotalInfections = 0
 	self.NextIdleLoopT = 0
 	self.NextThemeSongT = 0
 	self.NextChaseSongT = 0
 	self.NextDoorT = 0
 	if GetConVarNumber("cpt_scp_049slsounds") == 1 then
-		self.tbl_Sounds["FootStep"] = {"cpthazama/scp/049/SCPSL_Footstep01.wav","cpthazama/scp/049/SCPSL_Footstep02.wav"}
+		self.tbl_Sounds["FootStep"] = {"cpthazama/scp/049/SCPSL_Footstep01.mp3","cpthazama/scp/049/SCPSL_Footstep02.mp3"}
 	else
-		self.tbl_Sounds["FootStep"] = {"cpthazama/scp/049/Step1.wav","cpthazama/scp/049/Step2.wav","cpthazama/scp/049/Step3.wav"}
+		self.tbl_Sounds["FootStep"] = {"cpthazama/scp/049/Step1.mp3","cpthazama/scp/049/Step2.mp3","cpthazama/scp/049/Step3.mp3"}
 	end
 	self.NextHearSoundT = 0
 end
@@ -170,7 +184,7 @@ function ENT:OnThink()
 			if CurTime() > self.NextChaseSongT then
 				self.ChaseSong:Stop()
 				self.ChaseSong:Play()
-				self.NextChaseSongT = CurTime() +25
+				self.NextChaseSongT = CurTime() +179
 			end
 		end
 	end
@@ -188,6 +202,24 @@ function ENT:WhenRemoved()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnKilledEnemy(v)
+	local function SCPSounds()
+		timer.Simple(0.4,function()
+			if IsValid(self) then
+				self:EmitSound(Sound("npc/zombie/foot_slide3.wav"),72,100)
+			end
+		end)
+		timer.Simple(2.8,function()
+			if IsValid(self) then
+				self:EmitSound(Sound("npc/zombie/foot_slide2.wav"),72,100)
+			end
+		end)
+		timer.Simple(1.2,function()
+			if IsValid(self) then
+				self:EmitSound(Sound("physics/flesh/flesh_squishy_impact_hard1.wav"),72,130)
+			end
+		end)
+	end
+	self:PlaySound("Infect",75)
 	if v:IsNPC() then
 		local zombie
 		local setskin = false
@@ -241,11 +273,7 @@ function ENT:OnKilledEnemy(v)
 		undo.ReplaceEntity(v,zombie)
 		v.HasDeathRagdoll = false
 		v.HasDeathCorpse = false
-		-- if zombie.OnResurrected then
-			self:PlaySequence("infect",1)
-			-- zombie:OnResurrected()
-			zombie:PlaySequence("resurrect",1)
-		-- end
+		self:PlaySequence("infect",1)
 		v:Remove()
 	elseif v:IsPlayer() && v.SCP_Has714 == false then
 		v:ChatPrint("You lose consciousness and your body is turned into a walking corpse..")
@@ -258,7 +286,11 @@ function ENT:OnKilledEnemy(v)
 		zombie:SetMaterial(v:GetMaterial())
 		zombie:SetModelScale(v:GetModelScale(),0)
 		CreateUndo(zombie,v:Nick() .. " (Infected)",v)
+		v.CPTBase_SCP_Zombie = zombie
+		v:SetPos(zombie:GetPos() +zombie:OBBCenter())
 		v:GetRagdollEntity():Remove()
+		zombie:PlaySequence("resurrect",1)
+		SCPSounds()
 	end
 	self.TotalInfections = self.TotalInfections +1
 end

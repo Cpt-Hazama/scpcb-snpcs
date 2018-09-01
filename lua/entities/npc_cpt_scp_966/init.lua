@@ -23,9 +23,9 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/966/Idle1.wav","cpthazama/scp/966/Idle2.wav","cpthazama/scp/966/Idle3.wav"},
-	["Echo"] = {"cpthazama/scp/966/Echo1.wav","cpthazama/scp/966/Echo2.wav","cpthazama/scp/966/Echo3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage4.wav"},
+	["Idle"] = {"cpthazama/scp/966/Idle1.mp3","cpthazama/scp/966/Idle2.mp3","cpthazama/scp/966/Idle3.mp3"},
+	["Echo"] = {"cpthazama/scp/966/Echo1.mp3","cpthazama/scp/966/Echo2.mp3","cpthazama/scp/966/Echo3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage4.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}

@@ -24,23 +24,23 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/087/loudstep.wav"},
+	["FootStep"] = {"cpthazama/scp/087/loudstep.mp3"},
 	["Idle"] = {
-		"cpthazama/scp/087/ambient1.wav",
-		"cpthazama/scp/087/ambient2.wav",
-		"cpthazama/scp/087/ambient3.wav",
-		"cpthazama/scp/087/ambient4.wav",
-		"cpthazama/scp/087/ambient5.wav",
-		"cpthazama/scp/087/ambient6.wav",
-		"cpthazama/scp/087/ambient7.wav",
-		"cpthazama/scp/087/ambient8.wav",
-		"cpthazama/scp/087/ambient9.wav",
-		"cpthazama/scp/087/no.wav"
+		"cpthazama/scp/087/ambient1.mp3",
+		"cpthazama/scp/087/ambient2.mp3",
+		"cpthazama/scp/087/ambient3.mp3",
+		"cpthazama/scp/087/ambient4.mp3",
+		"cpthazama/scp/087/ambient5.mp3",
+		"cpthazama/scp/087/ambient6.mp3",
+		"cpthazama/scp/087/ambient7.mp3",
+		"cpthazama/scp/087/ambient8.mp3",
+		"cpthazama/scp/087/ambient9.mp3",
+		"cpthazama/scp/087/no.mp3"
 	},
-	["Teleport"] = {"cpthazama/scp/087/behind.wav"},
-	["Death"] = {"cpthazama/scp/087/death.wav"},
-	["Horror"] = {"cpthazama/scp/087/horror1.wav","cpthazama/scp/087/horror2.wav","cpthazama/scp/087/horror3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
+	["Teleport"] = {"cpthazama/scp/087/behind.mp3"},
+	["Death"] = {"cpthazama/scp/087/death.mp3"},
+	["Horror"] = {"cpthazama/scp/087/horror1.mp3","cpthazama/scp/087/horror2.mp3","cpthazama/scp/087/horror3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_USE}
@@ -51,9 +51,9 @@ function ENT:SetInit()
 	self.IsAttacking = false
 	self.NextDoorT = 0
 	self.WasSeen = false
-	self.ThemeSong = CreateSound(self,"cpthazama/scp/087/music.wav")
+	self.ThemeSong = CreateSound(self,"cpthazama/scp/087/music.mp3")
 	self.ThemeSong:SetSoundLevel(110)
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/087/breath.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/087/breath.mp3")
 	self.IdleLoop:SetSoundLevel(85)
 	self.NextThemeSongT = 0
 	self.NextIdleLoopT = 0
@@ -68,7 +68,7 @@ end
 function ENT:Teleport(ent)
 	self:SetClearPos(ent:GetPos() +ent:GetForward() *math.random(-100,-50))
 	if self:IsInWorld() then
-		self:EmitSound("cpthazama/scp/087/behind.wav",100,100)
+		self:EmitSound("cpthazama/scp/087/behind.mp3",100,100)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:WhenRemoved()
-	sound.Play("cpthazama/scp/087/no.wav",self:GetPos(),100,100)
+	sound.Play("cpthazama/scp/087/no.mp3",self:GetPos(),100,100)
 	self.ThemeSong:Stop()
 	self.IdleLoop:Stop()
 end

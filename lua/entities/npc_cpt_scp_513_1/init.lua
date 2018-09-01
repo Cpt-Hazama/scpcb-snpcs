@@ -26,8 +26,8 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Idle"] = {"cpthazama/scp/513/Bell1.wav","cpthazama/scp/513/Bell2.wav","cpthazama/scp/513/Bell3.wav"},
-	["Alert"] = {"cpthazama/scp/513/Bell1.wav","cpthazama/scp/513/Bell2.wav","cpthazama/scp/513/Bell3.wav"},
+	["Idle"] = {"cpthazama/scp/513/Bell1.mp3","cpthazama/scp/513/Bell2.mp3","cpthazama/scp/513/Bell3.mp3"},
+	["Alert"] = {"cpthazama/scp/513/Bell1.mp3","cpthazama/scp/513/Bell2.mp3","cpthazama/scp/513/Bell3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -75,7 +75,7 @@ end
 function ENT:Teleport(ent)
 	self:SetClearPos(ent:GetPos() +ent:GetForward() *70)
 	-- self:PlaySound("Alert",100)
-	sound.Play("cpthazama/scp/513/Bell" .. math.random(1,3) .. ".wav",ent:GetPos(),180,100)
+	sound.Play("cpthazama/scp/513/Bell" .. math.random(1,3) .. ".mp3",ent:GetPos(),180,100)
 	ent:TakeDamage(15,self)
 	util.ShakeWorld(ent:GetPos(),16,3,100)
 end

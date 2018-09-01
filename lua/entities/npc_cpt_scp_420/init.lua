@@ -34,7 +34,7 @@ function ENT:OnInputAccepted(event,activator)
 			local oldspeedrun = activator:GetRunSpeed()
 			activator:SetWalkSpeed(activator:GetWalkSpeed() +100)
 			activator:SetRunSpeed(activator:GetRunSpeed() +100)
-			activator:EmitSound("cpthazama/scp/music/420J.wav",50,100)
+			activator:EmitSound("cpthazama/scp/music/420J.mp3",50,100)
 			self:Remove()
 			timer.Simple(GetConVarNumber("cpt_scp_420effectstime"),function()
 				if IsValid(activator) then

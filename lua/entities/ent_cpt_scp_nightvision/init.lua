@@ -27,7 +27,7 @@ function ENT:SetInit()
 	self.Wearer = NULL
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:OnThink()
+function ENT:OnThink_Disabled()
 	if self.IsPickedUp then
 		self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 		if IsValid(self.Wearer) then

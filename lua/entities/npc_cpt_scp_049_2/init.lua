@@ -24,8 +24,8 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/049/Step1.wav","cpthazama/scp/049/Step2.wav","cpthazama/scp/049/Step3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
+	["FootStep"] = {"cpthazama/scp/049/Step1.mp3","cpthazama/scp/049/Step2.mp3","cpthazama/scp/049/Step3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -33,7 +33,7 @@ ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
 function ENT:SetInit()
 	self:SetHullType(HULL_HUMAN)
 	self:SetMovementType(MOVETYPE_STEP)
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/049/0492Breath.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/049/0492Breath.mp3")
 	self.IdleLoop:SetSoundLevel(65)
 	self.IsAttacking = false
 	self.NextIdleLoopT = 0
@@ -83,8 +83,8 @@ function ENT:OnHitEntity(hitents,hitpos)
 			if v.CPTBase_SCP_InfectionOverlayT == nil then v.CPTBase_SCP_InfectionOverlayT = 0 end
 			v.SCP_Infected_049 = true
 			v:ChatPrint("You instantly feel weaker and want to throw up..")
-			v:EmitSound("cpthazama/scp/D9341/Heartbeat.wav",70,100)
-			v:SendLua("surface.PlaySound('cpthazama/scp/music/Horror8.wav')")
+			v:EmitSound("cpthazama/scp/D9341/Heartbeat.mp3",70,100)
+			v:SendLua("surface.PlaySound('cpthazama/scp/music/Horror8.mp3')")
 			v:ConCommand("r_screenoverlay models/props_lab/Tank_Glass001.vmt")
 			v.CPTBase_SCP_InfectionOverlayT = CurTime() +4.9
 			timer.Simple(5,function()
@@ -97,7 +97,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 			timer.Simple(time /3,function()
 				if v:IsValid() && v.SCP_Infected_049 then
 					if v:Deaths() > deaths then return end
-					v:EmitSound("cpthazama/scp/D9341/Damage6.wav",70,100)
+					v:EmitSound("cpthazama/scp/D9341/Damage6.mp3",70,100)
 					v:ChatPrint("Parts of your skin begins to peel off and your bones start to crack..")
 					v:TakeDamage(5,v)
 				end
@@ -105,8 +105,8 @@ function ENT:OnHitEntity(hitents,hitpos)
 			timer.Simple(time /2,function()
 				if v:IsValid() && v.SCP_Infected_049 then
 					if v:Deaths() > deaths then return end
-					v:EmitSound("cpthazama/scp/D9341/Cough3.wav",70,100)
-					v:SendLua("surface.PlaySound('cpthazama/scp/music/Room049.wav')")
+					v:EmitSound("cpthazama/scp/D9341/Cough3.mp3",70,100)
+					v:SendLua("surface.PlaySound('cpthazama/scp/music/Room049.mp3')")
 					v:ChatPrint("Blood begins to pour from your mouth and ears..")
 					for i = 1,3 do
 						ParticleEffect("blood_impact_red_01",v:GetAttachment(2).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
@@ -125,6 +125,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 					zombie:SetModelScale(v:GetModelScale(),0)
 					CreateUndo(zombie,v:Nick() .. " (049-2 Infected)",v)
 					v:Kill()
+					v.CPTBase_SCP_Zombie = zombie
 					v:GetRagdollEntity():Remove()
 				end
 			end)

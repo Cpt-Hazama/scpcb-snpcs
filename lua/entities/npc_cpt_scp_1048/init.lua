@@ -23,7 +23,7 @@ ENT.tbl_Animations = {
 
 ENT.tbl_Sounds = {
 	["FootStep"] = {"physics/body/body_medium_impact_soft7.wav"},
-	["Attack"] = {"cpthazama/scp/1048A/Shriek.wav"},
+	["Attack"] = {"cpthazama/scp/1048A/Shriek.mp3"},
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_OnPossessed(possessor)
@@ -68,7 +68,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 		if v:IsValid() && v:IsPlayer() && v:Alive() && v.SCP_Has714 == false && v.SCP_Inflicted_1048a == false then
 			v.SCP_Inflicted_1048a = true
 			v:ChatPrint("Your body begins to melt and your trachea becomes filled with human ears..")
-			v:EmitSound("cpthazama/scp/1048a/Growth.wav",75,100)
+			v:EmitSound("cpthazama/scp/1048a/Growth.mp3",75,100)
 			local deaths = v:Deaths()
 			timer.Simple(24,function()
 				if v:IsValid() && v.SCP_Inflicted_1048a then
@@ -95,7 +95,7 @@ function ENT:OnThink()
 				for i = 0,self:GetBoneCount() -1 do
 					ParticleEffect("blood_impact_red",self:GetBonePosition(i),Angle(0,0,0),nil)
 				end
-				self:EmitSound("cpthazama/scp/D9341/Damage4.wav",75,100)
+				self:EmitSound("cpthazama/scp/D9341/Damage4.mp3",75,100)
 				self.IsTransformed = true
 				self:SetCollisionBounds(Vector(self.CollisionBounds.x,self.CollisionBounds.y,self.CollisionBounds.z),-(Vector(self.CollisionBounds.x,self.CollisionBounds.y,0)))
 			elseif !IsValid(self:GetEnemy()) && self:CheckForValidMemory() <= 0 && self.IsTransformed == true then
@@ -104,7 +104,7 @@ function ENT:OnThink()
 				for i = 0,self:GetBoneCount() -1 do
 					ParticleEffect("blood_impact_red",self:GetBonePosition(i),Angle(0,0,0),nil)
 				end
-				self:EmitSound("cpthazama/scp/D9341/Damage4.wav",75,100)
+				self:EmitSound("cpthazama/scp/D9341/Damage4.mp3",75,100)
 				self.IsTransformed = false
 				self:SetCollisionBounds(Vector(self.CollisionBounds.x,self.CollisionBounds.y,self.CollisionBounds.z),-(Vector(self.CollisionBounds.x,self.CollisionBounds.y,0)))
 			end
@@ -121,7 +121,7 @@ function ENT:Possess_Secondary(possessor)
 			for i = 0,self:GetBoneCount() -1 do
 				ParticleEffect("blood_impact_red",self:GetBonePosition(i),Angle(0,0,0),nil)
 			end
-			self:EmitSound("cpthazama/scp/D9341/Damage4.wav",75,100)
+			self:EmitSound("cpthazama/scp/D9341/Damage4.mp3",75,100)
 			self.IsTransformed = true
 			self:SetCollisionBounds(Vector(self.CollisionBounds.x,self.CollisionBounds.y,self.CollisionBounds.z),-(Vector(self.CollisionBounds.x,self.CollisionBounds.y,0)))
 		else
@@ -130,7 +130,7 @@ function ENT:Possess_Secondary(possessor)
 			for i = 0,self:GetBoneCount() -1 do
 				ParticleEffect("blood_impact_red",self:GetBonePosition(i),Angle(0,0,0),nil)
 			end
-			self:EmitSound("cpthazama/scp/D9341/Damage4.wav",75,100)
+			self:EmitSound("cpthazama/scp/D9341/Damage4.mp3",75,100)
 			self.IsTransformed = false
 			self:SetCollisionBounds(Vector(self.CollisionBounds.x,self.CollisionBounds.y,self.CollisionBounds.z),-(Vector(self.CollisionBounds.x,self.CollisionBounds.y,0)))
 		end

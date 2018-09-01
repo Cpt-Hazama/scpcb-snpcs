@@ -16,8 +16,8 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["Pain"] = {"cpthazama/scp/D9341/breath0.wav","cpthazama/scp/D9341/breath1.wav","cpthazama/scp/D9341/breath2.wav","cpthazama/scp/D9341/breath3.wav","cpthazama/scp/D9341/breath4.wav"},
-	["Death"] = {"cpthazama/scp/dclass/Gasp.wav"}
+	["Pain"] = {"cpthazama/scp/D9341/breath0.mp3","cpthazama/scp/D9341/breath1.mp3","cpthazama/scp/D9341/breath2.mp3","cpthazama/scp/D9341/breath3.mp3","cpthazama/scp/D9341/breath4.mp3"},
+	["Death"] = {"cpthazama/scp/dclass/Gasp.mp3"}
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()

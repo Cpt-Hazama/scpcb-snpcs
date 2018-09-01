@@ -25,29 +25,29 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/ntf/Step1.wav","cpthazama/scp/ntf/Step2.wav","cpthazama/scp/ntf/Step3.wav"},
-	["Spot"] = {"cpthazama/scp/ntf/Stop1.wav","cpthazama/scp/ntf/Stop3.wav","cpthazama/scp/ntf/Stop4.wav","cpthazama/scp/ntf/Stop5.wav","cpthazama/scp/ntf/Stop6.wav"},
-	["Termination"] = {"cpthazama/scp/ntf/TargetTerminated2.wav","cpthazama/scp/ntf/TargetTerminated4.wav","cpthazama/scp/ntf/Targetterminated1.wav"},
-	["CombatToLost"] = {"cpthazama/scp/ntf/Searching1.wav","cpthazama/scp/ntf/Searching3.wav","cpthazama/scp/ntf/Searching4.wav","cpthazama/scp/ntf/Searching5.wav","cpthazama/scp/ntf/Searching6.wav"},
-	["LostToNormal"] = {"cpthazama/scp/ntf/TargetLost1.wav","cpthazama/scp/ntf/TargetLost3.wav",},
-	["Fire"] = {"cpthazama/scp/Gunshot.wav"},
-	["Blinking"] = {"cpthazama/scp/ntf/173blinking.wav"},
+	["FootStep"] = {"cpthazama/scp/ntf/Step1.mp3","cpthazama/scp/ntf/Step2.mp3","cpthazama/scp/ntf/Step3.mp3"},
+	["Spot"] = {"cpthazama/scp/ntf/Stop1.mp3","cpthazama/scp/ntf/Stop3.mp3","cpthazama/scp/ntf/Stop4.mp3","cpthazama/scp/ntf/Stop5.mp3","cpthazama/scp/ntf/Stop6.mp3"},
+	["Termination"] = {"cpthazama/scp/ntf/TargetTerminated2.mp3","cpthazama/scp/ntf/TargetTerminated4.mp3","cpthazama/scp/ntf/Targetterminated1.mp3"},
+	["CombatToLost"] = {"cpthazama/scp/ntf/Searching1.mp3","cpthazama/scp/ntf/Searching3.mp3","cpthazama/scp/ntf/Searching4.mp3","cpthazama/scp/ntf/Searching5.mp3","cpthazama/scp/ntf/Searching6.mp3"},
+	["LostToNormal"] = {"cpthazama/scp/ntf/TargetLost1.mp3","cpthazama/scp/ntf/TargetLost3.mp3",},
+	["Fire"] = {"cpthazama/scp/Gunshot.mp3"},
+	["Blinking"] = {"cpthazama/scp/ntf/173blinking.mp3"},
 	-- ["Idle"] = {
-		-- "cpthazama/scp/ntf/Random1.wav",
-		-- "cpthazama/scp/ntf/Random2.wav",
-		-- "cpthazama/scp/ntf/Random3.wav",
-		-- "cpthazama/scp/ntf/Random4.wav",
-		-- "cpthazama/scp/ntf/Random5.wav",
-		-- "cpthazama/scp/ntf/Random6.wav",
-		-- "cpthazama/scp/ntf/Random7.wav",
+		-- "cpthazama/scp/ntf/Random1.mp3",
+		-- "cpthazama/scp/ntf/Random2.mp3",
+		-- "cpthazama/scp/ntf/Random3.mp3",
+		-- "cpthazama/scp/ntf/Random4.mp3",
+		-- "cpthazama/scp/ntf/Random5.mp3",
+		-- "cpthazama/scp/ntf/Random6.mp3",
+		-- "cpthazama/scp/ntf/Random7.mp3",
 	-- },
-	["Spot_Scientist"] = {"cpthazama/scp/ntf/ThereHeIs3.wav"},
-	["Spot_DClass"] = {"cpthazama/scp/ntf/ClassD1.wav","cpthazama/scp/ntf/ClassD2.wav","cpthazama/scp/ntf/ClassD3.wav","cpthazama/scp/ntf/ClassD4.wav"},
-	["Spot_049"] = {"cpthazama/scp/ntf/049/Spotted1.wav","cpthazama/scp/ntf/049/Spotted2.wav","cpthazama/scp/ntf/049/Spotted3.wav","cpthazama/scp/ntf/049/Spotted4.wav","cpthazama/scp/ntf/049/Spotted5.wav"},
-	["Spot_0492"] = {"cpthazama/scp/ntf/049/Player0492_1.wav","cpthazama/scp/ntf/049/Player0492_2.wav"},
-	["Spot_096"] = {"cpthazama/scp/ntf/GateB3.wav","cpthazama/scp/ntf/096/Spotted1.wav","cpthazama/scp/ntf/096/Spotted2.wav"},
-	["Spot_106"] = {"cpthazama/scp/ntf/106/Spotted1.wav","cpthazama/scp/ntf/106/Spotted2.wav","cpthazama/scp/ntf/106/Spotted3.wav","cpthazama/scp/ntf/106/Spotted4.wav"},
-	["Spot_173"] = {"cpthazama/scp/ntf/173/Spotted1.wav","cpthazama/scp/ntf/173/Spotted2.wav","cpthazama/scp/ntf/173/Spotted3.wav"},
+	["Spot_Scientist"] = {"cpthazama/scp/ntf/ThereHeIs3.mp3"},
+	["Spot_DClass"] = {"cpthazama/scp/ntf/ClassD1.mp3","cpthazama/scp/ntf/ClassD2.mp3","cpthazama/scp/ntf/ClassD3.mp3","cpthazama/scp/ntf/ClassD4.mp3"},
+	["Spot_049"] = {"cpthazama/scp/ntf/049/Spotted1.mp3","cpthazama/scp/ntf/049/Spotted2.mp3","cpthazama/scp/ntf/049/Spotted3.mp3","cpthazama/scp/ntf/049/Spotted4.mp3","cpthazama/scp/ntf/049/Spotted5.mp3"},
+	["Spot_0492"] = {"cpthazama/scp/ntf/049/Player0492_1.mp3","cpthazama/scp/ntf/049/Player0492_2.mp3"},
+	["Spot_096"] = {"cpthazama/scp/ntf/GateB3.mp3","cpthazama/scp/ntf/096/Spotted1.mp3","cpthazama/scp/ntf/096/Spotted2.mp3"},
+	["Spot_106"] = {"cpthazama/scp/ntf/106/Spotted1.mp3","cpthazama/scp/ntf/106/Spotted2.mp3","cpthazama/scp/ntf/106/Spotted3.mp3","cpthazama/scp/ntf/106/Spotted4.mp3"},
+	["Spot_173"] = {"cpthazama/scp/ntf/173/Spotted1.mp3","cpthazama/scp/ntf/173/Spotted2.mp3","cpthazama/scp/ntf/173/Spotted3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
@@ -72,8 +72,8 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnPlaySound(sound,tbl)
 	if tbl != "FootStep" then
-		self:EmitSound("cpthazama/scp/ntf/Beep.wav",60,100)
-		timer.Simple(SoundDuration(sound),function() if self:IsValid() then self:EmitSound("cpthazama/scp/ntf/Beep.wav",60,100) end end)
+		self:EmitSound("cpthazama/scp/ntf/Beep.mp3",60,100)
+		timer.Simple(SoundDuration(sound),function() if self:IsValid() then self:EmitSound("cpthazama/scp/ntf/Beep.mp3",60,100) end end)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ function ENT:OnKilledEnemy(v)
 		if v:IsNPC() then
 			if v:GetClass() == "npc_cpt_scp_173" then
 				for _,v in ipairs(player.GetAll()) do
-					v:SendLua("surface.PlaySound('cpthazama/scp/ntf/Announc173Contain.wav')")
+					v:SendLua("surface.PlaySound('cpthazama/scp/ntf/Announc173Contain.mp3')")
 				end
 			end
 		end
@@ -206,7 +206,7 @@ function ENT:Possess_Reload(possessor)
 			if self:GetClosestPoint(scp) <= 130 && scp:GetPos():Distance(THESTATUE) > 400 then
 				scp:ContainSCP(self)
 				for _,v in ipairs(player.GetAll()) do
-					v:SendLua("surface.PlaySound('cpthazama/scp/ntf/Announc173Contain.wav')")
+					v:SendLua("surface.PlaySound('cpthazama/scp/ntf/Announc173Contain.mp3')")
 				end
 			end
 		end

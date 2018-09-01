@@ -25,9 +25,9 @@ ENT.tbl_Animations = {
 }
 
 ENT.tbl_Sounds = {
-	["FootStep"] = {"cpthazama/scp/087/step.wav"},
-	["Horror"] = {"cpthazama/scp/087/horror1.wav","cpthazama/scp/087/horror2.wav","cpthazama/scp/087/horror3.wav"},
-	["Strike"] = {"cpthazama/scp/D9341/Damage3.wav"},
+	["FootStep"] = {"cpthazama/scp/087/step.mp3"},
+	["Horror"] = {"cpthazama/scp/087/horror1.mp3","cpthazama/scp/087/horror2.mp3","cpthazama/scp/087/horror3.mp3"},
+	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 }
 
 ENT.tbl_Capabilities = {CAP_USE}
@@ -42,10 +42,10 @@ function ENT:SetInit()
 	self:SetHullType(HULL_HUMAN)
 	self:SetMovementType(MOVETYPE_STEP)
 	self.IsAttacking = false
-	self.IdleLoop = CreateSound(self,"cpthazama/scp/087/dontlook.wav")
+	self.IdleLoop = CreateSound(self,"cpthazama/scp/087/dontlook.mp3")
 	self.IdleLoop:SetSoundLevel(90)
-	-- self.IdleMoveSound = CreateSound(self,"cpthazama/scp/173/StoneDrag.wav") // 5
-	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/087/stone.wav") // 1.5
+	-- self.IdleMoveSound = CreateSound(self,"cpthazama/scp/173/StoneDrag.mp3") // 5
+	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/087/stone.mp3") // 1.5
 	self.IdleMoveSound:SetSoundLevel(75)
 	self.NextIdleLoopT = 0
 	self.NextMoveSoundT = 0
@@ -135,7 +135,7 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:WhenRemoved()
-	sound.Play("cpthazama/scp/087/no.wav",self:GetPos(),100,100)
+	sound.Play("cpthazama/scp/087/no.mp3",self:GetPos(),100,100)
 	self.IdleLoop:Stop()
 	self.IdleMoveSound:Stop()
 end
