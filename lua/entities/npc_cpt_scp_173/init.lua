@@ -5,12 +5,14 @@ include('shared.lua')
 ENT.ModelTable = {"models/cpthazama/scp/173.mdl"}
 ENT.StartHealth = 4000
 ENT.CanMutate = false
+-- ENT.CanSeeAllEnemies = true -- DISABLE!
 -- ENT.WanderChance = 0
 ENT.WanderChance = 25
 ENT.DeathRagdollType = "prop_physics"
 ENT.Mass = 0
 ENT.ViewAngle = 180
 ENT.CollisionBounds = Vector(13,13,85)
+ENT.UseSecretLaboratoryHealthSystem = false
 
 ENT.Faction = "FACTION_SCP"
 
@@ -69,7 +71,6 @@ function ENT:SetInit()
 	self.IsAttacking = false
 	self.IdleMoveSound = CreateSound(self,"cpthazama/scp/173/StoneDrag.mp3") // 5
 	self.IdleMoveSound:SetSoundLevel(75)
-	-- self:SetModelScale(0.88,0)
 	self.WasSeen = false
 	self.IsContained = false
 	self.NextDoorT = 0
@@ -78,6 +79,36 @@ function ENT:SetInit()
 	self.NextAlertSoundShitT = 0
 	self.LastVent = Vector(0,0,0)
 	self:SetSkin(GetConVarNumber("cpt_scp_halloween"))
+	self.NextSplitT = CurTime() +10
+	self.tbl_Hive = {}
+	self.NextHiveT = CurTime() +1
+	if self:GetModel() == "models/cpthazama/scp/173.mdl" then
+		self.UseSecretLaboratoryHealthSystem = true
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:FindHive()
+	for _,v in ipairs(ents.GetAll()) do
+		if IsValid(v) && v:IsNPC() && string.find(v:GetClass(),"173") then
+			if !table.HasValue(self.tbl_Hive,v) then
+				table.insert(self.tbl_Hive,v)
+			end
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:OnFoundEnemy(count,oldcount,ent)
+	if self.tbl_Hive == nil then return end
+	for _,v in ipairs(self.tbl_Hive) do
+		if IsValid(v) then
+			table.insert(v.tbl_EnemyMemory,ent)
+			if !IsValid(v:GetEnemy()) then
+				v:SetEnemy(ent)
+				v:SetLastPosition(ent:GetPos())
+				v:TASKFUNC_RUNTOPOS()
+			end
+		end
+	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:ContainSCP(ntf)
@@ -120,7 +151,7 @@ function ENT:Teleport(pos)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Secondary(possessor)
-	if util.IsSCPMap() then
+	if util.IsSite19() then
 		if CurTime() > self.P_NextVentT then
 			if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 			local tb = {VENTA,VENTB,VENTC,VENTD,VENTE,VENTF,VENTG,VENTH}
@@ -155,6 +186,26 @@ function ENT:OnThink()
 	if self.IsContained then
 		self.IdleMoveSound:Stop()
 		return
+	end
+	if GetConVarNumber("cpt_scp_173revision") == 1 then
+		if self.NextHiveT == nil then self.NextHiveT = 0 end
+		if self.tbl_Hive == nil then self.tbl_Hive = {} end
+		if CurTime() > self.NextHiveT then
+			self:FindHive()
+			self.NextHiveT = CurTime() +3
+		end
+	end
+	if self.UseSecretLaboratoryHealthSystem then
+		-- self:PlayerChat(tostring(self:Health()))
+		if self:Health() <= self:GetMaxHealth() *0.5 && self:Health() > self:GetMaxHealth() *0.25 then
+			self.OverrideWalkAnimation = ACT_RUN_AIM
+			self.OverrideRunAnimation = ACT_RUN_AIM
+			-- self:PlayerChat("Tier 2")
+		elseif self:Health() <= self:GetMaxHealth() *0.25 then
+			self.OverrideWalkAnimation = ACT_RUN_PROTECTED
+			self.OverrideRunAnimation = ACT_RUN_PROTECTED
+			-- self:PlayerChat("Tier 3")
+		end
 	end
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then
 		if self.WasSeen == false then
@@ -199,6 +250,29 @@ function ENT:OnThink()
 		end
 		self.MeleeAttackDistance = 60
 		self.MeleeAttackDamageDistance = 80
+		if GetConVarNumber("cpt_scp_173revision") == 1 then
+			if CurTime() > self.NextSplitT then
+				if math.random(1,1000) == 1 then
+					if SERVER then
+						local ent = ents.Create(self:GetClass())
+						ent:SetClearPos(self:GetPos() +Vector(math.Rand(-25,25),math.Rand(-25,25),0))
+						ent:SetAngles(self:GetAngles())
+						ent:Spawn()
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *0,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *5,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *10,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *15,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *20,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *25,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *30,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *35,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *40,Angle(0,0,0),nil)
+						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *45,Angle(0,0,0),nil)
+					end
+					self.NextSplitT = CurTime() +math.Rand(8,20)
+				end
+			end
+		end
 	end
 	if util.IsSCPMap() then
 		if CurTime() > self.NextDoorT then
@@ -209,6 +283,8 @@ function ENT:OnThink()
 			end
 			self.NextDoorT = CurTime() +math.Rand(1,3)
 		end
+	end
+	if util.IsSite19() then
 		if !self.IsPossessed then
 			if !IsValid(self:GetEnemy()) && math.random(1,50) == 1 && CurTime() > self.P_NextVentT then
 				if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end

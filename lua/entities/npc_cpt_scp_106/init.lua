@@ -309,7 +309,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 					v:EmitSound("cpthazama/scp/106/Decay" .. math.random(0,3) .. ".mp3",35,200)
 				end
 			end
-			if util.IsSCPMap() && v:IsValid() && v:Alive() then
+			if util.IsSite19() && v:IsValid() && v:Alive() then
 				v:SetPos(POCKETDIMENSION)
 				v:EmitSound("cpthazama/scp/106/Enter.mp3",40,100)
 			end
@@ -319,7 +319,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.WasContained = false
 function ENT:OnThink()
-	if util.IsSCPMap() then
+	if util.IsSite19() then
 		if MN_FEMUR == false && self:GetPos():Distance(FEMURBREAKER) <= 250 then
 			self.IsContained = true
 			if self.WasContained == false then

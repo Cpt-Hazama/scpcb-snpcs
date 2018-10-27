@@ -4,6 +4,7 @@
 	modified without prior written consent of the original author, Cpt. Hazama
 --------------------------------------------------*/
 include('server/cpt_utilities.lua')
+include('cpt_scp_vision.lua')
 
 CPTBase.RegisterMod("SCP:CB SNPCs","0.1.7")
 
@@ -25,6 +26,7 @@ CPTBase.AddNPC("SCP-087-1","npc_cpt_scp_087_1",category)
 CPTBase.AddNPC("SCP-087-B","npc_cpt_scp_087_b",category)
 CPTBase.AddNPC("SCP-096","npc_cpt_scp_096",category)
 CPTBase.AddNPC("SCP-106","npc_cpt_scp_106",category)
+CPTBase.AddNPC("SCP-106 Pocket Dimension Plane","npc_cpt_scp_106pdplane",category)
 CPTBase.AddNPC("SCP-173","npc_cpt_scp_173",category)
 -- CPTBase.AddNPC("SCP-173 (Box)","npc_cpt_scp_173_box",category) // Shouldn't be spawnable
 CPTBase.AddNPC("SCP-178","npc_cpt_scp_178specs",category)
@@ -41,6 +43,8 @@ CPTBase.AddNPC("SCP-457","npc_cpt_scp_457",category)
 CPTBase.AddNPC("SCP-500","npc_cpt_scp_500",category)
 CPTBase.AddNPC("SCP-513","npc_cpt_scp_513",category)
 -- CPTBase.AddNPC("SCP-513-1","npc_cpt_scp_513_1",category) // Shouldn't be spawnable
+CPTBase.AddNPC("SCP-575","npc_cpt_scp_575",category)
+CPTBase.AddNPC("SCP-682","npc_cpt_scp_682",category)
 CPTBase.AddNPC("SCP-714","npc_cpt_scp_714",category)
 CPTBase.AddNPC("SCP-860-2","npc_cpt_scp_860",category)
 CPTBase.AddNPC("SCP-895","npc_cpt_scp_895",category)
@@ -56,7 +60,7 @@ CPTBase.AddNPC("SCP-1499-1","npc_cpt_scp_1499_1",category)
 CPTBase.AddNPC("SCP-1499-1 King","npc_cpt_scp_1499_1_king",category)
 
 -- CPTBase.AddNPC("MTF Site Guard","npc_cpt_scp_mtf",category)
-CPTBase.AddNPC("MTF Epislon-11 Nine-Tailed Fox","npc_cpt_scp_ntf",category)
+CPTBase.AddNPC("MTF Epsilon-11 Nine-Tailed Fox","npc_cpt_scp_ntf",category)
 CPTBase.AddNPC("MTF Lambda-5 White Rabbits","npc_cpt_scp_lambda",category)
 CPTBase.AddNPC("MTF Nu-7 Hammer Down","npc_cpt_scp_nu",category)
 
@@ -207,16 +211,16 @@ if CLIENT then
 		["$pp_colour_mulb"] = 0
 	}
 
-	local tab_computer = {
+	local tab_plane = {
 		["$pp_colour_addr"] = 0,
 		["$pp_colour_addg"] = 0,
 		["$pp_colour_addb"] = 0,
-		["$pp_colour_brightness"] = 0.2,
-		["$pp_colour_contrast"] = 1,
+		["$pp_colour_brightness"] = 0,
+		["$pp_colour_contrast"] = 0.3,
 		["$pp_colour_colour"] = 0,
-		["$pp_colour_mulr"] = 0,
-		["$pp_colour_mulg"] = 0,
-		["$pp_colour_mulb"] = 0
+		["$pp_colour_mulr"] = 30,
+		["$pp_colour_mulg"] = -1,
+		["$pp_colour_mulb"] = -1
 	}
 
 	local CLIENT_SCP_NV = false
@@ -224,17 +228,27 @@ if CLIENT then
 		CLIENT_SCP_NV = not CLIENT_SCP_NV
 	end)
 
-	local CLIENT_SCP_PC = false
-	concommand.Add("cpt_scp_togglepcvision", function(ply,cmd,args)
-		CLIENT_SCP_PC = not CLIENT_SCP_PC
+	local CLIENT_SCP_PLANE = false
+	concommand.Add("cpt_scp_toggleplanevision", function(ply,cmd,args)
+		CLIENT_SCP_PLANE = not CLIENT_SCP_PLANE
+	end)
+
+	hook.Add("RenderScreenspaceEffects","CPTBase_SCP_DrainingBlur",function(ply)
+		if CLIENT_SCP_PLANE == true then
+			-- DrawMotionBlur(0.2,0.99,0.04)
+			-- timer.Simple(2,function()
+				-- hook.Remove("RenderScreenspaceEffects","CPTBase_SCP_DrainingBlur")
+				-- hook.Call("CPTBase_SCP_DrainingBlur")
+			-- end)
+		end
 	end)
 
 	hook.Add("RenderScreenspaceEffects","CPTBase_SCP_Nightvision",function(ply)
 		if CLIENT_SCP_NV == true then
 			DrawColorModify(tab_nightvision)
 		end
-		if CLIENT_SCP_PC == true then
-			DrawColorModify(tab_computer)
+		if CLIENT_SCP_PLANE == true then
+			DrawColorModify(tab_plane)
 		end
 	end)
 	
@@ -339,6 +353,7 @@ SCP_DoorOpenDistance = 100
 hook.Add("PlayerDeath","CPTBase_SCP_DeathData",function(ply)
 	-- if CLIENT then
 		ply:SetNWBool("SCP_HasNightvision",false)
+		ply:SetNWBool("SCP_IsBeingDrained",false)
 		ply:SetNWBool("SCP_Has178",false)
 		ply:SetNWBool("SCP_895Horror",false)
 		ply:SetNWString("SCP_895HorrorID",nil)
@@ -390,6 +405,7 @@ end)
 hook.Add("PlayerSpawn","CPTBase_SCP_SpawnData",function(ply)
 	if CLIENT then
 		ply:SetNWBool("SCP_HasNightvision",false)
+		ply:SetNWBool("SCP_IsBeingDrained",false)
 		ply:SetNWBool("SCP_Has178",false)
 		ply:SetNWBool("SCP_895Horror",false)
 		ply:SetNWString("SCP_895HorrorID",nil)
@@ -478,14 +494,14 @@ end)
 hook.Add("Think","CPTBase_SCP_BlinkSystem_NPCs",function()
 	local canevenblink = false
 	for _,scp in ipairs(ents.GetAll()) do
-		if scp:IsNPC() && (scp:GetClass() == "npc_cpt_scp_173" or scp:GetClass() == "npc_cpt_scp_087_b") then
+		if scp:IsNPC() && (scp:GetClass() == "npc_cpt_scp_173" or scp:GetClass() == "npc_cpt_scpunity_173" or scp:GetClass() == "npc_cpt_scp_087_b") then
 			canevenblink = true
 		end
 	end
 	if canevenblink == true then
 		local tb = {}
 		for _,v in ipairs(ents.GetAll()) do
-			if v:IsNPC() && (v:GetClass() != "npc_cpt_scp_173" && v:GetClass() != "npc_cpt_scp_087_b") && v:Health() > 0 then
+			if v:IsNPC() && (v:GetClass() != "npc_cpt_scp_173" && v:GetClass() != "npc_cpt_scpunity_173" && v:GetClass() != "npc_cpt_scp_087_b") && v:Health() > 0 then
 				if !table.HasValue(tb,v) then
 					table.insert(tb,v)
 				end
@@ -511,6 +527,9 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem_NPCs",function()
 							if tb[i]:IsValid() && tb[i].SCP_IsBlinking == true then
 								tb[i].SCP_IsBlinking = false
 								local time = math.random(5,9)
+								if GetConVarNumber("cpt_scp_173blinksame") == 1 then
+									time = 5
+								end
 								tb[i].SCP_BlinkTime = CurTime() +time
 							end
 						end)
@@ -604,6 +623,9 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 								if tb[i]:IsValid() && tb[i]:Alive() then
 									tb[i]:SetNWBool("SCP_IsBlinking",false)
 									local time = math.random(5,9)
+									if GetConVarNumber("cpt_scp_173blinksame") == 1 then
+										time = 5
+									end
 									if GetConVarNumber("cpt_scp_blinkmessage") == 1 then
 										tb[i]:ChatPrint("You will blink in " .. time .. " seconds.")
 									end
@@ -619,6 +641,14 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 end)
 
 function util.IsSCPMap()
+	if GetConVarNumber("cpt_scp_site19") == 0 then return false end
+	if game.GetMap() == "gm_site19" || game.GetMap() == "rp_site54" then
+		return true
+	end
+	return false
+end
+
+function util.IsSite19()
 	if GetConVarNumber("cpt_scp_site19") == 0 then return false end
 	if game.GetMap() == "gm_site19" then
 		return true
@@ -707,6 +737,10 @@ CPTBase.AddConVar("cpt_scp_939smallcollision","0")
 CPTBase.AddConVar("cpt_scp_mtfhiding","1")
 CPTBase.AddConVar("cpt_scp_895attack","0")
 CPTBase.AddConVar("cpt_scp_halloween","0")
+CPTBase.AddConVar("cpt_scp_173revision","0")
+CPTBase.AddConVar("cpt_scp_173blinksame","0")
+CPTBase.AddConVar("cpt_scp_682audio","0")
+CPTBase.AddConVar("cpt_scp_682theme","1")
 CPTBase.AddClientVar("cpt_scp_blinkmessage","0",true)
 
 local function CPTBase_SCP_ResetFemurBreaker(ply)
@@ -723,7 +757,41 @@ local function CPTBase_SCP_ResetFemurBreaker(ply)
 end
 concommand.Add("cpt_scp_resetfemurbreaker",CPTBase_SCP_ResetFemurBreaker)
 
+local function CPTBase_SCP_Decontamination(ply)
+	if ply:IsAdmin() or ply:IsSuperAdmin() then
+		PlayGlobalSound("cpthazama/scpsl/vo/Decont_countdown.mp3")
+		for _,v in ipairs(ents.GetAll()) do
+			if v:IsValid() && v:GetClass() == "prop_door_rotating" || v:GetClass() == "func_door" then
+				v:Fire("Unlock")
+				v:Fire("Open")
+				-- v:Fire("Lock")
+			end
+		end
+		timer.Simple(38,function() for _,v in ipairs(player.GetAll()) do v:Kill() end end)
+	end
+end
+concommand.Add("cpt_scp_decontamination",CPTBase_SCP_Decontamination)
+
+local function CPTBase_SCP_Nuke(ply)
+	if ply:IsAdmin() or ply:IsSuperAdmin() then
+		PlayGlobalSound("cpthazama/scpsl/vo/Main120.mp3")
+		for _,v in ipairs(ents.GetAll()) do
+			if v:IsValid() && v:GetClass() == "prop_door_rotating" || v:GetClass() == "func_door" then
+				v:Fire("Unlock")
+				v:Fire("Open")
+				-- v:Fire("Lock")
+			end
+		end
+		timer.Simple(131,function() for _,v in ipairs(ents.GetAll()) do v:TakeDamage(999999999,nil) end end)
+	end
+end
+concommand.Add("cpt_scp_nuke",CPTBase_SCP_Nuke)
+
 if (CLIENT) then
+	local hookName = "CPTBaseMenu_Add_SCP"
+	local menuMainTab = "CPTBase"
+	local menuDropName = "Mod Settings"
+	local menuTabName = "SCP:CB SNPCs"
 	local function CPTBaseMenu_SCP_SNPC(panel)
 		if !game.SinglePlayer() then
 			if !LocalPlayer():IsAdmin() or !LocalPlayer():IsSuperAdmin() then
@@ -751,6 +819,10 @@ if (CLIENT) then
 			cpt_scp_939slsounds = "0",
 			cpt_scp_mtfhiding = "1",
 			cpt_scp_895attack = "0",
+			cpt_scp_173revision = "0",
+			cpt_scp_173blinksame = "0",
+			cpt_scp_682audio = "0",
+			cpt_scp_682theme = "1",
 		}
 		panel:AddControl("ComboBox",CPTBaseMenu_SCP_SNPC)
 		panel:AddControl("CheckBox",{Label = "Allow custom code on gm_site19",Command = "cpt_scp_site19"})
@@ -765,18 +837,24 @@ if (CLIENT) then
 		panel:AddControl("CheckBox",{Label = "Allow SCP-895 to attack players regardless of nightvision?",Command = "cpt_scp_895attack"})
 		panel:AddControl("CheckBox",{Label = "Allow music on some SCPs?",Command = "cpt_scp_usemusic"})
 		panel:AddControl("CheckBox",{Label = "Remind you when you're going to blink?",Command = "cpt_scp_blinkmessage"})
+		panel:AddControl("CheckBox",{Label = "Allow SCP-628 extra audio?",Command = "cpt_scp_682audio"})
+		panel:AddControl("CheckBox",{Label = "Allow SCP-628 battle theme?",Command = "cpt_scp_682theme"})
+		panel:AddControl("CheckBox",{Label = "Use SCP-173's '2018 lore'?",Command = "cpt_scp_173revision"})
+		panel:AddControl("CheckBox",{Label = "Make all NPCs and Players blink every 5 seconds?",Command = "cpt_scp_173blinksame"})
 		panel:AddControl("Slider", { Label 	= "SCP-008 infection time", Command = "cpt_scp_008infectiontime", Type = "Float", Min = "10", Max = "800"})
 		panel:AddControl("Slider", { Label 	= "SCP-049 infection time", Command = "cpt_scp_049infectiontime", Type = "Float", Min = "10", Max = "800"})
 		panel:AddControl("Slider", { Label 	= "SCP-420-J effects time", Command = "cpt_scp_420effectstime", Type = "Float", Min = "5", Max = "120"})
 		panel:AddControl("Slider", { Label 	= "SCP-513 effects time", Command = "cpt_scp_513effectstime", Type = "Float", Min = "30", Max = "360"})
 		panel:AddControl("Slider", { Label 	= "SCP-939 view distance", Command = "cpt_scp_939viewdistance", Type = "Float", Min = "100", Max = "7500"})
 		panel:AddControl("Button", {Label = "Reset Femur Breaker (if it's broken)", Command = "cpt_scp_resetfemurbreaker"})
+		panel:AddControl("Button", {Label = "Decontamination Sequence", Command = "cpt_scp_decontamination"})
+		panel:AddControl("Button", {Label = "Alpha Warhead Detonation Sequence", Command = "cpt_scp_nuke"})
 		panel:AddControl("Label",{Text = "Cpt. Hazama"})
 	end
 	function CPTBaseMenu_Add_SCP()
-		spawnmenu.AddToolMenuOption("CPTBase","Mod Settings","SCP:CB SNPCs","SCP:CB SNPCs Settings","","",CPTBaseMenu_SCP_SNPC) -- Tab, Dropdown, Select, Title
+		spawnmenu.AddToolMenuOption(menuMainTab,menuDropName,menuTabName,menuTabName .. " Settings","","",CPTBaseMenu_SCP_SNPC) -- Tab, Dropdown, Select, Title
 	end
-	hook.Add("PopulateToolMenu","CPTBaseMenu_Add_SCP",CPTBaseMenu_Add_SCP)
+	hook.Add("PopulateToolMenu",hookName,CPTBaseMenu_Add_SCP)
 end
 
 	-- Set up --

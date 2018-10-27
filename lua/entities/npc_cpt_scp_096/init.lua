@@ -42,7 +42,7 @@ function ENT:SetInit()
 	self.ChaseLoop = CreateSound(self,"cpthazama/scp/music/096Chase.mp3")
 	self.ChaseLoop:SetSoundLevel(110)
 	self.NextDoorT = 0
-	self.NextCanTriggerT = 0
+	self.NextCanTriggerT = CurTime() +2.5
 	self.NextScreamT = 0
 	self.NextIdleLT = 0
 	self.NextTriggeredLT = 0

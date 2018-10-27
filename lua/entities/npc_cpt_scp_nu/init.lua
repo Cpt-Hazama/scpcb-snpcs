@@ -292,7 +292,7 @@ function ENT:OnThink()
 			self:SetIdleAnimation(ACT_IDLE_ANGRY)
 		end
 	end
-	if util.IsSCPMap() then
+	if util.IsSite19() then
 		if !self.IsPossessed then
 			if self.IsTakingSCP == true then
 				if IsValid(self.IsTakingSCP_Box) && self.IsTakingSCP_Box:GetPos():Distance(THESTATUE) <= 250 then
@@ -327,6 +327,8 @@ function ENT:OnThink()
 				end
 			end
 		end
+	end
+	if util.IsSCPMap() then
 		if CurTime() > self.NextDoorT then
 			for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance *1.35)) do
 				if v:IsValid() && v:GetClass() == "func_door" /*&& v:GetSequenceName(v:GetSequence()) == "idle"*/ then

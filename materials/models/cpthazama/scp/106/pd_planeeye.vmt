@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\106\pd_planeeye"
+	$alphatest "1"
+}
