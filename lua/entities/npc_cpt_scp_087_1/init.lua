@@ -14,6 +14,9 @@ ENT.MeleeAttackDistance = 60
 ENT.MeleeAttackDamageDistance = 90
 ENT.MeleeAttackType = DMG_SLASH
 ENT.MeleeAttackDamage = 60
+ENT.CanRagdollEnemies = true
+ENT.RagdollEnemyChance = 7
+ENT.RagdollEnemyVelocity = Vector(math.Rand(-60,60),-120,80)
 
 ENT.Bleeds = false
 

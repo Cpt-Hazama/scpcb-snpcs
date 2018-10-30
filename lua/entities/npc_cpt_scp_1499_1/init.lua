@@ -15,6 +15,9 @@ ENT.MeleeAttackDistance = 50
 ENT.MeleeAttackDamageDistance = 60
 ENT.MeleeAttackType = DMG_CRUSH
 ENT.MeleeAttackDamage = 40
+ENT.CanRagdollEnemies = true
+ENT.RagdollEnemyChance = 7
+ENT.RagdollEnemyVelocity = Vector(math.Rand(-60,60),-120,80)
 
 ENT.BloodEffect = {"blood_impact_yellow"}
 ENT.BloodDecal = {"CPTBase_YellowBlood"}

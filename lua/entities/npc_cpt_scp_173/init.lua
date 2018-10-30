@@ -177,7 +177,12 @@ end
 function ENT:OnSeen()
 	if self.IsContained then return end
 	if CurTime() > self.NextAlertSoundShitT then
-		self:PlaySound("Horror",100)
+		-- self:PlaySound("Horror",100)
+		for _,v in ipairs(self:SCP_CanBeSeen(true)) do
+			if IsValid(v) then
+				v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Horror"]),0.2,100)
+			end
+		end
 		self.NextAlertSoundShitT = CurTime() +5
 	end
 end
@@ -252,7 +257,7 @@ function ENT:OnThink()
 		self.MeleeAttackDamageDistance = 80
 		if GetConVarNumber("cpt_scp_173revision") == 1 then
 			if CurTime() > self.NextSplitT then
-				if math.random(1,1000) == 1 then
+				if math.random(1,2000) == 1 then
 					if SERVER then
 						local ent = ents.Create(self:GetClass())
 						ent:SetClearPos(self:GetPos() +Vector(math.Rand(-25,25),math.Rand(-25,25),0))
@@ -322,6 +327,8 @@ end
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if self.IsContained then return end
+	-- local IsSeen = (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC())
+	-- self:PlayerChat(IsSeen)
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if(disp == D_HT) then
 		if nearest <= self.MeleeAttackDistance && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == false then

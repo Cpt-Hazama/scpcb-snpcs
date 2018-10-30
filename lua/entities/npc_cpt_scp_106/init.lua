@@ -335,6 +335,20 @@ function ENT:OnThink()
 			end
 		end
 	end
+	if !IsValid(self:GetEnemy()) then
+		if !self.IsPossessed && self:CanPerformProcess() && CurTime() > self.NextRandomTeleportT && math.random(1,80) == 1 then
+			local tb = {}
+			for _,v in ipairs(ents.GetAll()) do
+				if IsValid(v) && ((v:IsNPC() && v != self && !self:IsFriendlyToMe(v)) || v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
+					table.insert(tb,v)
+				end
+			end
+			if table.Count(tb) <= 0 then return end
+			local ent = self:SelectFromTable(tb)
+			self:Teleport(ent:GetPos() +Vector(math.Rand(-60,60),math.Rand(-60,60),0))
+			self.NextRandomTeleportT = CurTime() +math.Rand(30,40)
+		end
+	end
 	if GetConVarNumber("cpt_scp_usemusic") == 1 && CurTime() > self.NextThemeSongT then
 		self.ThemeSong:Stop()
 		self.ThemeSong:Play()
