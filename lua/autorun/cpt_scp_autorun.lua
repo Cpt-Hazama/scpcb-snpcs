@@ -668,7 +668,26 @@ function NPC_Meta:SCP_IsPlayerBlinking()
 	end
 end
 
-function NPC_Meta:SCP_CanBeSeen(senddata)
+function NPC_Meta:SCP_CanBeSeenData()
+	local tb = {}
+	for _,v in ipairs(player.GetAll()) do
+		if GetConVarNumber("ai_ignoreplayers") == 1 then return end
+		if v:IsPlayer() && v:Visible(self) then
+			if v:GetNWBool("SCP_IsBlinking") == false && v.IsPossessing == false && v:Alive() && self:Disposition(v) != D_LI && v:Visible(self) && (v:GetForward():Dot(((self:GetPos() +self:OBBCenter() +self:GetForward() *-30) -v:GetPos() +v:OBBCenter()):GetNormalized()) > math.cos(math.rad(SCP_SightAngle))) then
+				if !table.HasValue(tb) then
+					table.insert(tb,v)
+				end
+			else
+				if table.HasValue(tb) && tb[v] != nil then
+					tb[v] = nil
+				end
+			end
+		end
+	end
+	return tb
+end
+
+function NPC_Meta:SCP_CanBeSeen()
 	local tb = {}
 	for _,v in ipairs(player.GetAll()) do
 		if GetConVarNumber("ai_ignoreplayers") == 1 then return false end
@@ -683,9 +702,6 @@ function NPC_Meta:SCP_CanBeSeen(senddata)
 				end
 			end
 		end
-	end
-	if senddata then
-		return tb
 	end
 	for _,v in ipairs(tb) do
 		if v == nil then

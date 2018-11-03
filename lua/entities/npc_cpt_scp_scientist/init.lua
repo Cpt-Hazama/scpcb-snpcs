@@ -86,6 +86,37 @@ function ENT:OnSpottedFriendly(ent)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:SelectSchedule(bSchedule)
+	if self.IsDead == true then return end
+	if self.bInSchedule == true then return end
+	if self.IsPlayingSequence == true then return end
+	if self.IsPossessed == false && !self.IsPlayingSequence && self.CanWander then
+		if !IsValid(self:GetEnemy()) then
+			if self.WanderChance != 0 && math.random(1,self.WanderChance) == 1 then
+				self:TASKFUNC_WANDER()
+				self:SetMovementAnimation("Walk")
+				self:OnDoIdle()
+			end
+		else
+			if self:GetEnemy():GetClass() == "npc_cpt_scp_dclass" then
+				if self.WanderChance != 0 && math.random(1,self.WanderChance) == 1 then
+					self:TASKFUNC_WANDER()
+					self:SetMovementAnimation("Walk")
+					self:OnDoIdle()
+				end
+			end
+		end
+	end
+	-- self:PlayerChat(tostring(self.EnemyMemoryCount))
+	if(self.EnemyMemoryCount == 0) then
+		if(self:GetState() == NPC_STATE_ALERT) then
+			self:OnAreaCleared()
+			self:SetState(NPC_STATE_IDLE)
+		end
+	end
+	self:StartIdleAnimation()
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if self.IsOwned then return end
@@ -94,6 +125,7 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp)
 			self:FaceEnemy()
 		else
 			if self:CanPerformProcess() then
+				if enemy:GetClass() == "npc_cpt_scp_dclass" then return end
 				self:Hide()
 			end
 		end

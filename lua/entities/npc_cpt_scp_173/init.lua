@@ -175,10 +175,11 @@ function ENT:HandleEvents(...)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnSeen()
+	if GetConVarNumber("ai_ignoreplayers") == 1 then return end
 	if self.IsContained then return end
 	if CurTime() > self.NextAlertSoundShitT then
 		-- self:PlaySound("Horror",100)
-		for _,v in ipairs(self:SCP_CanBeSeen(true)) do
+		for _,v in ipairs(self:SCP_CanBeSeenData()) do
 			if IsValid(v) then
 				v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Horror"]),0.2,100)
 			end

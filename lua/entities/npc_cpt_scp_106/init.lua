@@ -77,6 +77,7 @@ function ENT:SetInit()
 	self.P_NextSetTeleportSpotT = 0
 	self.P_NextTeleportT = 0
 	self.P_NextTeleportParticleT = 0
+	self.NextRandomTeleportT = 0
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Teleport(pos)
@@ -339,7 +340,7 @@ function ENT:OnThink()
 		if !self.IsPossessed && self:CanPerformProcess() && CurTime() > self.NextRandomTeleportT && math.random(1,80) == 1 then
 			local tb = {}
 			for _,v in ipairs(ents.GetAll()) do
-				if IsValid(v) && ((v:IsNPC() && v != self && !self:IsFriendlyToMe(v)) || v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
+				if IsValid(v) && ((v:IsNPC() && v != self && !self:IsFriendlyToMe(v)) || GetConVarNumber("ai_ignoreplayers") == 0 && v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
 					table.insert(tb,v)
 				end
 			end
