@@ -136,8 +136,6 @@ function ENT:HandleEvents(...)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink_Disabled()
-	self.CanChaseEnemy = false
-	self.IsAttacking = true
 	-- self:PlayerChat(self:Health())
 	if self:Health() < self:GetMaxHealth() && CurTime() > self.NextHealT then
 		self:SetHealth(self:Health() +1)

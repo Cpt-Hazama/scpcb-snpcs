@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\106_old\106face"
+
+    $phong "1"
+    $phongboost 3
+    $phongtint "[.85 .85 1]"
+    $phongfresnelranges "[0.4 0.3 0.1]"
+    $ambientocclusion 1
+}

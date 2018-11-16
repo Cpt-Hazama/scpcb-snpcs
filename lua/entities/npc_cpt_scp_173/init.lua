@@ -203,15 +203,20 @@ function ENT:OnThink()
 	end
 	if self.UseSecretLaboratoryHealthSystem then
 		-- self:PlayerChat(tostring(self:Health()))
-		if self:Health() <= self:GetMaxHealth() *0.5 && self:Health() > self:GetMaxHealth() *0.25 then
-			self.OverrideWalkAnimation = ACT_RUN_AIM
-			self.OverrideRunAnimation = ACT_RUN_AIM
-			-- self:PlayerChat("Tier 2")
-		elseif self:Health() <= self:GetMaxHealth() *0.25 then
-			self.OverrideWalkAnimation = ACT_RUN_PROTECTED
-			self.OverrideRunAnimation = ACT_RUN_PROTECTED
-			-- self:PlayerChat("Tier 3")
+		if self:Health() > self:GetMaxHealth() then
+			self:SetMaxHealth(self:Health())
 		end
+		local sChange = ((self:GetMaxHealth() -self:Health()) /self:GetMaxHealth())
+		local cPitch = 1 -sChange
+		-- self:PlayerChat(sChange)
+		self:SetPoseParameter("173_speed",sChange)
+		-- if self:Health() <= self:GetMaxHealth() *0.5 && self:Health() > self:GetMaxHealth() *0.25 then
+			-- self.OverrideWalkAnimation = ACT_RUN_AIM
+			-- self.OverrideRunAnimation = ACT_RUN_AIM
+		-- elseif self:Health() <= self:GetMaxHealth() *0.25 then
+			-- self.OverrideWalkAnimation = ACT_RUN_PROTECTED
+			-- self.OverrideRunAnimation = ACT_RUN_PROTECTED
+		-- end
 	end
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then
 		if self.WasSeen == false then

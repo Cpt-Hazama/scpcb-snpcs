@@ -71,10 +71,10 @@ function ENT:SapHealth()
 				if !table.HasValue(self.tbl_Drain,v) then
 					table.insert(self.tbl_Drain,v)
 				end
-				if v:GetNWBool("SCP_IsBeingDrained") == false then
-					v:SetNWBool("SCP_IsBeingDrained",true)
-					v:ConCommand("cpt_scp_toggleplanevision")
-				end
+				-- if v:GetNWBool("SCP_IsBeingDrained") == false then
+					-- v:SetNWBool("SCP_IsBeingDrained",true)
+					-- v:ConCommand("cpt_scp_toggleplanevision")
+				-- end
 			end
 			if CurTime() > self.NextDamageT then
 				v:TakeDamage(1,self)
@@ -82,11 +82,11 @@ function ENT:SapHealth()
 				self.NextDamageT = CurTime() +0.01
 			end
 		else
-			for _,v in ipairs(self.tbl_Drain) do
-				if IsValid(v) && !self:CanBeSeenByPlane(v) && v:GetNWBool("SCP_IsBeingDrained") then
-					v:ConCommand("cpt_scp_toggleplanevision")
-				end
-			end
+			-- for _,v in ipairs(self.tbl_Drain) do
+				-- if IsValid(v) && !self:CanBeSeenByPlane(v) && v:GetNWBool("SCP_IsBeingDrained") then
+					-- v:ConCommand("cpt_scp_toggleplanevision")
+				-- end
+			-- end
 		end
 	end
 end
@@ -110,12 +110,12 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:WhenRemoved()
 	self.IdleLoop:Stop()
-	for _,v in ipairs(self.tbl_Drain) do
-		if IsValid(v) && v:GetNWBool("SCP_IsBeingDrained") then
-			v:SetNWBool("SCP_IsBeingDrained",false)
-			v:ConCommand("cpt_scp_toggleplanevision")
-		end
-	end
+	-- for _,v in ipairs(self.tbl_Drain) do
+		-- if IsValid(v) && v:GetNWBool("SCP_IsBeingDrained") then
+			-- v:SetNWBool("SCP_IsBeingDrained",false)
+			-- v:ConCommand("cpt_scp_toggleplanevision")
+		-- end
+	-- end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleFlying(enemy,dist,nearest,disp)

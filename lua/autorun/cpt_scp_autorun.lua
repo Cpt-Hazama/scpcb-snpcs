@@ -13,6 +13,8 @@ CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
 CPTBase.AddParticleSystem("particles/cpt_scp_pocketdimension.pcf",{})
 
 local category = "SCP:CB"
+CPTBase.AddNPC("(Classic) SCP-106","npc_cpt_scp_106_old",category)
+
 CPTBase.AddNPC("SCP-008","npc_cpt_scp_008",category)
 CPTBase.AddNPC("SCP-008-1","npc_cpt_scp_008_1",category)
 CPTBase.AddNPC("SCP-012","npc_cpt_scp_012",category)
@@ -545,7 +547,7 @@ hook.Add("HUDPaint","CPTBase_SCP_SetBlinkTexture",function()
 	if ply then
 		if ply:GetNWBool("SCP_IsBlinking") && ply:Alive() then
 			surface.SetDrawColor(255,255,255,255)
-			surface.SetMaterial(Material("engine/modulatesinglecolor"))
+			surface.SetMaterial(Material("overlay/blink"))
 			surface.DrawTexturedRect(0,0,ScrW(),ScrH())
 			surface.SetDrawColor(255,255,255,0)
 			surface.DrawRect(0,0,ScrW(),ScrH())
