@@ -73,7 +73,7 @@ function ENT:SetInit()
 	self.P_NextSetTeleportSpotT = 0
 	self.P_NextTeleportT = 0
 	self.P_NextTeleportParticleT = 0
-	self.NextRandomTeleportT = 0
+	self.NextRandomTeleportT = CurTime() +20
 	self.NextStartThemeT = CurTime() +7
 	self:SetNWBool("Chase",false)
 	self:PlaySpawnAnimation("Teleport",2)
@@ -81,6 +81,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Teleport(pos)
 	if self.IsContained then return end
+	self:StopCompletely()
 	self:PlayAnimation("Teleport",2)
 	local tr = util.TraceLine({
 		start = self:GetPos(),
@@ -297,7 +298,7 @@ function ENT:OnThink()
 		if !self.IsPossessed && self:CanPerformProcess() && CurTime() > self.NextRandomTeleportT && math.random(1,80) == 1 then
 			local tb = {}
 			for _,v in ipairs(ents.GetAll()) do
-				if IsValid(v) && ((v:IsNPC() && v != self && !self:IsFriendlyToMe(v)) || GetConVarNumber("ai_ignoreplayers") == 0 && v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
+				if IsValid(v) && ((v:IsNPC() && v != self && self:Disposition(v) != D_LI) || (v:IsPlayer() && GetConVarNumber("ai_ignoreplayers") == 0 && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing"))) then
 					table.insert(tb,v)
 				end
 			end

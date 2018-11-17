@@ -79,6 +79,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 	else
 		self:EmitSound(self:SelectFromTable(self.tbl_Sounds["Strike"]),55,100)
 	end
+	local cl = self:GetClass()
 	for _,v in ipairs(hitents) do
 		if v:IsValid() && v:IsPlayer() && v:Alive() && v.SCP_Has714 == false && v.SCP_Infected_008 == false then
 			v.SCP_Infected_008 = true
@@ -103,7 +104,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 			timer.Simple(time,function()
 				if v:IsValid() && v.SCP_Infected_008 then
 					if v:Deaths() > deaths then return end
-					local zombie = ents.Create("npc_cpt_scp_008_1")
+					local zombie = ents.Create(cl)
 					zombie:SetPos(v:GetPos())
 					zombie:SetAngles(v:GetAngles())
 					zombie:Spawn()

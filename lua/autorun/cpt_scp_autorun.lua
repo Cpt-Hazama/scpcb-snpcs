@@ -6,14 +6,18 @@
 include('server/cpt_utilities.lua')
 include('cpt_scp_vision.lua')
 
-CPTBase.RegisterMod("SCP:CB SNPCs","0.1.7")
+CPTBase.RegisterMod("SCP:CB SNPCs","0.2.0")
 
 CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
 -- CPTBase.DefineDecal("SCP_457Scorch",{"decals/decal_footprint_scorch"})
 CPTBase.AddParticleSystem("particles/cpt_scp_pocketdimension.pcf",{})
 
 local category = "SCP:CB"
+CPTBase.AddNPC("(Classic) SCP-008-1","npc_cpt_scp_008_1_old",category)
+CPTBase.AddNPC("(Classic) SCP-096","npc_cpt_scp_096_old",category)
 CPTBase.AddNPC("(Classic) SCP-106","npc_cpt_scp_106_old",category)
+CPTBase.AddNPC("(Classic) SCP-173","npc_cpt_scp_173_old",category)
+CPTBase.AddNPC("(Classic) MTF Guard","npc_cpt_scp_guard_old",category)
 
 CPTBase.AddNPC("SCP-008","npc_cpt_scp_008",category)
 CPTBase.AddNPC("SCP-008-1","npc_cpt_scp_008_1",category)
@@ -32,7 +36,7 @@ CPTBase.AddNPC("SCP-106 Pocket Dimension Plane","npc_cpt_scp_106pdplane",categor
 CPTBase.AddNPC("SCP-173","npc_cpt_scp_173",category)
 -- CPTBase.AddNPC("SCP-173 (Box)","npc_cpt_scp_173_box",category) // Shouldn't be spawnable
 CPTBase.AddNPC("SCP-178","npc_cpt_scp_178specs",category)
-CPTBase.AddNPC("SCP-178-1","npc_cpt_scp_178",category) // No longer spawnable
+CPTBase.AddNPC("SCP-178-1","npc_cpt_scp_178",category)
 -- CPTBase.AddNPC("SCP-205","npc_cpt_scp_205",category) // Stupid
 -- CPTBase.AddNPC("SCP-205-A","npc_cpt_scp_205a",category)
 -- CPTBase.AddNPC("SCP-205-B","npc_cpt_scp_205b",category)
@@ -61,7 +65,7 @@ CPTBase.AddNPC("SCP-1356","npc_cpt_scp_1356",category)
 CPTBase.AddNPC("SCP-1499-1","npc_cpt_scp_1499_1",category)
 CPTBase.AddNPC("SCP-1499-1 King","npc_cpt_scp_1499_1_king",category)
 
--- CPTBase.AddNPC("MTF Site Guard","npc_cpt_scp_mtf",category)
+-- CPTBase.AddNPC("MTF Guard","npc_cpt_scp_guard",category)
 CPTBase.AddNPC("MTF Epsilon-11 Nine-Tailed Fox","npc_cpt_scp_ntf",category)
 CPTBase.AddNPC("MTF Lambda-5 White Rabbits","npc_cpt_scp_lambda",category)
 CPTBase.AddNPC("MTF Nu-7 Hammer Down","npc_cpt_scp_nu",category)
@@ -496,14 +500,14 @@ end)
 hook.Add("Think","CPTBase_SCP_BlinkSystem_NPCs",function()
 	local canevenblink = false
 	for _,scp in ipairs(ents.GetAll()) do
-		if scp:IsNPC() && (scp:GetClass() == "npc_cpt_scp_173" or scp:GetClass() == "npc_cpt_scpunity_173" or scp:GetClass() == "npc_cpt_scp_087_b") then
+		if scp:IsNPC() && (string.find(scp:GetClass(),"173") or string.find(scp:GetClass(),"087_b")) then
 			canevenblink = true
 		end
 	end
 	if canevenblink == true then
 		local tb = {}
 		for _,v in ipairs(ents.GetAll()) do
-			if v:IsNPC() && (v:GetClass() != "npc_cpt_scp_173" && v:GetClass() != "npc_cpt_scpunity_173" && v:GetClass() != "npc_cpt_scp_087_b") && v:Health() > 0 then
+			if v:IsNPC() && !(string.find(v:GetClass(),"173") or string.find(v:GetClass(),"087_b")) && v:Health() > 0 then
 				if !table.HasValue(tb,v) then
 					table.insert(tb,v)
 				end
@@ -588,7 +592,7 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 		local canevenblink = false
 		local scps = {}
 		for _,scp in ipairs(ents.GetAll()) do
-			if scp:IsNPC() && (scp:GetClass() == "npc_cpt_scp_173" or scp:GetClass() == "npc_cpt_scp_087_b" or scp:GetClass() == "npc_cpt_scpunity_173") then
+			if scp:IsNPC() && (string.find(scp:GetClass(),"173") or string.find(scp:GetClass(),"087_b")) then
 				canevenblink = true
 				if !table.HasValue(scps,scp) then
 					table.insert(scps,scp)
