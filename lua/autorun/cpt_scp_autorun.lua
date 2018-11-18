@@ -765,7 +765,8 @@ CPTBase.AddConVar("cpt_scp_halloween","0")
 CPTBase.AddConVar("cpt_scp_173revision","0")
 CPTBase.AddConVar("cpt_scp_173blinksame","0")
 CPTBase.AddConVar("cpt_scp_682audio","0")
-CPTBase.AddConVar("cpt_scp_682theme","1")
+CPTBase.AddConVar("cpt_scp_682theme","0")
+CPTBase.AddConVar("cpt_scp_guardduty","0")
 CPTBase.AddClientVar("cpt_scp_blinkmessage","0",true)
 
 local function CPTBase_SCP_ResetFemurBreaker(ply)
@@ -847,10 +848,12 @@ if (CLIENT) then
 			cpt_scp_173revision = "0",
 			cpt_scp_173blinksame = "0",
 			cpt_scp_682audio = "0",
-			cpt_scp_682theme = "1",
+			cpt_scp_682theme = "0",
+			cpt_scp_guardduty = "0",
 		}
 		panel:AddControl("ComboBox",CPTBaseMenu_SCP_SNPC)
 		panel:AddControl("CheckBox",{Label = "Allow custom code on gm_site19",Command = "cpt_scp_site19"})
+		panel:AddControl("CheckBox",{Label = "Allow Guards to boss you around?",Command = "cpt_scp_guardduty"})
 		panel:AddControl("CheckBox",{Label = "Make SCP-106 take normal damage?",Command = "cpt_scp_106damage"})
 		panel:AddControl("CheckBox",{Label = "Enable SCP-939's Secret Laboratory sounds?",Command = "cpt_scp_939slsounds"})
 		panel:AddControl("CheckBox",{Label = "Enable SCP-173's Secret Laboratory sounds?",Command = "cpt_scp_173slsounds"})

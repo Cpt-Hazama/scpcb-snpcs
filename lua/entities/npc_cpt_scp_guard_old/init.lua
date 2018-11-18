@@ -83,7 +83,15 @@ ENT.tbl_Sounds = {
 		"cpthazama/scp/mtf/ExitCellRefuse1.mp3",
 		"cpthazama/scp/mtf/ExitCellRefuse2.mp3",
 	},
+	["EndEscort"] = {
+		"cpthazama/scp/mtf/EscortDone1.mp3",
+		"cpthazama/scp/mtf/EscortDone2.mp3",
+		"cpthazama/scp/mtf/EscortDone3.mp3",
+		"cpthazama/scp/mtf/EscortDone4.mp3",
+		"cpthazama/scp/mtf/EscortDone5.mp3",
+	},
 	["MoveTooFar"] = {"cpthazama/scp/mtf/EscortRun.mp3"},
+	["ExitCell"] = {"cpthazama/scp/mtf/ExitCell.mp3"},
 	["Spot_SCP"] = {"cpthazama/scp/mtf/OhSh.mp3","cpthazama/scp/mtf/WTF1.mp3","cpthazama/scp/mtf/WTF2.mp3"},
 }
 
@@ -115,6 +123,12 @@ function ENT:SetInit()
 	self.MTF_Partner = NULL
 	self.MTF_PartnerStarter = false
 	self.IsSpeaking = false
+	self.Bossed = NULL
+	self.IsBossing = false
+	self.FindBossedT = CurTime() +2
+	self.Threshold = 0
+	self.NextThresholdT = 0
+	self.NextEndEscort = CurTime() +500
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CanTalk()
@@ -133,6 +147,16 @@ function ENT:FindPartner()
 			end
 		end
 		-- break
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:FindPlayer()
+	for _,v in ipairs(ents.FindInSphere(self:GetPos(),300)) do
+		if IsValid(v) && v:IsPlayer() then
+			if v:Visible(self) && !v.IsBeingBossed && v.Faction == "FACTION_SCP_NTF" then
+				return v
+			end
+		end
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -258,6 +282,42 @@ function ENT:HandleEvents(...)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Boss(ent)
+	if self.Threshold >= 3 then
+		ent.IsBeingBossed = false
+		self.IsBossing = false
+		self.Bossed.Faction = "FACTION_PLAYER"
+		self.Bossed:SetNWString("CPTBase_NPCFaction","FACTION_PLAYER")
+		self.Bossed = NULL
+		self:PlaySound("BecomeEnemy",78)
+		self.WanderChance = 60
+		self.FindBossedT = CurTime() +30
+	end
+	if IsValid(ent) then
+		if CurTime() > self.NextEndEscort then
+			ent.IsBeingBossed = false
+			self.IsBossing = false
+			self.Bossed = NULL
+			self:PlaySound("EndEscort",78)
+			self.WanderChance = 60
+			self.FindBossedT = CurTime() +30
+		end
+		local dist = self:GetClosestPoint(ent)
+		if CurTime() > self.NextThresholdT && dist > 300 then // too far
+			self.Threshold = self.Threshold +1
+			if self.Threshold <= 1 then
+				self:PlaySound("MoveTooFar",78)
+			else
+				self:PlaySound("PissOff",78)
+			end
+			self:LookAtPosition(self:FindCenter(ent),pp,pp_speed,self.ReversePoseParameters)
+			self:SetAngles(Angle(0,(ent:GetPos() -self:GetPos()):Angle().y,0))
+			self:StopCompletely()
+			self.NextThresholdT = CurTime() +8
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
 	-- print(self,self.IsSpeaking)
 	-- if self.IsSpeaking then
@@ -272,14 +332,39 @@ function ENT:OnThink()
 			self.MTF_Partner.MTF_PartnerStarter = false
 			self.MTF_Partner.MTF_Partner = NULL
 		end
+		if IsValid(self.Bossed) then
+			self.Bossed.IsBeingBossed = false
+			self.Threshold = 0
+			self.Bossed = NULL
+			self.IsBossing = false
+		end
 		self.MTF_Partner = NULL
 		self.NextIdleSoundT = CurTime() +math.random(5,10)
 		self.WanderChance = 60
 	else
 		if !self.IsPossessed then
 			self:SetIdleAnimation(ACT_IDLE)
+			if GetConVarNumber("cpt_scp_guardduty") == 1 && !self.IsBossing && CurTime() > self.FindBossedT then
+				local v = self:FindPlayer()
+				if IsValid(v) then
+					self.Bossed = v
+					v.IsBeingBossed = true
+					self.IsBossing = true
+					self.NextEndEscort = CurTime() +60
+					v:ChatPrint("Follow the MTF Guard for the next 60 seconds or you will be terminated.")
+					self:PlaySound("ExitCell",78)
+					self:LookAtPosition(self:FindCenter(v),pp,pp_speed,self.ReversePoseParameters)
+					self:SetAngles(Angle(0,(v:GetPos() -self:GetPos()):Angle().y,0))
+					self:StopCompletely()
+					self.WanderChance = 1
+				end
+				self.FindBossedT = CurTime() +5
+			end
+			if self.IsBossing && IsValid(self.Bossed) then
+				self:Boss(self.Bossed)
+			end
 			if IsValid(self.MTF_Partner) then
-				if self.IsSpeaking then
+				if self.IsSpeaking && !self.IsBossing then
 					local pp = self.DefaultPoseParameters
 					local pp_speed = self.DefaultPoseParamaterSpeed
 					self:LookAtPosition(self:FindCenter(self.MTF_Partner),pp,pp_speed,self.ReversePoseParameters)

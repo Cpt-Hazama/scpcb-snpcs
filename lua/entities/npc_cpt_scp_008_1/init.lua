@@ -114,7 +114,9 @@ function ENT:OnHitEntity(hitents,hitpos)
 					CreateUndo(zombie,v:Nick() .. " (008 Infected)",v)
 					v:Kill()
 					v.CPTBase_SCP_Zombie = zombie
-					v:GetRagdollEntity():Remove()
+					if IsValid(v:GetRagdollEntity()) then
+						v:GetRagdollEntity():Remove()
+					end
 				end
 			end)
 		end

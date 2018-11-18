@@ -3,7 +3,7 @@ AddCSLuaFile('shared.lua')
 include('shared.lua')
 
 ENT.ModelTable = {"models/cpthazama/scp/682.mdl"}
-ENT.StartHealth = 50000
+ENT.StartHealth = 5000000
 ENT.CollisionBounds = Vector(250,100,120)
 
 ENT.Faction = "FACTION_SCP_682"
