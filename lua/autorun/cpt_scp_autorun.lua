@@ -6,7 +6,10 @@
 include('server/cpt_utilities.lua')
 include('cpt_scp_vision.lua')
 
+-- if !CPTBase.IsAddonUpdated("cptbase","54") then return end
+
 CPTBase.RegisterMod("SCP:CB SNPCs","0.2.0")
+-- CPTBase.AddAddon("scp","10")
 
 CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
 -- CPTBase.DefineDecal("SCP_457Scorch",{"decals/decal_footprint_scorch"})
