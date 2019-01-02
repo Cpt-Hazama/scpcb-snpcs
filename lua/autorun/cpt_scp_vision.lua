@@ -21,6 +21,54 @@ if CLIENT then
 		concommand.Add("cpt_scp_togglepcvision", function(ply,cmd,args)
 			CLIENT_SCP_PC = not CLIENT_SCP_PC
 		end)
+
+		hook.Add("HUDPaint","CPTBase_SCP079_HUD",function()
+			if !CLIENT_SCP_PC then return end
+			if !LocalPlayer():GetNWBool("CPTBase_IsPossessing") then return end
+			if LocalPlayer():GetNWBool("CPTBase_IsPossessing") && LocalPlayer():GetNWString("CPTBase_PossessedNPCClass") != "npc_cpt_scp_079" then return end
+			local SCP079 = LocalPlayer():GetNWEntity("CPTBase_PossessedNPC")
+			-- local SCP079
+			-- for _,v in ipairs(ents.GetAll()) do
+				-- if v:GetClass() == "npc_cpt_scp_079" then
+					-- SCP079 = v
+					-- break
+				-- end
+			-- end
+			if !IsValid(SCP079) then return end
+			local iAux = SCP079:GetNWInt("CPTBase_SCP079_AuxCount")
+			local iAuxMax = SCP079:GetNWInt("CPTBase_SCP079_MaxAuxCount")
+			local iLocks = SCP079:GetNWInt("CPTBase_SCP079_LockCount")
+			local iTier = SCP079:GetNWInt("CPTBase_SCP079_Tier")
+			local iEXP = SCP079:GetNWInt("CPTBase_SCP079_Experience")
+			local iEXPMax = SCP079:GetNWInt("CPTBase_SCP079_ExperienceMax")
+
+			local smooth = 1
+			local bposX = 10
+			local bposY = 10
+			local bX = 230
+			local bY = 75
+			draw.RoundedBox(smooth,bposX,bposY,bX,bY,Color(0,0,0,200))
+				
+			local auxText = "Auxiliary Power - " .. iAux .. " / " .. iAuxMax
+			local auxposX = 15
+			local auxposY = 15
+			draw.SimpleText(auxText,"TargetID",auxposX,auxposY,Color(0,161,255,255))
+
+			local tierText = "Tier Level " .. iTier
+			local tierposX = 15
+			local tierposY = 30
+			draw.SimpleText(tierText,"TargetID",tierposX,tierposY,Color(0,161,255,255))
+
+			local tierText = "Experience - " .. math.Round(iEXP) .. " / " .. math.Round(iEXPMax)
+			local tierposX = 15
+			local tierposY = 45
+			draw.SimpleText(tierText,"TargetID",tierposX,tierposY,Color(0,161,255,255))
+
+			local tierText = "Locked Doors - " .. iLocks
+			local tierposX = 15
+			local tierposY = 60
+			draw.SimpleText(tierText,"TargetID",tierposX,tierposY,Color(0,161,255,255))
+		end)
 	//----------------------------------------------------------------------------------------------------------------------------
 
 	// Red vision -----------------------------------------------------------------------------------------------------------------

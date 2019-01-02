@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\079\079_camera_glow"
+	"$selfillum" 1
+	"$detail" "models\cpthazama\scp\079\079_camera_glow"
+	$detailscale 1
+	$detailblendmode 5
+	$detailblendfactor 1
+
+	"$blendtintbybasealpha" "1"
+	"$blendtintcoloroverbase" "0"
+}
