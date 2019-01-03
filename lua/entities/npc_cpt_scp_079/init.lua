@@ -238,18 +238,21 @@ function ENT:SCP079AI()
 		end
 	end
 	if table.Count(self.tbl_LockedDoors) > 0 then
-		self.RemoveLockAmount = table.Count(self.tbl_LockedDoors) *2
+		self.RemoveLockAmount = table.Count(self.tbl_LockedDoors) *1
 		if CurTime() > self.NextRemoveAuxLockT then
 			self.AuxiliaryPower = self.AuxiliaryPower -self.RemoveLockAmount
 			self.NextRemoveAuxLockT = CurTime() +1
 		end
 		if self.AuxiliaryPower <= 0 then
 			for _,v in ipairs(self.tbl_LockedDoors) do
-				if IsValid(v) then v:Fire("Unlock") end
+				if IsValid(v) then
+					v:Fire("Unlock")
+				end
 			end
+			table.Empty(self.tbl_LockedDoors)
 		end
 	end
-	if CurTime() > self.NextPowerRegenT && self.AuxiliaryPower <= self.MaxAuxiliaryPower then
+	if CurTime() > self.NextPowerRegenT && self.AuxiliaryPower <= self.MaxAuxiliaryPower && table.Count(self.tbl_LockedDoors) <= 0 then
 		self.AuxiliaryPower = self.AuxiliaryPower +1
 		if self.AuxiliaryPower >= self.MaxAuxiliaryPower then self.AuxiliaryPower = self.MaxAuxiliaryPower end
 		self.NextPowerRegenT = CurTime() +0.2
@@ -313,18 +316,6 @@ function ENT:SetInit()
 	self.CanBeSpokenTo = true
 	self.NextDoorT = CurTime() +1
 	self.Possessor_CanMove = false
-	self.Possessor_DoorObject = ents.Create("prop_dynamic")
-	self.Possessor_DoorObject:SetPos(self:GetPos())
-	self.Possessor_DoorObject:SetModel("models/props_junk/watermelon01_chunk02c.mdl")
-	self.Possessor_DoorObject:SetParent(self)
-	self.Possessor_DoorObject:SetRenderMode(RENDERMODE_TRANSALPHA)
-	self.Possessor_DoorObject:Spawn()
-	self.Possessor_DoorObject:SetColor(Color(0,0,0,0))
-	self.Possessor_DoorObject:SetNoDraw(false)
-	self.Possessor_DoorObject:DrawShadow(false)
-	self.Possessor_DoorObject:DeleteOnRemove(self)
-	self.Possessor_ViewingDoor = false
-	self.Possessor_ViewedDoor = NULL
 	self.IsActivated = false
 	self.NextCameraSwitchT = CurTime() +math.Rand(1,4)
 	self.NextCameraMoveT = CurTime() +math.Rand(1,2)
@@ -346,6 +337,7 @@ function ENT:SetInit()
 	self:SetNWInt("CPTBase_SCP079_Tier",nil)
 	self:SetNWInt("CPTBase_SCP079_Experience",nil)
 	self:SetNWInt("CPTBase_SCP079_ExperienceMax",nil)
+	self:SetNWBool("CPTBase_SCP079_OnCooldown",false)
 	-- if util.IsSite19() then
 		-- for i = 1,table.Count(self.tbl_CameraSpawns) do
 			-- if SERVER then
@@ -436,6 +428,11 @@ function ENT:Possess_Think(possessor,object)
 	self:SetNWInt("CPTBase_SCP079_Tier",self.Tier)
 	self:SetNWInt("CPTBase_SCP079_Experience",self.ExperiencePoints)
 	self:SetNWInt("CPTBase_SCP079_ExperienceMax",self.NextTierUnlock)
+	if CurTime() >= self.NextUseAbilityT then
+		self:SetNWBool("CPTBase_SCP079_OnCooldown",false)
+	else
+		self:SetNWBool("CPTBase_SCP079_OnCooldown",true)
+	end
 	possessor:SpectateEntity(self:GetCurrentCamera())
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -41,6 +41,7 @@ if CLIENT then
 			local iTier = SCP079:GetNWInt("CPTBase_SCP079_Tier")
 			local iEXP = SCP079:GetNWInt("CPTBase_SCP079_Experience")
 			local iEXPMax = SCP079:GetNWInt("CPTBase_SCP079_ExperienceMax")
+			local bCooldown = SCP079:GetNWBool("CPTBase_SCP079_OnCooldown")
 
 			local smooth = 1
 			local bposX = 10
@@ -68,6 +69,15 @@ if CLIENT then
 			local tierposX = 15
 			local tierposY = 60
 			draw.SimpleText(tierText,"TargetID",tierposX,tierposY,Color(0,161,255,255))
+			
+			if bCooldown then
+				local scale = 100
+				local posX = ScrW() /2
+				local posY = ScrH() /2
+				surface.SetTexture(surface.GetTextureID("overlay/079_delay"))
+				surface.SetDrawColor(0,161,255,255)
+				surface.DrawTexturedRectRotated(posX,posY,scale,scale,0)
+			end
 		end)
 	//----------------------------------------------------------------------------------------------------------------------------
 
