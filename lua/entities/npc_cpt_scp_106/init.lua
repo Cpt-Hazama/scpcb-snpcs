@@ -504,11 +504,11 @@ function ENT:OnThink()
 	if !self.IsPossessed then
 		if !self.IsContained && IsValid(self:GetEnemy()) then
 			if CurTime() > self.NextTeleportT && !self:GetEnemy():Visible(self) && self:GetClosestPoint(self:GetEnemy()) > 500 && math.random(1,20) == 1 then
-				-- if math.random(1,2) == 1 then
+				if math.random(1,2) == 1 then
 					self:Teleport(self:GetEnemy():GetPos(),true)
-				-- else
-					-- self:Teleport(self:GetEnemy():GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
-				-- end
+				else
+					self:Teleport(self:GetEnemy():GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+				end
 				self.NextTeleportT = CurTime() +math.Rand(28,35)
 			end
 		end
