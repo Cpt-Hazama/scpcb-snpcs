@@ -13,7 +13,7 @@ ENT.MaxTurnSpeed = 0
 
 ENT.Faction = "FACTION_SCP"
 
-ENT.UseNotarget = true
+-- ENT.UseNotarget = true
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
 ENT.IsEssential = true
@@ -40,6 +40,7 @@ function ENT:GetCameraOwner()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetInit()
+	self.UseNotarget = true
 	self.StartPos = self:GetPos()
 	self.StartAng = self:GetAngles()
 	self:SetHullType(HULL_TINY)
@@ -49,6 +50,7 @@ function ENT:SetInit()
 	self.IsBeingControlled = false
 	self.CameraHitPosition = nil
 	self.CameraHitEntity = NULL
+	self.UseNotarget = true
 	self:SetCollisionBounds(Vector(14,4,20),Vector(-24,-4,0))
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,6 +58,7 @@ function ENT:OnThink_Disabled()
 	-- self:SetPos(self.StartPos)
 	-- self:SetAngles(self.StartAng)
 	-- PrintEntityPlacement(self)
+	self.UseNotarget = true
 	if IsValid(self:GetCameraOwner()) && self:GetCameraOwner():GetCurrentCamera() == self then
 		self:SetSkin(1)
 		local enemy = self:FindAllEnemies079()

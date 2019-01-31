@@ -94,6 +94,18 @@ ENT.tbl_CameraSpawns = {
 	-- [46] = {Pos=Vector(0,0,0),Ang=Angle(0,0,0)},
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:SetAggressionValue(input)
+	local output = input
+	if self.AggressionLevel == 0 then
+		output = input *0.5
+	elseif self.AggressionLevel == 1 then
+		output = input
+	elseif self.AggressionLevel >= 2 then
+		output = input /self.AggressionLevel
+	end
+	return math.Round(output)
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_CustomCommands(possessor)
 	local w = possessor:KeyDown(IN_FORWARD)
 	local e = possessor:KeyDown(IN_USE)
@@ -223,7 +235,7 @@ function ENT:SCP079AI()
 			if CurTime() > self.NextCameraMoveT then
 				local randpos = self:GetCurrentCamera():GetPos() +self:GetCurrentCamera():GetForward() *800 +self:GetCurrentCamera():GetRight() *math.Rand(-250,250) +self:GetCurrentCamera():GetUp() *math.Rand(-250,250)
 				self:GetCurrentCamera():LookAtPosition(randpos,{"aim_pitch","aim_yaw"},10,self.ReversePoseParameters)
-				self.NextCameraMoveT = CurTime() +math.Rand(4,6)
+				self.NextCameraMoveT = CurTime() +math.Rand(self:SetAggressionValue(4),self:SetAggressionValue(6))
 			end
 		elseif IsValid(self:GetEnemy()) then
 			if IsValid(self:GetCurrentCamera()) then
@@ -235,6 +247,44 @@ function ENT:SCP079AI()
 					end
 				end
 			end
+			if CurTime() > self.AI_NextDoorT then
+				local tb_doors = {}
+				for _,v in ipairs(ents.FindInSphere(self:GetEnemy():GetPos(),100)) do
+					if v:GetClass() == "func_door" then
+						table.insert(tb_doors,v)
+						for _,ov in ipairs(ents.FindInSphere(v:GetPos(),15)) do
+							if ov:GetClass() == "func_door" && !table.HasValue(tb_doors,ov) then
+								table.insert(tb_doors,ov)
+							end
+						end
+					end
+				end
+				if table.Count(tb_doors) > 0 then
+					if !self:CanUseAux(10) then return end
+					if math.random(1,4) != 1 then
+						tb_doors[1]:Fire("Close")
+						tb_doors[1]:EmitSound("cpthazama/scp/music/Horror7.mp3",70,100)
+						if tb_doors[2] then
+							tb_doors[2]:Fire("Close")
+						end
+						self:RemoveAux(10,1)
+					else
+						tb_doors[1]:Fire("Lock")
+						if !table.HasValue(self.tbl_LockedDoors,tb_doors[1]) then
+							table.insert(self.tbl_LockedDoors,tb_doors[1])
+						end
+						if tb_doors[2] then
+							tb_doors[2]:Fire("Lock")
+							if !table.HasValue(self.tbl_LockedDoors,tb_doors[2]) then
+								table.insert(self.tbl_LockedDoors,tb_doors[2])
+							end
+						end
+						self:RemoveAux(10,3)
+					end
+					table.Empty(tb_doors)
+					self.AI_NextDoorT = CurTime() +math.Rand(self:SetAggressionValue(8),self:SetAggressionValue(14))
+				end
+			end
 		end
 	end
 	if table.Count(self.tbl_LockedDoors) > 0 then
@@ -242,6 +292,16 @@ function ENT:SCP079AI()
 		if CurTime() > self.NextRemoveAuxLockT then
 			self.AuxiliaryPower = self.AuxiliaryPower -self.RemoveLockAmount
 			self.NextRemoveAuxLockT = CurTime() +1
+		end
+		if !self.IsPossessed then
+			if self.AuxiliaryPower <= 20 then
+				for _,v in ipairs(self.tbl_LockedDoors) do
+					if IsValid(v) then
+						v:Fire("Unlock")
+					end
+				end
+				table.Empty(self.tbl_LockedDoors)
+			end
 		end
 		if self.AuxiliaryPower <= 0 then
 			for _,v in ipairs(self.tbl_LockedDoors) do
@@ -314,6 +374,7 @@ function ENT:SetInit()
 	self.HasBeenSpokenTo = false
 	self.IsTalking = false
 	self.CanBeSpokenTo = true
+	self.AI_NextDoorT = CurTime() +10
 	self.NextDoorT = CurTime() +1
 	self.Possessor_CanMove = false
 	self.IsActivated = false
@@ -390,14 +451,12 @@ function ENT:Possess_OnPossessed(possessor)
 		self:Possess_DoChat079(possessor,10.112,"Left click (Close/Open) the door you're looking at | (Enable/Disable) tesla gate you're looking at")
 		self:Possess_DoChat079(possessor,10.113,"Right click (Lock) the door you're looking at")
 		self:Possess_DoChat079(possessor,10.114,"Space bar to release all locked doors")
-		self:Possess_DoChat079(possessor,10.115,"Middle mouse to go to closest camera of an enemy")
 	else
 		self:Possess_DoChat079(possessor,0,"INITIATING CONTROL PANEL -")
 		self:Possess_DoChat079(possessor,0.11,"Toggle through cameras with Shift (Up one) / Ctrl (Down one)")
 		self:Possess_DoChat079(possessor,0.112,"Left click (Close/Open) the door you're looking at | (Enable/Disable) tesla gate you're looking at")
 		self:Possess_DoChat079(possessor,0.113,"Right click (Lock) the door you're looking at")
 		self:Possess_DoChat079(possessor,0.114,"Space bar to release all locked doors")
-		self:Possess_DoChat079(possessor,0.115,"Middle mouse to go to closest camera of an enemy")
 	end
 	possessor:ConCommand("cpt_scp_togglepcvision")
 	self:ToggleCamera(math.random(1,table.Count(self.tbl_Cameras)))

@@ -4,7 +4,7 @@ include('shared.lua')
 
 ENT.ModelTable = {"models/cpthazama/scp/ntf.mdl"}
 ENT.StartHealth = 100
-ENT.CanMutate = false
+ENT.ReactsToSound = false
 ENT.CollisionBounds = Vector(18,15,70)
 
 ENT.Faction = "FACTION_SCP_NTF"
@@ -373,15 +373,21 @@ function ENT:OnThink()
 	if util.IsSite19() then
 		if !self.IsPossessed then
 			if self.IsTakingSCP == true then
-				if IsValid(self.IsTakingSCP_Box) && self.IsTakingSCP_Box:GetPos():Distance(THESTATUE) <= 250 then
-					self.IsTakingSCP_Box.NTFOwner = NULL
-					self.IsTakingSCP = false
+				if IsValid(self.IsTakingSCP_Box) then
+					if !IsValid(self:GetEnemy()) then
+						self:SetLastPosition(THESTATUE)
+						self:TASKFUNC_LASTPOSITION()
+					end
+					if self.IsTakingSCP_Box:GetPos():Distance(THESTATUE) <= 250 then
+						self.IsTakingSCP_Box.NTFOwner = NULL
+						self.IsTakingSCP = false
+					end
 				end
 			end
 			if IsValid(self:GetEnemy()) && self:GetEnemy():GetClass() == "npc_cpt_scp_173" && !self:GetEnemy().IsContained then
 				local ent = self:GetEnemy()
 				local dist = ent:GetPos():Distance(self:GetPos())
-				if dist <= 350 then
+				if dist <= 600 then
 					if !self.IsContainingSCP then
 						for _,v in ipairs(ents.FindInSphere(self:GetPos(),350)) do
 							if v:IsValid() && v:IsNPC() && v != self && v:GetClass() == self:GetClass() then

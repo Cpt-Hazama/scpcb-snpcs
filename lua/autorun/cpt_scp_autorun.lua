@@ -1,5 +1,5 @@
 /*--------------------------------------------------
-	Copyright (c) 2018 by Cpt. Hazama, All rights reserved.
+	Copyright (c) 2019 by Cpt. Hazama, All rights reserved.
 	Nothing in these files or/and code may be reproduced, adapted, merged or
 	modified without prior written consent of the original author, Cpt. Hazama
 --------------------------------------------------*/
@@ -8,7 +8,7 @@ include('cpt_scp_vision.lua')
 
 -- if !CPTBase.IsAddonUpdated("cptbase","54") then return end
 
-CPTBase.RegisterMod("SCP:CB SNPCs","0.2.0")
+CPTBase.RegisterMod("SCP:CB SNPCs","0.2.1")
 -- CPTBase.AddAddon("scp","10")
 
 CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
@@ -73,6 +73,7 @@ CPTBase.AddNPC("SCP-1499-1 King","npc_cpt_scp_1499_1_king",category)
 CPTBase.AddNPC("MTF Epsilon-11 Nine-Tailed Fox","npc_cpt_scp_ntf",category)
 CPTBase.AddNPC("MTF Lambda-5 White Rabbits","npc_cpt_scp_lambda",category)
 CPTBase.AddNPC("MTF Nu-7 Hammer Down","npc_cpt_scp_nu",category)
+CPTBase.AddAdminNPC("MTF AH-64 Apache","npc_cpt_scp_apache",category)
 
 CPTBase.AddNPC("Class D Subject","npc_cpt_scp_dclass",category)
 CPTBase.AddNPC("Scientist","npc_cpt_scp_scientist",category) // STAHP! NO!
@@ -273,7 +274,7 @@ if CLIENT then
 					end
 				end
 				-- if !(ply:GetNWBool("CPTBase_IsPossessing") && string.find(ply:GetNWBool("CPTBase_PossessedNPCClass"),"scp_079")) then return end
-				halo.Add(tbl,Color(255,191,0),15,15,15,true,true)
+				halo.Add(tbl,Color(0,161,255),15,15,15,true,true)
 			end
 		end
 	end)

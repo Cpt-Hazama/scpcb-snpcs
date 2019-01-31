@@ -45,7 +45,7 @@ end
 function ENT:OnThink()
 	if IsValid(self.NTFOwner) then
 		if self.NTFOwner:GetPos():Distance(self:GetPos()) > 125 then
-			self:ChaseTarget(self.NTFOwner,false)
+			self:ChaseTarget(self.NTFOwner,true)
 		else
 			self:StopCompletely()
 		end

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+    $basetexture "models\cpthazama\scp\apache\apache"
+    $bumpmap "models\cpthazama\scp\apache\apache_n"
+    $phong 1
+    $phongboost 1.5
+    $phongtint "[.85 .85 1]"
+    $phongfresnelranges "[0.2 0.1 0.1]"
+}

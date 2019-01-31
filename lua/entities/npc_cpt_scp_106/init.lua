@@ -23,12 +23,14 @@ ENT.tbl_Animations = {
 	["Walk"] = {ACT_WALK},
 	["Run"] = {ACT_WALK},
 	["Attack"] = {ACT_MELEE_ATTACK1},
+	["AttackGround"] = {ACT_MELEE_ATTACK2},
 	["Teleport"] = {ACT_JUMP},
 }
 
 ENT.tbl_Sounds = {
 	["FootStep"] = {"cpthazama/scp/StepPD1.mp3","cpthazama/scp/StepPD2.mp3","cpthazama/scp/StepPD3.mp3"},
 	["Alert"] = {"cpthazama/scp/106/Laugh.mp3"},
+	["Kneel"] = {"cpthazama/scp/106/Kneel.mp3"},
 	["Strike"] = {"cpthazama/scp/D9341/Damage3.mp3"},
 	["Corrosion"] = {"cpthazama/scp/106/Corrosion1.mp3","cpthazama/scp/106/Corrosion2.mp3","cpthazama/scp/106/Corrosion3.mp3"},
 	["Decay"] = {"cpthazama/scp/106/Decay0.mp3"}
@@ -63,6 +65,7 @@ function ENT:SetInit()
 	self.IsContained = false
 	self.IsAttacking = false
 	self.WasSeen = false
+	self.GrabbedVictim = NULL
 	self.NextTeleportT = 0
 	self.NextThemeSongT = 0
 	self.NextIdleLoopT = 0
@@ -80,9 +83,14 @@ function ENT:SetInit()
 	self.NextRandomTeleportT = 0
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:Teleport(pos)
+function ENT:Teleport(pos,grab)
 	if self.IsContained then return end
-	self:PlayAnimation("Teleport",2)
+	self:StopCompletely()
+	if grab then
+		self:PlayAnimation("AttackGround",2)
+	else
+		self:PlayAnimation("Teleport",2)
+	end
 	local tr = util.TraceLine({
 		start = self:GetPos(),
 		endpos = self:GetPos() -Vector(0,0,10),
@@ -111,14 +119,16 @@ function ENT:Teleport(pos)
 		mask = MASK_NPCWORLDSTATIC
 	})
 	ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
-	for i = 1,math.random(60,70) do
-		timer.Simple(i *0.1,function()
-			if self:IsValid() then
-				for i = 0,self:GetBoneCount() -1 do
-					ParticleEffect("blood_impact_black",self:GetPos() +Vector(math.Rand(-20,20),math.Rand(-20,20),-8),Angle(0,0,0),nil)
+	if !grab then
+		for i = 1,math.random(60,70) do
+			timer.Simple(i *0.1,function()
+				if self:IsValid() then
+					for i = 0,self:GetBoneCount() -1 do
+						ParticleEffect("blood_impact_black",self:GetPos() +Vector(math.Rand(-20,20),math.Rand(-20,20),-8),Angle(0,0,0),nil)
+					end
 				end
-			end
-		end)
+			end)
+		end
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -238,7 +248,11 @@ function ENT:Possess_Duck(possessor)
 		end
 		if table.Count(tb) <= 0 then return end
 		local ent = self:SelectFromTable(tb)
-		self:Teleport(ent:GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+		if math.random(1,2) == 1 then
+			self:Teleport(ent:GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+		else
+			self:Teleport(ent:GetPos(),true)
+		end
 		self.P_NextTeleportT = CurTime() +15
 	end
 end
@@ -254,7 +268,11 @@ function ENT:Possess_Jump(possessor)
 		end
 		if table.Count(tb) <= 0 then return end
 		local ent = self:SelectFromTable(tb)
-		self:Teleport(ent:GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+		if math.random(1,2) == 1 then
+			self:Teleport(ent:GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+		else
+			self:Teleport(ent:GetPos(),true)
+		end
 		self.P_NextTeleportT = CurTime() +15
 	end
 end
@@ -264,6 +282,59 @@ function ENT:HandleEvents(...)
 	local arg1 = select(2,...)
 	if(event == "mattack") then
 		self:DoDamage(self.MeleeAttackDamageDistance,self.MeleeAttackDamage,self.MeleeAttackType)
+		return true
+	end
+	if(event == "grab") then
+		if(arg1 == "pull") then
+			if IsValid(self:GetEnemy()) && self:GetEnemy():GetPos():Distance(self:GetPos()) <= 50 then
+				self.GrabbedVictim = self:GetEnemy()
+				self:PlaySound("Kneel",75)
+				self.GrabbedVictim:EmitSound("physics/body/body_medium_impact_soft7.wav",65,100)
+				if self.GrabbedVictim:IsPlayer() then
+					self.GrabbedVictim:EmitSound("cpthazama/scp/D9341/breath4.mp3",65,100)
+					self.GrabbedVictim:ChatPrint("SCP-106 grabs you by your legs and yanks you into the ground!")
+				end
+				self.GrabbedVictim:SetPos(LerpVector(0.2,self.GrabbedVictim:GetPos(),self.GrabbedVictim:GetPos() +Vector(0,0,-120)))
+			end
+		end
+		if(arg1 == "kill") then
+			if self.GrabbedVictim:IsValid() then
+				if math.random(1,3) == 1 then
+					for i = 0,self.GrabbedVictim:GetBoneCount() -1 do
+						ParticleEffect("blood_impact_black",self.GrabbedVictim:GetBonePosition(i),Angle(0,0,0),nil)
+					end
+					self.GrabbedVictim:Kill()
+					if self.GrabbedVictim:IsNPC() then
+						self.GrabbedVictim:Remove()
+					else
+						self.GrabbedVictim:EmitSound("cpthazama/scp/D9341/Damage5.mp3",78,100)
+						if self.GrabbedVictim:GetRagdollEntity():IsValid() then
+							self.GrabbedVictim:GetRagdollEntity():Remove()
+						end
+					end
+					self:EmitSound("cpthazama/scp/_oldscp/106horror.mp3",78,100)
+				else
+					if util.IsSite19() && self.GrabbedVictim:IsValid() && self.GrabbedVictim:Alive() then
+						for i = 0,self.GrabbedVictim:GetBoneCount() -1 do
+							ParticleEffect("blood_impact_black",self.GrabbedVictim:GetBonePosition(i),Angle(0,0,0),nil)
+						end
+						self.GrabbedVictim:SetPos(POCKETDIMENSION)
+						self.GrabbedVictim:EmitSound("cpthazama/scp/106/Enter.mp3",40,100)
+						local tr = util.TraceLine({
+							start = self.GrabbedVictim:GetPos(),
+							endpos = self.GrabbedVictim:GetPos() -Vector(0,0,10),
+							filter = {self,self.GrabbedVictim},
+							mask = MASK_NPCWORLDSTATIC
+						})
+						ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+						for i = 0,self.GrabbedVictim:GetBoneCount() -1 do
+							ParticleEffect("blood_impact_black",self.GrabbedVictim:GetBonePosition(i),Angle(0,0,0),nil)
+						end
+					end
+				end
+			end
+			self:PlayAnimation("Teleport",2)
+		end
 		return true
 	end
 	if(event == "emit") then
@@ -320,6 +391,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.WasContained = false
 function ENT:OnThink()
+		-- Containment --
 	if util.IsSite19() then
 		if MN_FEMUR == false && self:GetPos():Distance(FEMURBREAKER) <= 250 then
 			self.IsContained = true
@@ -336,6 +408,7 @@ function ENT:OnThink()
 			end
 		end
 	end
+		-- Random Teleportation --
 	if !IsValid(self:GetEnemy()) then
 		if !self.IsPossessed && self:CanPerformProcess() && CurTime() > self.NextRandomTeleportT && math.random(1,80) == 1 then
 			local tb = {}
@@ -360,6 +433,7 @@ function ENT:OnThink()
 		self.IdleLoop:Play()
 		self.NextIdleLoopT = CurTime() +2.8
 	end
+		-- Stupid Code --
 	local cantpp = false
 	if self.point != nil && self.point:IsValid() && self.point:GetPos():Distance(self:GetPos()) > 800 && !self.point:Visible(self) then
 		for _,v in ipairs(ents.FindInSphere(self.point:GetPos(),250)) do
@@ -383,6 +457,7 @@ function ENT:OnThink()
 	else
 		self.WasSeen = false
 	end
+		-- Walk Through Stuff --
 	local canwalkthroughsurface = false
 	if self.IsContained == false then
 		for _,v in ipairs(ents.FindInSphere(self:GetPos(),self.CorrosionCheckDistance)) do
@@ -425,10 +500,15 @@ function ENT:OnThink()
 	else
 		self:SetCollisionGroup(COLLISION_GROUP_NPC)
 	end
+		-- Enemy Teleportation --
 	if !self.IsPossessed then
 		if !self.IsContained && IsValid(self:GetEnemy()) then
-			if CurTime() > self.NextTeleportT && !self:GetEnemy():Visible(self) && self:GetClosestPoint(self:GetEnemy()) > 900 && math.random(1,20) == 1 then
-				self:Teleport(self:GetEnemy():GetPos()  +Vector(math.random(-50,50),math.random(-50,50),0))
+			if CurTime() > self.NextTeleportT && !self:GetEnemy():Visible(self) && self:GetClosestPoint(self:GetEnemy()) > 500 && math.random(1,20) == 1 then
+				-- if math.random(1,2) == 1 then
+					self:Teleport(self:GetEnemy():GetPos(),true)
+				-- else
+					-- self:Teleport(self:GetEnemy():GetPos() +Vector(math.random(-50,50),math.random(-50,50),0))
+				-- end
 				self.NextTeleportT = CurTime() +math.Rand(28,35)
 			end
 		end
