@@ -88,6 +88,11 @@ function ENT:Teleport(pos,grab)
 	self:StopCompletely()
 	if grab then
 		self:PlayAnimation("AttackGround",2)
+		timer.Simple(self:AnimationLength(ACT_MELEE_ATTACK2) +0.01,function()
+			if IsValid(self) then
+				self:PlayAnimation("Teleport",2)
+			end
+		end)
 	else
 		self:PlayAnimation("Teleport",2)
 	end
@@ -288,12 +293,12 @@ function ENT:HandleEvents(...)
 		if(arg1 == "pull") then
 			if IsValid(self:GetEnemy()) && self:GetEnemy():GetPos():Distance(self:GetPos()) <= 50 then
 				self.GrabbedVictim = self:GetEnemy()
-				self:PlaySound("Kneel",75)
 				self.GrabbedVictim:EmitSound("physics/body/body_medium_impact_soft7.wav",65,100)
 				if self.GrabbedVictim:IsPlayer() then
 					self.GrabbedVictim:EmitSound("cpthazama/scp/D9341/breath4.mp3",65,100)
 					self.GrabbedVictim:ChatPrint("SCP-106 grabs you by your legs and yanks you into the ground!")
 				end
+				self:PlaySound("Kneel",75)
 				self.GrabbedVictim:SetPos(LerpVector(0.2,self.GrabbedVictim:GetPos(),self.GrabbedVictim:GetPos() +Vector(0,0,-120)))
 			end
 		end
@@ -302,6 +307,9 @@ function ENT:HandleEvents(...)
 				if math.random(1,3) == 1 then
 					for i = 0,self.GrabbedVictim:GetBoneCount() -1 do
 						ParticleEffect("blood_impact_black",self.GrabbedVictim:GetBonePosition(i),Angle(0,0,0),nil)
+					end
+					if self.GrabbedVictim:IsNPC() then
+						self.GrabbedVictim.HasDeathRagdoll = false
 					end
 					self.GrabbedVictim:Kill()
 					if self.GrabbedVictim:IsNPC() then
@@ -312,7 +320,7 @@ function ENT:HandleEvents(...)
 							self.GrabbedVictim:GetRagdollEntity():Remove()
 						end
 					end
-					self:EmitSound("cpthazama/scp/_oldscp/106horror.mp3",78,100)
+					sound.Play("cpthazama/scp/_oldscp/106horror.mp3",self:GetPos(),78,100)
 				else
 					if util.IsSite19() && self.GrabbedVictim:IsValid() && self.GrabbedVictim:Alive() then
 						for i = 0,self.GrabbedVictim:GetBoneCount() -1 do
@@ -333,7 +341,6 @@ function ENT:HandleEvents(...)
 					end
 				end
 			end
-			self:PlayAnimation("Teleport",2)
 		end
 		return true
 	end

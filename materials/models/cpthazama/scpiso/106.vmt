@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	$baseTexture "models\cpthazama\scpiso\106"
+	$bumpmap "models\cpthazama\scpiso\106_n"
+
+	$phong "1"
+	$phongboost "3"
+	$phongexponenttexture "models\cpthazama\scpiso\106_s"
+	$phongfresnelranges	"[0.05 0.5 1]"
+	$phongalbedotint 1
+}

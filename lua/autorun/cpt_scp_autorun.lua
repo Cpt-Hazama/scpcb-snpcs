@@ -16,12 +16,18 @@ CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
 CPTBase.AddParticleSystem("particles/cpt_scp_pocketdimension.pcf",{})
 
 local category = "SCP:CB"
+-- CPTBase.AddNPC("SCP-106 (Isolation)","npc_cpt_scpiso_106",category)
+CPTBase.AddNPC("SCP-173 (Isolation)","npc_cpt_scpiso_173",category)
+CPTBase.AddAdminNPC("SCP-303 (Isolation)","npc_cpt_scpiso_303",category)
+CPTBase.AddNPC("SCP-650 (Isolation)","npc_cpt_scpiso_650",category)
+
 CPTBase.AddNPC("(Classic) SCP-008-1","npc_cpt_scp_008_1_old",category)
 CPTBase.AddNPC("(Classic) SCP-096","npc_cpt_scp_096_old",category)
 CPTBase.AddNPC("(Classic) SCP-106","npc_cpt_scp_106_old",category)
 CPTBase.AddNPC("(Classic) SCP-173","npc_cpt_scp_173_old",category)
 CPTBase.AddNPC("(Classic) MTF Guard","npc_cpt_scp_guard_old",category)
 
+CPTBase.AddAdminNPC("SCP-005","npc_cpt_scp_005",category)
 CPTBase.AddAdminNPC("SCP-008","npc_cpt_scp_008",category)
 CPTBase.AddNPC("SCP-008-1","npc_cpt_scp_008_1",category)
 CPTBase.AddAdminNPC("SCP-012","npc_cpt_scp_012",category)
@@ -54,6 +60,7 @@ CPTBase.AddNPC("SCP-500","npc_cpt_scp_500",category)
 CPTBase.AddNPC("SCP-513","npc_cpt_scp_513",category)
 -- CPTBase.AddNPC("SCP-513-1","npc_cpt_scp_513_1",category) // Shouldn't be spawnable
 CPTBase.AddNPC("SCP-575","npc_cpt_scp_575",category)
+CPTBase.AddNPC("SCP-650","npc_cpt_scp_650",category)
 CPTBase.AddAdminNPC("SCP-682","npc_cpt_scp_682",category)
 CPTBase.AddNPC("SCP-714","npc_cpt_scp_714",category)
 CPTBase.AddNPC("SCP-860-2","npc_cpt_scp_860",category)
@@ -79,6 +86,18 @@ CPTBase.AddNPC("Class D Subject","npc_cpt_scp_dclass",category)
 CPTBase.AddNPC("Scientist","npc_cpt_scp_scientist",category) // STAHP! NO!
 
 CPTBase.AddNPC("Nightvision Goggles","ent_cpt_scp_nightvision",category) // The object itself isn't a NPC but technically speaking, it is a NPC since well, it's running on my SNPC base
+
+hook.Add("PlayerUse","CPTBase_SCP005",function(ply,ent)
+	if !ply.SCP_Has005 then return end
+	if ply.SCP_NextUnlockDoorT == nil then ply.SCP_NextUnlockDoorT = 0 end
+	if CurTime() > ply.SCP_NextUnlockDoorT && ent:IsValid() && string.find(ent:GetClass(),"door") && string.find(ent:GetSequenceName(ent:GetSequence()),"locked") then
+		ent:Fire("Unlock")
+		ply:ChatPrint("Door unlocked with SCP-005")
+		ply:ChatPrint("SCP-005 cooldown time is 3 seconds")
+		ent:EmitSound("doors/default_locked.wav",70,100)
+		ply.SCP_NextUnlockDoorT = CurTime() +3
+	end
+end)
 
 if CLIENT then
 	local CPT_SCP_TBL_939_MOVERS = {}
@@ -437,6 +456,7 @@ hook.Add("PlayerSpawn","CPTBase_SCP_SpawnData",function(ply)
 	ply.SCP_Disease_CardiacArrest = false
 	ply.SCP_Has714 = false
 	ply.SCP_Has427 = false
+	ply.SCP_Has005 = false
 	ply.SCP_NextUse1123T = CurTime()
 	ply.SCP_Using420 = false
 	ply.CPTBase_SCP_Zombie = NULL

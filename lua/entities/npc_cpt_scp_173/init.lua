@@ -317,7 +317,6 @@ function ENT:DoAttack()
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
 	self:PlayAnimation("Attack")
 	self.IsAttacking = true
 	self:AttackFinish()

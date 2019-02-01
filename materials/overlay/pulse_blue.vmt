@@ -1,0 +1,29 @@
+"Refract"
+{
+	<dx90
+	{
+		 	"$fallbackmaterial" "overlay/pulse_blue_dx80"
+	}
+
+	"%keywords" "tf"
+	"$refractamount" ".02"
+	"$forcerefract" "1"
+	"$model" "1"
+	"$refracttint" "{55 155 255}"
+	"$normalmap" "overlay/pulse_n"
+	"$bumpframe" "0"
+	"$bluramount" "1"
+	"$refracttinttexture" "overlay/pulse"
+	"Proxies"
+	{
+		"sine"
+		{
+			"sinemax" ".1"
+			"sinemin" "-.1"
+			"sineperiod" ".81"
+			"resultvar" "$refractamount"
+		}
+	}
+
+}
+

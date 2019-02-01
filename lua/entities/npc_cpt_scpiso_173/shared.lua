@@ -1,0 +1,5 @@
+ENT.Base = "npc_cpt_scp_173"
+ENT.Type = "ai"
+ENT.PrintName = "SCP"
+ENT.Author = "Cpt. Hazama"
+ENT.Category = "SCP:CB"

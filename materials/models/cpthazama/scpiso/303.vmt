@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	$baseTexture "models\cpthazama\scpiso\303"
+	//$bumpmap "models\cpthazama\scpiso\303_n"
+}

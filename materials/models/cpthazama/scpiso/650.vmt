@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	$baseTexture "models\cpthazama\scpiso\650"
+	$bumpmap "models\cpthazama\scpiso\650_n"
+
+	"$phong" "1"
+	"$phongexponenttexture" 	"models\cpthazama\scpiso\650_s"
+	"$phongboost" "4"
+	"$phongfresnelranges"	"[0.1 1 1]"
+
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .1 .1 .1 ]"
+}
