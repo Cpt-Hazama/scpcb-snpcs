@@ -41,6 +41,7 @@ ENT.tbl_Sounds = {
 		-- "cpthazama/scp/ntf/Random6.mp3",
 		-- "cpthazama/scp/ntf/Random7.mp3",
 	-- },
+	["Tesla"] = {"cpthazama/scp/ntf/Tesla0.mp3","cpthazama/scp/ntf/Tesla1.mp3","cpthazama/scp/ntf/Tesla2.mp3","cpthazama/scp/ntf/Tesla3.mp3"},
 	["Spot_Scientist"] = {"cpthazama/scp/ntf/ThereHeIs3.mp3"},
 	["Spot_DClass"] = {"cpthazama/scp/ntf/ClassD1.mp3","cpthazama/scp/ntf/ClassD2.mp3","cpthazama/scp/ntf/ClassD3.mp3","cpthazama/scp/ntf/ClassD4.mp3"},
 	["Spot_049"] = {"cpthazama/scp/ntf/049/Spotted1.mp3","cpthazama/scp/ntf/049/Spotted2.mp3","cpthazama/scp/ntf/049/Spotted3.mp3","cpthazama/scp/ntf/049/Spotted4.mp3","cpthazama/scp/ntf/049/Spotted5.mp3"},
@@ -55,12 +56,24 @@ ENT.tbl_Capabilities = {CAP_OPEN_DOORS,CAP_USE}
 function ENT:SCP_BeforeBlinking()
 	if CurTime() > self.NextBlinkingSoundT then
 		for _,v in ipairs(ents.GetAll()) do
-			if v:IsNPC() && (v:GetClass() == "npc_cpt_scp_173" || v:GetClass() == "npc_cpt_scp_087_b") && v:Visible(self) then
+			if v:IsNPC() && (string.find(v:GetClass(),"173") || v:GetClass() == "npc_cpt_scp_087_b") && v:Visible(self) then
 				self:PlaySound("Blinking",72)
 				self.NextBlinkingSoundT = CurTime() +4
 			end
 		end
 	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:OnFollowPlayer(ply)
+	ply:ChatPrint("This NPC will now follow you")
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:OnUnFollowPlayer(ply)
+	ply:ChatPrint("This NPC will no longer follow you")
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:OnDenyFollowPlayer(ply)
+	ply:ChatPrint("This NPC is already following someone")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnScientistFollowed(ent)
@@ -212,7 +225,7 @@ function ENT:OnEnemyChanged(ent)
 				self:PlaySound("Spot_096",80)
 			elseif class == "npc_cpt_scp_106" then
 				self:PlaySound("Spot_106",80)
-			elseif class == "npc_cpt_scp_173" then
+			elseif string.find(class,"173") then
 				self:PlaySound("Spot_173",80)
 			end
 		elseif ent:IsPlayer() then
@@ -232,7 +245,7 @@ end
 function ENT:OnKilledEnemy(v)
 	if GetConVarNumber("cpt_scp_ntfannouncer") == 1 && util.IsSCPMap() then
 		if v:IsNPC() then
-			if v:GetClass() == "npc_cpt_scp_173" then
+			if string.find(v:GetClass(),"173") then
 				for _,v in ipairs(player.GetAll()) do
 					v:SendLua("surface.PlaySound('cpthazama/scp/ntf/Announc173Contain.mp3')")
 				end
@@ -279,7 +292,7 @@ ENT.P_NextContainT = 0
 function ENT:Possess_Reload(possessor)
 	if CurTime() > self.P_NextContainT then
 		local tr = self:Possess_EyeTrace(possessor)
-		if tr.Hit && IsValid(tr.Entity) && tr.Entity:GetClass() == "npc_cpt_scp_173" then
+		if tr.Hit && IsValid(tr.Entity) && string.find(tr.Entity:GetClass(),"173") then
 			local scp = tr.Entity
 			if self:GetClosestPoint(scp) <= 130 && scp:GetPos():Distance(THESTATUE) > 400 then
 				scp:ContainSCP(self)
@@ -384,7 +397,7 @@ function ENT:OnThink()
 					end
 				end
 			end
-			if IsValid(self:GetEnemy()) && self:GetEnemy():GetClass() == "npc_cpt_scp_173" && !self:GetEnemy().IsContained then
+			if IsValid(self:GetEnemy()) && string.find(self:GetEnemy():GetClass(),"173") && !self:GetEnemy().IsContained then
 				local ent = self:GetEnemy()
 				local dist = ent:GetPos():Distance(self:GetPos())
 				if dist <= 600 then
@@ -439,6 +452,7 @@ function ENT:OnThink()
 			if self.IsLeader == true then
 				local didremove = false
 				for _,v in ipairs(ents.FindInSphere(self:GetPos(),100)) do
+					print(v)
 					if v:IsValid() && (v:GetClass() == "trigger_multiple") then
 						v:Remove()
 						didremove = true
@@ -458,6 +472,7 @@ function ENT:OnThink()
 						for _,v in ipairs(player.GetAll()) do
 							v:SendLua(glbsound)
 						end
+						self:PlaySound("Tesla",75)
 					end
 				end
 			end
@@ -467,7 +482,7 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CanSetAsEnemy(ent)
-	if ent:GetClass() == "npc_cpt_scp_173" && ent.IsContained then
+	if string.find(ent:GetClass(),"173") && ent.IsContained then
 		return false
 	else
 		return true

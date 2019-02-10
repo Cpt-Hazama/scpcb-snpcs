@@ -29,12 +29,12 @@ function ENT:SetInit()
 	self.NTFOwner = NULL
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:FaceOwner(owner)
-	self:SetTarget(owner)
-	local facetarget = ai_sched_cpt.New("cptbase_scp_faceowner")
-	facetarget:EngTask("TASK_FACE_TARGET",0)
-	self:StartSchedule(facetarget)
-	self:LookAtPosition(self:FindCenter(owner),self.DefaultPoseParameters,self.DefaultPoseParamaterSpeed)
+function ENT:OnFollowAI(owner,dist)
+	if IsValid(self:GetEnemy()) then
+		if string.find(self:GetEnemy():GetClass(),"173") && dist < 400 && self:GetEnemy():Visible(self) then
+			self:SetAngles(Angle(0,(self:GetEnemy():GetPos() -self:GetPos()):Angle().y,0))
+		end
+	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
@@ -63,7 +63,7 @@ function ENT:OnThink()
 					self:FaceOwner(self.NTFOwner)
 				end
 			else
-				if dist <= self.MinFollowDistance && (self:GetEnemy():GetClass() == "npc_cpt_scp_173" || self:GetEnemy():GetClass() == "npc_cpt_scp_087_b") && self:GetEnemy():Visible(self) then
+				if dist <= self.MinFollowDistance && (string.find(self:GetEnemy():GetClass(),"173") || self:GetEnemy():GetClass() == "npc_cpt_scp_087_b") && self:GetEnemy():Visible(self) then
 					if self:IsMoving() then
 						self:StopCompletely()
 					end
@@ -77,6 +77,7 @@ function ENT:OnThink()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnSpottedFriendly(ent)
+	if self.IsFollowingAPlayer then return end
 	if IsValid(self.NTFOwner) then return end
 	if ent:GetClass() == "npc_cpt_scp_ntf" && ent:GetPos():Distance(self:GetPos()) <= 750 then
 		self.NTFOwner = ent
@@ -121,7 +122,7 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if self.IsOwned then return end
 	if(disp == D_HT) then
-		if enemy:GetClass() == "npc_cpt_scp_173" then
+		if !self.IsFollowingAPlayer && string.find(enemy:GetClass(),"173") then
 			self:FaceEnemy()
 		else
 			if self:CanPerformProcess() then
