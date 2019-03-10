@@ -398,6 +398,13 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.WasContained = false
 function ENT:OnThink()
+	if self:GetCollisionGroup() == COLLISION_GROUP_IN_VEHICLE then
+		self.OverrideWalkAnimation = ACT_WALK_STIMULATED
+		self.OverrideRunAnimation = ACT_WALK_STIMULATED
+	else
+		self.OverrideWalkAnimation = ACT_WALK
+		self.OverrideRunAnimation = ACT_WALK
+	end
 		-- Containment --
 	if util.IsSite19() then
 		if MN_FEMUR == false && self:GetPos():Distance(FEMURBREAKER) <= 250 then

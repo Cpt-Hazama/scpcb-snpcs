@@ -11,7 +11,7 @@ ENT.Faction = "FACTION_SCP_NTF"
 
 ENT.GrenadeDistance = 1000
 ENT.GrenadeMinDistance = 450
-ENT.GrenadeChance = 30
+ENT.GrenadeChance = 150
 
 ENT.RangeAttackDistance = 800
 ENT.FireRate = 0.1
