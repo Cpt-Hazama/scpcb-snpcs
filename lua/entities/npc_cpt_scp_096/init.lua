@@ -5,7 +5,8 @@ include('shared.lua')
 ENT.ModelTable = {"models/cpthazama/scp/096.mdl"}
 ENT.StartHealth = 5000
 ENT.CanMutate = false
-ENT.CollisionBounds = Vector(30,18,90)
+ENT.CollisionBounds = Vector(30,18,60)
+ENT.CollisionBoundsTriggered = Vector(20,20,80)
 ENT.CanChaseEnemy = false
 ENT.ReactsToSound = false
 
@@ -52,7 +53,7 @@ function ENT:SetInit()
 	self.CanSetEnemy = false
 	self.HasReset = true
 	self.TriggeredEntity = NULL
-	self:SetCollisionBounds(Vector(30,18,90),-(Vector(20,18,0)))
+	-- self:SetCollisionBounds(Vector(30,18,90),-(Vector(20,18,0)))
 	-- self:SetCollisionBounds(Vector(30,15,60),-(Vector(20,15,0)))
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -101,48 +102,26 @@ function ENT:OnThink()
 	end
 	if util.IsSCPMap() then
 		if CurTime() > self.NextDoorT then
-			-- local change = false
 			if self.IsTriggered == false then
 				for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance)) do
 					if v:IsValid() && v:GetClass() == "func_door" /*&& v:GetSequenceName(v:GetSequence()) == "idle"*/ then
 						v:Fire("Open")
-						-- change = true
-					end
-				end
-			elseif self.IsTriggered && self.CanAttack then
-				for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance +40)) do
-					if v:IsValid() && ((v:GetClass() == "prop_dynamic" && v:GetSequenceName(v:GetSequence()) == "idle") || v:GetClass() == "func_door") then
-						-- change = true
-						-- local finddoors = ents.Create("prop_physics")
-						-- finddoors:SetPos(v:GetPos())
-						-- finddoors:SetAngles(v:GetAngles())
-						-- finddoors:SetModel(v:GetModel())
-						-- finddoors:Spawn()
-						-- finddoors:Activate()
-						-- finddoors:SetModelScale(0.9,0)
-						-- if v:GetSkin() != nil then
-							-- finddoors:SetSkin(v:GetSkin())
-						-- end
-						-- finddoors:SetMaterial(v:GetMaterial())
-						if v:GetClass() == "prop_dynamic" then
-							ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
-						end
-						v:Remove()
-						-- if finddoors != nil && finddoors:IsValid() then
-							-- finddoors:SetCollisionGroup(COLLISION_GROUP_DEBRIS)	
-							-- local finddoors_phys = finddoors:GetPhysicsObject()
-							-- finddoors_phys:ApplyForceCenter(((self:GetPos() +self:GetForward() *300) -self:LocalToWorld(Vector(0,-8,20))) *150 +((self:GetPos() +self:GetForward() *300) +self:GetUp() *140))
-						-- end
 					end
 				end
 			end
-			-- if change == true then
-				-- self:SetCollisionBounds(Vector(30,15,60),-(Vector(20,15,0)))
-			-- else
-				-- self:SetCollisionBounds(Vector(30,20,90),-(Vector(20,20,0)))
-			-- end
 			self.NextDoorT = CurTime() +math.Rand(1,3)
 		end
+	end
+	if CurTime() > self.NextDoorT then
+		if self.IsTriggered && self.CanAttack then
+			for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance +40)) do
+				if v:IsValid() && ((v:GetClass() == "prop_dynamic" && v:GetSequenceName(v:GetSequence()) == "idle") || v:GetClass() == "func_door" || v:GetClass() == "func_door_rotating") then
+					ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
+					v:Remove()
+				end
+			end
+		end
+		self.NextDoorT = CurTime() +math.Rand(1,3)
 	end
 	if !self.IsPossessed && self.IsAttacking && IsValid(self:GetEnemy()) then
 		self:SetAngles(Angle(0,(self:GetEnemy():GetPos() -self:GetPos()):Angle().y,0))
@@ -241,6 +220,7 @@ function ENT:ResetTrigger()
 	self.HasReset = true
 	self:StopProcessing()
 	self:SetIdleAnimation(ACT_IDLE)
+	self:UpdateCollision(self.CollisionBounds)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnTakePain(dmg,dmginfo,hitbox)
@@ -256,7 +236,7 @@ end
 function ENT:FindFaceLookers()
 	if self.IsTriggered then return end
 	if CurTime() <= self.NextCanTriggerT then return end
-	local facepos = self:GetBonePosition(34)
+	local facepos = self:GetBonePosition(38)
 	for _,v in ipairs(ents.GetAll()) do
 		if v:IsValid() then
 			if v:IsPlayer() then
@@ -278,6 +258,7 @@ function ENT:FindFaceLookers()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnTriggered(v,triggertime,usepanic)
+	self:UpdateCollision(self.CollisionBoundsTriggered)
 	if usepanic == true then
 		self:EmitSound("cpthazama/scp/096/Panic.mp3",100,100)
 	else

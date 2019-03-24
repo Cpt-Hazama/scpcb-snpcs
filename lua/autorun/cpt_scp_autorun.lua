@@ -14,6 +14,7 @@ CPTBase.RegisterMod("SCP:CB SNPCs","0.2.1")
 CPTBase.DefineDecal("SCP_PDCorrosion",{"decals/decalpd3"})
 -- CPTBase.DefineDecal("SCP_457Scorch",{"decals/decal_footprint_scorch"})
 CPTBase.AddParticleSystem("particles/cpt_scp_pocketdimension.pcf",{})
+CPTBase.AddParticleSystem("particles/DOOR_EXPLOSION.pcf",{})
 
 local category = "SCP:CB"
 -- CPTBase.AddNPC("SCP-106 (Isolation)","npc_cpt_scpiso_106",category)
@@ -86,6 +87,58 @@ CPTBase.AddNPC("Class D Subject","npc_cpt_scp_dclass",category)
 CPTBase.AddNPC("Scientist","npc_cpt_scp_scientist",category) // STAHP! NO!
 
 CPTBase.AddNPC("Nightvision Goggles","ent_cpt_scp_nightvision",category) // The object itself isn't a NPC but technically speaking, it is a NPC since well, it's running on my SNPC base
+
+hook.Add("OnNPCKilled","CPTBase_SCP079_KillPoints",function(victim,inflictor,killer)
+	local canRun = false
+	local SCP = NULL
+	if killer.CPTBase_NPC then
+		if killer != victim then
+			for _,v in ipairs(ents.GetAll()) do
+				if v:IsNPC() && v:GetClass() == "npc_cpt_scp_079" then
+					canRun = true
+					SCP = v
+					break
+				end
+			end
+			if canRun then
+				if table.Count(SCP.tbl_LockedDoors) > 0 then
+					for _,v in ipairs(SCP.tbl_LockedDoors) do
+						if victim:GetPos():Distance(v:GetPos()) <= 450 then
+							SCP.ExperiencePoints = SCP.ExperiencePoints +15
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
+hook.Add("PlayerDeath","CPTBase_SCP079_KillPoints_Player",function(victim,inflictor,killer)
+	local canRun = false
+	local SCP = NULL
+	if killer.CPTBase_NPC then
+		if killer != victim then
+			for _,v in ipairs(ents.GetAll()) do
+				if v:IsNPC() && v:GetClass() == "npc_cpt_scp_079" then
+					canRun = true
+					SCP = v
+					break
+				end
+			end
+			if canRun then
+				if table.Count(SCP.tbl_LockedDoors) > 0 then
+					for _,v in ipairs(SCP.tbl_LockedDoors) do
+						if victim:GetPos():Distance(v:GetPos()) <= 450 then
+							SCP.ExperiencePoints = SCP.ExperiencePoints +15
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+end)
 
 hook.Add("PlayerUse","CPTBase_SCP005",function(ply,ent)
 	if !ply.SCP_Has005 then return end
@@ -673,7 +726,7 @@ end)
 
 function util.IsSCPMap()
 	if GetConVarNumber("cpt_scp_site19") == 0 then return false end
-	if game.GetMap() == "gm_site19" || game.GetMap() == "rp_site54" then
+	if game.GetMap() == "gm_site19" || game.GetMap() == "rp_site54" || game.GetMap() == "rp_site61_kaktusownia" then
 		return true
 	end
 	return false

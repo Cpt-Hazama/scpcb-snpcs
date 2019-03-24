@@ -25,6 +25,7 @@ ENT.tbl_Animations = {
 	["Attack"] = {ACT_MELEE_ATTACK1},
 	["AttackGround"] = {ACT_MELEE_ATTACK2},
 	["Teleport"] = {ACT_JUMP},
+	["TeleportWall"] = {ACT_SPRINT},
 }
 
 ENT.tbl_Sounds = {
@@ -36,6 +37,8 @@ ENT.tbl_Sounds = {
 	["Decay"] = {"cpthazama/scp/106/Decay0.mp3"}
 }
 
+ENT.RootBone = "Dummy001"
+
 ENT.tbl_Capabilities = {CAP_USE}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_OnPossessed(possessor)
@@ -45,6 +48,7 @@ function ENT:Possess_OnPossessed(possessor)
 	possessor:ChatPrint("Reload - Set Pocket Hole")
 	possessor:ChatPrint("Jump - Teleport to random player")
 	possessor:ChatPrint("Crouch - Teleport to random NPC")
+	possessor:ChatPrint("Suit Zoom - Wall teleport to random enemy")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:BeforeTakeDamage(dmg,hitbox)
@@ -279,6 +283,44 @@ function ENT:Possess_Jump(possessor)
 			self:Teleport(ent:GetPos(),true)
 		end
 		self.P_NextTeleportT = CurTime() +15
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_CustomCommands(possessor)
+	local w = possessor:KeyDown(IN_FORWARD)
+	local e = possessor:KeyDown(IN_USE)
+	local r = possessor:KeyDown(IN_RELOAD)
+	local a = possessor:KeyDown(IN_MOVELEFT)
+	local s = possessor:KeyDown(IN_BACK)
+	local d = possessor:KeyDown(IN_MOVERIGHT)
+	local lmb = possessor:KeyDown(IN_ATTACK)
+	local rmb = possessor:KeyDown(IN_ATTACK2)
+	local alt = possessor:KeyDown(IN_ALT1)
+	local shift = possessor:KeyDown(IN_RUN)
+	local zoom = possessor:KeyDown(IN_ZOOM)
+	if zoom then
+		return self:Possess_Zoom(possessor)
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Possess_Zoom(possessor)
+	if self.IsContained then return end
+	if CurTime() > self.P_NextTeleportT then
+		local tb = {}
+		for _,v in ipairs(player.GetAll()) do
+			if v:Alive() && v != possessor then
+				table.insert(tb,v)
+			end
+		end
+		for _,v in ipairs(ents.GetAll()) do
+			if v:IsValid() && v:IsNPC() && v != self && v:Disposition(self) != D_LI && v.Faction != "FACTION_SCP" then
+				table.insert(tb,v)
+			end
+		end
+		if table.Count(tb) <= 0 then return end
+		local ent = self:SelectFromTable(tb)
+		self:DoWallTeleport(ent)
+		self.P_NextTeleportT = CurTime() +7
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -551,9 +593,70 @@ function ENT:DoAttack()
 	self:AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:DoWallTeleport(enemy)
+	local tPos = enemy:GetPos() +enemy:GetUp() *8
+	local trR = self:DoCustomTrace(tPos,tPos +self:GetRight() *400,{self,enemy},true)
+	local trL = self:DoCustomTrace(tPos,tPos +self:GetRight() *-400,{self,enemy},true)
+	local time = 0.04
+	if trR.HitWorld then
+		local opos = enemy:GetPos()
+		ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
+		for i = 0,self:GetBoneCount() -1 do
+			ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+		end
+		self:SetClearPos(trR.HitPos)
+		self:SetAngles(Angle(0,(trR.HitNormal):Angle().y,0))
+		-- self:SetPos(self:GetPos() +self:GetForward() *20)
+		self:PlayAnimation("TeleportWall")
+		util.Decal("MetalStain3",trR.HitPos +trR.HitNormal,trR.HitPos -trR.HitNormal)
+		self:EmitSound("cpthazama/scp/106/Decay2.mp3",80,100)
+		self:SetCollisionGroup(COLLISION_GROUP_NONE)
+		timer.Simple(2,function()
+			if self:IsValid() then
+				self:SetCollisionGroup(COLLISION_GROUP_NPC)
+			end
+		end)
+		timer.Simple(self:AnimationLength(ACT_SPRINT) +time,function()
+			if self:IsValid() then
+				-- self:PlayerChat("Ran")
+				local pos,ang = self:GetBonePosition(0)
+				self:SetPos(pos)
+			end
+		end)
+	elseif trL.HitWorld then
+		local opos = enemy:GetPos()
+		ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
+		for i = 0,self:GetBoneCount() -1 do
+			ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+		end
+		self:SetClearPos(trL.HitPos)
+		self:SetAngles(Angle(0,(trL.HitNormal):Angle().y,0))
+		-- self:SetPos(self:GetPos() +self:GetForward() *20)
+		self:PlayAnimation("TeleportWall")
+		util.Decal("MetalStain3",trL.HitPos +trL.HitNormal,trL.HitPos -trL.HitNormal)
+		self:EmitSound("cpthazama/scp/106/Decay2.mp3",80,100)
+		self:SetCollisionGroup(COLLISION_GROUP_NONE)
+		timer.Simple(2,function()
+			if self:IsValid() then
+				self:SetCollisionGroup(COLLISION_GROUP_NPC)
+			end
+		end)
+		timer.Simple(self:AnimationLength(ACT_SPRINT) +time,function()
+			if self:IsValid() then
+				-- self:PlayerChat("Ran")
+				local pos,ang = self:GetBonePosition(0)
+				self:SetPos(pos)
+			end
+		end)
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
+		if (!enemy:Visible(self) || nearest > 900) && math.random(1,20) == 1 && self:CanPerformProcess() then
+			self:DoWallTeleport(enemy)
+		end
 		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end

@@ -7,7 +7,7 @@ ENT.StartHealth = 300
 ENT.CanMutate = false
 ENT.CollisionBounds = Vector(18,18,50)
 ENT.FlyUpOnSpawn = false
-ENT.FlySpeed = 1300
+ENT.FlySpeed = 2500
 ENT.DeathRagdollType = "prop_physics"
 
 ENT.MeleeAttackDistance = 90

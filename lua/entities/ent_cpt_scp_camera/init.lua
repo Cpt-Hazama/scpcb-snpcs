@@ -23,7 +23,6 @@ function ENT:FindAllEnemies079()
 		if IsValid(v) && (v:IsNPC() && v != self && v:GetClass() != "npc_cpt_scp_079" || v:IsPlayer() && GetConVarNumber("ai_ignoreplayers") == 0 && self.FriendlyToPlayers == false && v.IsPossessing == false) then
 			if v.Faction == "FACTION_NOTARGET" then return end
 			if v.UseNotarget then return end
-			-- if v:GetClass() != "ent_cpt_scp_camera" then return end
 			if v:Health() > 0 && self:CheckCanSee(v,90) && v.Faction != self:GetCameraOwner().Faction then
 				return v
 			end
