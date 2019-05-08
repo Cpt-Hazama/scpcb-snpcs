@@ -14,6 +14,7 @@ ENT.MaxTurnSpeed = 0
 ENT.Faction = "FACTION_SCP"
 
 -- ENT.UseNotarget = true
+ENT.Possessor_CanBePossessed = false
 ENT.Bleeds = false
 ENT.TurnsOnDamage = false
 ENT.IsEssential = true
