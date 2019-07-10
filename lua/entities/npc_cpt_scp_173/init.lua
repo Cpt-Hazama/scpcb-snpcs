@@ -131,10 +131,14 @@ function ENT:Teleport(pos)
 	if pos == self.LastVent then
 		local tb = {VENTA,VENTB,VENTC,VENTD,VENTE,VENTF,VENTG,VENTH}
 		local pos = self:SelectFromTable(tb)
-		self:Teleport(pos)
+		if util.GetSCPMapData(pos) != nil then
+			self:Teleport(util.GetSCPMapData(pos))
+		end
 		return
 	end
-	self:SetPos(pos)
+	if pos != nil then
+		self:SetPos(pos)
+	end
 	timer.Simple(0.5,function()
 		if self:IsValid() then
 			self:SetCollisionGroup(COLLISION_GROUP_NPC)
@@ -142,7 +146,9 @@ function ENT:Teleport(pos)
 			if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then
 				local tb = {VENTA,VENTB,VENTC,VENTD,VENTE,VENTF,VENTG,VENTH}
 				local pos = self:SelectFromTable(tb)
-				self:Teleport(pos)
+				if util.GetSCPMapData(pos) != nil then
+					self:Teleport(util.GetSCPMapData(pos))
+				end
 			end
 			self.LastVent = pos
 		end
@@ -151,12 +157,14 @@ function ENT:Teleport(pos)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Secondary(possessor)
-	if util.IsSite19() then
+	if util.IsSCPMap() then
 		if CurTime() > self.P_NextVentT then
 			if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 			local tb = {VENTA,VENTB,VENTC,VENTD,VENTE,VENTF,VENTG,VENTH}
 			local pos = self:SelectFromTable(tb)
-			self:Teleport(pos)
+			if util.GetSCPMapData(pos) != nil then
+				self:Teleport(util.GetSCPMapData(pos))
+			end
 			-- print(pos)
 			self.P_NextVentT = CurTime() +7
 		end
@@ -295,13 +303,15 @@ function ENT:OnThink()
 			self.NextDoorT = CurTime() +math.Rand(1,3)
 		end
 	end
-	if util.IsSite19() then
+	if util.IsSCPMap() then
 		if !self.IsPossessed then
 			if !IsValid(self:GetEnemy()) && math.random(1,50) == 1 && CurTime() > self.P_NextVentT then
 				if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 				local tb = {VENTA,VENTB,VENTC,VENTD,VENTE,VENTF,VENTG,VENTH}
 				local pos = self:SelectFromTable(tb)
-				self:Teleport(pos)
+				if util.GetSCPMapData(pos) != nil then
+					self:Teleport(util.GetSCPMapData(pos))
+				end
 				self.P_NextVentT = CurTime() +7
 			end
 		end

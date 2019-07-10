@@ -5,6 +5,7 @@
 --------------------------------------------------*/
 include('server/cpt_utilities.lua')
 include('cpt_scp_vision.lua')
+include('cpt_scp_map.lua')
 
 -- if !CPTBase.IsAddonUpdated("cptbase","54") then return end
 
@@ -516,65 +517,6 @@ hook.Add("PlayerSpawn","CPTBase_SCP_SpawnData",function(ply)
 	ply.SCP_SpawnedZombieEntity = false
 end)
 
-if SERVER then
-	FEMURACTIVATED = false
-	NEXTFMT = 0
-	ST_FEMUR = false
-	NEXTSTT = 0
-	MN_FEMUR = false
-	NEXTMNT = 0
-end
-
-hook.Add("PlayerUse","CPTBase_SCP_106Containtment",function(ply,ent)
-	if util.IsSCPMap() then
-		if IsValid(ent) then
-			if ent:GetName() == "sound_lever_106" then
-				if CurTime() > NEXTSTT then
-					if ST_FEMUR == false then
-						ST_FEMUR = true
-					else
-						ST_FEMUR = false
-					end
-					NEXTSTT = CurTime() +1
-				end
-			end
-			if ent:GetName() == "magnet_lever_106" then
-				if CurTime() > NEXTMNT then
-					if MN_FEMUR == false then
-						MN_FEMUR = true
-					else
-						MN_FEMUR = false
-					end
-					NEXTMNT = CurTime() +1
-				end
-			end
-			if ent:GetName() == "femur_button" && !FEMURACTIVATED then
-				if CurTime() > NEXTFMT then
-					if ST_FEMUR == true && MN_FEMUR == true then
-						timer.Simple(10,function()
-							if MN_FEMUR == true && FEMURACTIVATED == true then
-								for _,v in ipairs(ents.GetAll()) do
-									if v:IsNPC() && v:GetClass() == "npc_cpt_scp_106" then
-										v:StopCompletely()
-										v:BeContained()
-									end
-								end
-							end
-						end)
-						FEMURACTIVATED = true
-						timer.Simple(40,function()
-							if FEMURACTIVATED == true then
-								FEMURACTIVATED = false
-							end
-						end)
-					end
-					NEXTFMT = CurTime() +1
-				end
-			end
-		end
-	end
-end)
-
 hook.Add("Think","CPTBase_SCP_BlinkSystem_NPCs",function()
 	local canevenblink = false
 	for _,scp in ipairs(ents.GetAll()) do
@@ -723,22 +665,6 @@ hook.Add("Think","CPTBase_SCP_BlinkSystem",function()
 		end
 	end
 end)
-
-function util.IsSCPMap()
-	if GetConVarNumber("cpt_scp_site19") == 0 then return false end
-	if game.GetMap() == "gm_site19" || game.GetMap() == "rp_site54" || game.GetMap() == "rp_site61_kaktusownia" then
-		return true
-	end
-	return false
-end
-
-function util.IsSite19()
-	if GetConVarNumber("cpt_scp_site19") == 0 then return false end
-	if game.GetMap() == "gm_site19" then
-		return true
-	end
-	return false
-end
 
 function NPC_Meta:SCP_IsPlayerBlinking()
 	for _,v in ipairs(player.GetAll()) do
@@ -962,39 +888,6 @@ if (CLIENT) then
 	end
 	hook.Add("PopulateToolMenu",hookName,CPTBaseMenu_Add_SCP)
 end
-
-	-- Set up --
-
-// Custom stuff
-POCKETDIMENSION = Vector(2301.208252,4616.074219,512.031250)
-VENTA = Vector(3530.062256,1088.677856,0.031250)
-VENTB = Vector(3392.920166,2365.031006,0.186196)
-VENTC = Vector(4162.134277,3011.957764,1.603760)
-VENTD = Vector(4800.398926,1599.382446,0.031250)
-VENTE = Vector(-2420.687988,3691.424805,0.031250)
-VENTF = Vector(2131.408447,-833.008423,2.629341)
-VENTG = Vector(762.196350,1862.844360,128.031250)
-VENTH = Vector(1467.462646,-2335.210938,5.031250)
-FEMURBREAKER = Vector(2510.879639,4448.236816,-402.968750)
-FEMURBREAKERBUTTON = Vector(2181.582031,5239.628906,-207.408264)
-
-// Spawn
-THESTATUE = Vector(1156.137695,1669.294189,128.031250)
-THEDOCTOR = Vector(4789.070801,-2199.250488,16.031250)
-DOORMONSTER = Vector(5221.532715,5611.821777,-1151.968750)
-NINETAILEDFOX = Vector(-3667.533936,3008.088379,0.031250)
-DCLASS_1 = Vector(-724.727173,1662.895996,128.031250)
-DCLASS_2 = Vector(-1053.085205,1926.578003,128.031250)
-DCLASS_3 = Vector(-1839.484009,1914.269165,128.031250)
-EYEJUMPER = Vector(-1454.074585,-895.121460,1.031254)
-MASKEDMAN = Vector(5700.815918,-897.143433,0.031250)
-NIGHTMONSTER = Vector(4142.149902,2391.131104,0.031250)
-SCHOOLESSAY = Vector(-322.574921,-226.815811,-228.013397)
-SHYBOI = Vector(5108.851563,3645.203613,0.031250)
-ZAMBIE = Vector(-985.775757,2585.012451,0.031250)
-GATOR_1 = Vector(2323.954590,-1011.927673,-767.968750)
-GATOR_2 = Vector(1793.346558,-2106.122559,-767.968750)
-GATOR_3 = Vector(1104.790894,-661.958618,-767.968750)
 
 hook.Add("PlayerSay","CPTBase_SCP_CommandsChat",function(ply,spoke)
 	local lowered = string.lower(spoke)

@@ -203,6 +203,7 @@ function ENT:Possess_Reload(possessor)
 		local tr = self:Possess_EyeTrace(possessor)
 		if tr.Hit && IsValid(tr.Entity) && tr.Entity:GetClass() == "npc_cpt_scp_173" then
 			local scp = tr.Entity
+			if util.GetSCPMapData(THESTATUE) == nil then return end
 			if self:GetClosestPoint(scp) <= 130 && scp:GetPos():Distance(THESTATUE) > 400 then
 				scp:ContainSCP(self)
 				for _,v in ipairs(player.GetAll()) do
@@ -295,7 +296,7 @@ function ENT:OnThink()
 	if util.IsSite19() then
 		if !self.IsPossessed then
 			if self.IsTakingSCP == true then
-				if IsValid(self.IsTakingSCP_Box) && self.IsTakingSCP_Box:GetPos():Distance(THESTATUE) <= 250 then
+				if IsValid(self.IsTakingSCP_Box) && (util.GetSCPMapData(THESTATUE) != nil && self.IsTakingSCP_Box:GetPos():Distance(util.GetSCPMapData(THESTATUE)) <= 250) then
 					self.IsTakingSCP_Box.NTFOwner = NULL
 					self.IsTakingSCP = false
 				end

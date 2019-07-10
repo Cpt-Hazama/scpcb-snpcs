@@ -56,6 +56,7 @@ function ENT:OnThink()
 		self.SCP.IsContained = true
 		self.SCP.Possessor_CanMove = false
 		self.SCP:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+		-- self.SCP:SetParent(self)
 		self.SCP.Faction = "FACTION_SCP_NTF"
 		self.SCP.CanWander = false
 		self.SCP.CanSetEnemy = false
@@ -71,6 +72,7 @@ end
 function ENT:WhenRemoved()
 	if IsValid(self.SCP) then
 		self.SCP.IsContained = false
+		-- self.SCP:SetParent(NULL)
 		self.SCP.Possessor_CanMove = true
 		self.SCP:SetCollisionGroup(COLLISION_GROUP_NPC)
 		self.SCP.Faction = "FACTION_SCP"

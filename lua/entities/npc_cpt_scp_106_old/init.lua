@@ -116,7 +116,9 @@ function ENT:BeContained()
 	for i = 0,self:GetBoneCount() -1 do
 		ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 	end
-	self:SetPos(FEMURBREAKER +self:GetUp() *15)
+	if util.GetSCPMapData(FEMURBREAKER) != nil then
+		self:SetPos(util.GetSCPMapData(FEMURBREAKER) +self:GetUp() *15)
+	end
 	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",70,100)
 	self:PlaySound("Decay",100)
 	ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
@@ -268,8 +270,10 @@ function ENT:OnHitEntity(hitents,hitpos)
 					v:EmitSound("cpthazama/scp/106/Decay" .. math.random(0,3) .. ".mp3",35,200)
 				end
 			end
-			if util.IsSite19() && v:IsValid() && v:Alive() then
-				v:SetPos(POCKETDIMENSION)
+			if util.IsSCPMap() && v:IsValid() && v:Alive() then
+				if util.GetSCPMapData(POCKETDIMENSION) != nil then
+					v:SetPos(util.GetSCPMapData(POCKETDIMENSION))
+				end
 				v:EmitSound("cpthazama/scp/106/Enter.mp3",40,100)
 			end
 		end
@@ -278,8 +282,8 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.WasContained = false
 function ENT:OnThink()
-	if util.IsSite19() then
-		if MN_FEMUR == false && self:GetPos():Distance(FEMURBREAKER) <= 250 then
+	if util.IsSCPMap() && util.GetSCPMapData(FEMURBREAKER) != nil then
+		if MN_FEMUR == false && self:GetPos():Distance(util.GetSCPMapData(FEMURBREAKER)) <= 250 then
 			self.IsContained = true
 			if self.WasContained == false then
 				self.WasContained = true
