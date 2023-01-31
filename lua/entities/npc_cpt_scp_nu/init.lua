@@ -56,7 +56,7 @@ function ENT:SCP_BeforeBlinking()
 	if CurTime() > self.NextBlinkingSoundT then
 		for _,v in ipairs(ents.GetAll()) do
 			if v:IsNPC() && (v:GetClass() == "npc_cpt_scp_173" || v:GetClass() == "npc_cpt_scp_087_b") && v:Visible(self) then
-				self:PlaySound("Blinking",72)
+				self:CPT_PlaySound("Blinking",72)
 				self.NextBlinkingSoundT = CurTime() +4
 			end
 		end
@@ -65,7 +65,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnScientistFollowed(ent)
 	if CurTime() > self.NextSciT then
-		self:PlaySound("Spot_Scientist",80)
+		self:CPT_PlaySound("Spot_Scientist",80)
 		self.NextSciT = CurTime() +10
 	end
 end
@@ -125,20 +125,20 @@ function ENT:OnEnemyChanged(ent)
 		if ent:IsNPC() then
 			local class = ent:GetClass()
 			if class == "npc_cpt_scp_dclass" then
-				self:PlaySound("Spot_DClass",80)
+				self:CPT_PlaySound("Spot_DClass",80)
 			elseif class == "npc_cpt_scp_049" then
-				self:PlaySound("Spot_049",80)
+				self:CPT_PlaySound("Spot_049",80)
 			elseif class == "npc_cpt_scp_0492" then
-				self:PlaySound("Spot_0492",80)
+				self:CPT_PlaySound("Spot_0492",80)
 			elseif class == "npc_cpt_scp_096" then
-				self:PlaySound("Spot_096",80)
+				self:CPT_PlaySound("Spot_096",80)
 			elseif class == "npc_cpt_scp_106" then
-				self:PlaySound("Spot_106",80)
+				self:CPT_PlaySound("Spot_106",80)
 			elseif class == "npc_cpt_scp_173" then
-				self:PlaySound("Spot_173",80)
+				self:CPT_PlaySound("Spot_173",80)
 			end
 		elseif ent:IsPlayer() then
-			self:PlaySound("Spot",80)
+			self:CPT_PlaySound("Spot",80)
 		end
 		self.NextSpotT = CurTime() +8
 	end
@@ -161,7 +161,7 @@ function ENT:OnKilledEnemy(v)
 			end
 		end
 	end
-	self:PlaySound("Termination",80)
+	self:CPT_PlaySound("Termination",80)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleEvents(...)
@@ -191,7 +191,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 		end
 		return true
 	end
@@ -223,10 +223,10 @@ function ENT:ThrowGrenade()
 	if self.GrenadeCount <= 0 then return end
 	if CurTime() > self.NextGrenadeT then
 		if self:CanPerformProcess() == false then return end
-		self:StopCompletely()
+		self:CPT_StopCompletely()
 		self:PlayActivity("throw_grenade",2)
 		self.IsThrowingGrenade = true
-		self:AttackFinish()
+		self:CPT_AttackFinish()
 		self.NextGrenadeT = CurTime() +math.random(5,8)
 	end
 end
@@ -244,10 +244,10 @@ function ENT:Possess_Primary(possessor)
 		for i = 1, table.Count(tb) do
 			if tb[i].P_IsBeingCommanded == true then return end
 			tb[i].P_IsBeingCommanded = true
-			tb[i]:StopCompletely()
+			tb[i]:CPT_StopCompletely()
 			tb[i]:SetLastPosition(self:Possess_AimTarget())
 			tb[i]:TASKFUNC_LASTPOSITION()
-			tb[i]:PlaySound("CombatToLost",70)
+			tb[i]:CPT_PlaySound("CombatToLost",70)
 			timer.Simple(7,function()
 				if IsValid(tb[i]) then
 					tb[i].P_IsBeingCommanded = false
@@ -319,7 +319,7 @@ function ENT:OnThink()
 						self:ChaseTarget(ent,false)
 						if dist <= 80 && !self.IsContained then
 							ent:ContainSCP(self)
-							self:StopProcessing()
+							self:CPT_StopProcessing()
 							self:CheckPoseParameters()
 							self.CanShoot = true
 							self.IsContainingSCP = false
@@ -408,16 +408,16 @@ function ENT:DoRangeAttack()
 		bullet.Damage = 13
 		bullet.AmmoType = "SMG"
 		self:FireBullets(bullet)
-		self:SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
+		self:CPT_SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
 		local effectdata = EffectData()
-		effectdata:SetStart(muzzle.Pos)
+		effectdata:SetEntity(self)
 		effectdata:SetOrigin(muzzle.Pos)
-		effectdata:SetScale(1)
-		effectdata:SetAngles(muzzle.Ang)
-		util.Effect("MuzzleEffect",effectdata)
+		effectdata:SetNormal(bullet.Dir)
+		effectdata:SetAttachment(self:LookupAttachment("muzzle"))
+		util.Effect("cpt_muzzle",effectdata)
 		if !self.IsPossessed then
 			self.IsRangeAttacking = true
-			self:StopCompletely()
+			self:CPT_StopCompletely()
 		end
 		timer.Simple(self.FireRate -0.01,function() if self:IsValid() then self.IsRangeAttacking = false end end)
 		self.NextFireT = CurTime() +self.FireRate
@@ -445,24 +445,24 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp,time)
 			self:ThrowGrenade()
 		end
 		if nearest <= self.RangeAttackDistance && self.CanShoot == true then
-			if self:FindInCone(enemy,30) && self:Visible(enemy) then
+			if self:CPT_FindInCone(enemy,30) && self:Visible(enemy) then
 				if self:CanShootEnemy() then
 					self:SetAngles(Angle(0,(enemy:GetPos() -self:GetPos()):Angle().y,0))
 					self:DoRangeAttack()
 					if self:GetSequence() != ACT_IDLE_ANGRY then
-						self:StopProcessing()
+						self:CPT_StopProcessing()
 						self:SetIdleAnimation(ACT_IDLE_ANGRY)
 					end
 				end
-			elseif !self:FindInCone(enemy,30) && self:Visible(enemy) then
+			elseif !self:CPT_FindInCone(enemy,30) && self:Visible(enemy) then
 				self:SetAngles(Angle(0,(enemy:GetPos() -self:GetPos()):Angle().y,0))
-				self:StopCompletely()
+				self:CPT_StopCompletely()
 				self:SetIdleAnimation(ACT_IDLE_ANGRY)
 			end
 		end
 		if self:CanPerformProcess() then
 			if !self:Visible(enemy) || (nearest > self.RangeAttackDistance && self:Visible(enemy)) then
-				if self.IsRangeAttacking == true then self:StopCompletely() return end
+				if self.IsRangeAttacking == true then self:CPT_StopCompletely() return end
 				self:ChaseEnemy()
 			-- else
 				-- self:FaceEnemy()

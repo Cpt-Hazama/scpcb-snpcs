@@ -77,7 +77,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Secondary(possessor)
 	if CurTime() > self.NextHearSoundT then
-		self:PlaySound("Idle",75)
+		self:CPT_PlaySound("Idle",75)
 		self.NextHearSoundT = CurTime() +5
 		if self.CurrentSound != nil then
 			self.NextHearSoundT = CurTime() +SoundDuration(self.CurrentPlayingSound)
@@ -87,7 +87,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Reload(possessor)
 	if CurTime() > self.NextHearSoundT then
-		self:PlaySound("Voice_Random",75)
+		self:CPT_PlaySound("Voice_Random",75)
 		self.NextHearSoundT = CurTime() +5
 		if self.CurrentSound != nil then
 			self.NextHearSoundT = CurTime() +SoundDuration(self.CurrentPlayingSound)
@@ -100,9 +100,9 @@ function ENT:OnHitEntity(hitents,hitpos)
 		v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Crunch"]),90,100)
 		if v:IsPlayer() then
 			v:SetDSP(32,false)
-			v:Freeze(true)
-			timer.Simple(0.6,function() if IsValid(v) then v:Freeze(false) end end)
-			ParticleEffect("blood_impact_red_01",v:GetAttachment(v:LookupAttachment("eyes")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
+			v:CPT_Freeze(true)
+			timer.Simple(0.6,function() if IsValid(v) then v:CPT_Freeze(false) end end)
+			CPT_ParticleEffect("blood_impact_red_01",v:GetAttachment(v:LookupAttachment("eyes")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)))
 		end
 	end
 	self:EmitSound(self:SelectFromTable(self.tbl_Sounds["Strike"]),90,100)
@@ -112,14 +112,14 @@ function ENT:LocateEnemies()
 	if self.Faction == "FACTION_NONE" || self.CanSetEnemy == false then return end
 	for _,v in ipairs(ents.FindInSphere(self:GetPos(),self.FindEntitiesDistance)) do
 		if v:IsNPC() && v != self && v:Health() > 0 then
-			if (v:IsMoving() && self:CanSeeEntities(v) && self:FindInCone(v,self.ViewAngle)) && v.Faction != "FACTION_NONE" && self:CanSetAsEnemy(v) then
-				if ((v:GetFaction() == nil or v:GetFaction() != nil) && v.Faction != self:GetFaction()) && self:Disposition(v) != D_LI && !table.HasValue(self.tbl_BlackList,v) then
+			if (v:IsMoving() && self:CanSeeEntities(v) && self:CPT_FindInCone(v,self.ViewAngle)) && v.Faction != "FACTION_NONE" && self:CanSetAsEnemy(v) then
+				if ((v:CPT_GetFaction() == nil or v:CPT_GetFaction() != nil) && v.Faction != self:CPT_GetFaction()) && self:Disposition(v) != D_LI && !table.HasValue(self.tbl_BlackList,v) then
 					return v
 				end
 			end
 		elseif self.FriendlyToPlayers == false && GetConVarNumber("ai_ignoreplayers") == 0 && v:IsPlayer() && v:Alive() && !v.IsPossessing && v != self.Possessor then
-			if ((v:GetVelocity():Length() > 5 && v:GetVelocity().z <= 0) && self:CanSeeEntities(v) && self:FindInCone(v,self.ViewAngle)) && v.IsPossessing != true && v.Faction != "FACTION_NONE" then
-				if self:GetFaction() != "FACTION_PLAYER" && self.Faction != v.Faction && self:Disposition(v) != D_LI && !table.HasValue(self.tbl_BlackList,v) then
+			if ((v:GetVelocity():Length() > 5 && v:GetVelocity().z <= 0) && self:CanSeeEntities(v) && self:CPT_FindInCone(v,self.ViewAngle)) && v.IsPossessing != true && v.Faction != "FACTION_NONE" then
+				if self:CPT_GetFaction() != "FACTION_PLAYER" && self.Faction != v.Faction && self:Disposition(v) != D_LI && !table.HasValue(self.tbl_BlackList,v) then
 					return v
 				end
 			end
@@ -133,7 +133,7 @@ function ENT:OnHearSound(ent)
 		self:TASKFUNC_WALKLASTPOSITION()
 	end
 	if CurTime() > self.NextHearSoundT then
-		self:PlaySound("HearSound",78)
+		self:CPT_PlaySound("HearSound",78)
 		self.NextHearSoundT = CurTime() +5
 	end
 end
@@ -147,7 +147,7 @@ function ENT:OnEnemyChanged(ent)
 		end
 		if CurTime() > self.NextSpotSoundT then
 			if ent:IsPlayer() then ent:SendLua("surface.PlaySound('cpthazama/scp/939/attack.mp3')") end
-			self:PlaySound("Spot",80)
+			self:CPT_PlaySound("Spot",80)
 			self.NextSpotSoundT = CurTime() +5
 		end
 	end
@@ -208,7 +208,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 		end
 		return true
 	end
@@ -218,9 +218,9 @@ function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
 	if GetConVarNumber("cpt_scp_939slsounds") == 1 then
-		self:PlaySound("Attack",75)
+		self:CPT_PlaySound("Attack",75)
 	end
-	self:PlayNPCGesture("attack",2,1)
+	self:CPT_PlayNPCGesture("attack",2,1)
 	self.IsAttacking = true
 	timer.Simple(self.AttackFinishTime,function()
 		if self:IsValid() then
@@ -232,7 +232,7 @@ end
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

@@ -65,7 +65,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnSeen()
-	self:PlaySound("Horror",100)
+	self:CPT_PlaySound("Horror",100)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
@@ -82,16 +82,16 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

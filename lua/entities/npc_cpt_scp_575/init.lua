@@ -45,13 +45,13 @@ function ENT:SetInit()
 		self.Ball:SetPos(self:GetPos())
 		self.Ball:Spawn()
 		self.Ball:SetModelScale(18,0)
-		self:DeleteOnRemove(self.Ball)
 		self.Ball:SetMaterial("engine/modulatesinglecolor")
 		self.Ball:SetRenderMode(RENDERMODE_TRANSADD)
 		self.Ball:SetRenderFX(kRenderFxHologram)
 		self.Ball:SetColor(Color(65,65,65,1))
 		self.Ball:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 		self.Ball:DrawShadow(false)
+		self:DeleteOnRemove(self.Ball)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ function ENT:HandleEvents(...)
 	if(event == "emit") then
 		if arg1 == "step" then
 			if !IsValid(self:GetEnemy()) || (IsValid(self:GetEnemy()) && !(self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) && self:GetClosestPoint(self:GetEnemy()) > 800) then
-				self:PlaySound("FootStep",90,90,100,true)
+				self:CPT_PlaySound("FootStep",90,90,100,true)
 			end
 		end
 		return true
@@ -128,7 +128,7 @@ function ENT:OnThink()
 		self.CanChaseEnemy = false
 		self:SetMaxYawSpeed(0)
 		if self:IsMoving() then
-			self:StopProcessing()
+			self:CPT_StopProcessing()
 		end
 		-- self:SetRenderFX(kRenderFxNone)
 		-- self.Ball:SetRenderFX(kRenderFxNone)
@@ -146,16 +146,16 @@ function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (self:SCP_CanBeSeen() && self:FindFlashlights()) then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack",2)
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack",2)
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

@@ -45,7 +45,7 @@ function ENT:OnThink_Disabled()
 			end
 		else
 			self:SetNoDraw(false)
-			self:SetClearPos(self:GetPos())
+			self:CPT_SetClearPos(self:GetPos())
 			self.IsPickedUp = false
 			self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 		end

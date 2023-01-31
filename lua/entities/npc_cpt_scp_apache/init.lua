@@ -60,17 +60,17 @@ function ENT:HandleFlying_HoverAI(enemy,dist,nearest)
 	-- })
 	-- if (tr.Hit) then
 		-- local fly = (util.RandomVectorAroundPos(tr.HitPos,self.FlyRandomDistance) -self:GetPos() +self:GetVelocity() *30):GetNormal() *self:GetFlySpeed()
-		-- self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().y,0)))
+		-- self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().y,0)))
 		-- self:SetLocalVelocity(fly)
 	-- end
-	-- self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().y,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().r)))
-	local xang = (self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().x
+	-- self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().y,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().r)))
+	local xang = (self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().x
 	if xang > 34 then
-		self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().y,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().r)))
+		self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle(0,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().y,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().r)))
 	else
-		self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle((self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().x,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().y,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().r)))
+		self:SetAngles(LerpAngle(0.5,self:GetAngles(),Angle((self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().x,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().y,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().r)))
 	end
-	-- print((self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().x)
+	-- print((self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().x)
 	local movecloserDist = 2500
 	local movefartherDist = 760
 	local GoToPos = self:GetPos()
@@ -151,7 +151,7 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if CurTime() > self.NextMissileT then
-		self:PlaySound("Rocket",95)
+		self:CPT_PlaySound("Rocket",95)
 		self.IsRangeAttacking = true
 		local pos
 		if self.LastMissile == 1 then
@@ -163,20 +163,21 @@ function ENT:DoAttack()
 		end
 		local rattack = ents.Create("obj_cpt_rocket")
 		rattack:SetPos(self:GetAttachment(self:LookupAttachment(pos)).Pos)
-		rattack:SetAngles(Angle((self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().x,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().y,(self:FindCenter(self:GetEnemy()) -self:FindCenter(self)):Angle().r))
+		rattack:SetAngles(Angle((self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().x,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().y,(self:CPT_FindCenter(self:GetEnemy()) -self:CPT_FindCenter(self)):Angle().r))
 		rattack:SetOwner(self)
 		rattack:Spawn()
 		rattack:Activate()
 		local effectdata = EffectData()
-		effectdata:SetStart(self:GetAttachment(self:LookupAttachment(pos)).Pos)
-		effectdata:SetOrigin(self:GetAttachment(self:LookupAttachment(pos)).Pos)
-		effectdata:SetScale(1)
-		effectdata:SetAngles(self:GetAttachment(self:LookupAttachment(pos)).Ang)
-		util.Effect("MuzzleEffect",effectdata)
+		effectdata:SetEntity(self)
+		effectdata:SetOrigin(rattack:GetPos())
+		effectdata:SetNormal(rattack:GetForward())
+		effectdata:SetAttachment(self:LookupAttachment(pos))
+		util.Effect("cpt_muzzle",effectdata)
 		
 		local phys = rattack:GetPhysicsObject()
 		if IsValid(phys) then
-			phys:SetVelocity(self:SetUpRangeAttackTarget() *1 +self:GetForward() *1500 +self:GetUp() *-450 +self:GetRight() *math.Rand(-40,40))
+			-- phys:SetVelocity(self:SetUpRangeAttackTarget() *1 +self:GetForward() *1500 +self:GetUp() *-450 +self:GetRight() *math.Rand(-40,40))
+			phys:SetVelocity(self:SetUpRangeAttackTarget() *50 +self:GetRight() *math.Rand(-40,40))
 		end
 		timer.Simple(0.5,function()
 			if IsValid(self) then
@@ -208,13 +209,13 @@ function ENT:DoRangeAttack()
 		bullet.Damage = 13
 		bullet.AmmoType = "SMG"
 		self:FireBullets(bullet)
-		self:SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
+		self:CPT_SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
 		local effectdata = EffectData()
-		effectdata:SetStart(muzzle.Pos)
+		effectdata:SetEntity(self)
 		effectdata:SetOrigin(muzzle.Pos)
-		effectdata:SetScale(1)
-		effectdata:SetAngles(muzzle.Ang)
-		util.Effect("MuzzleEffect",effectdata)
+		effectdata:SetNormal(bullet.Dir)
+		effectdata:SetAttachment(self:LookupAttachment("M230E1"))
+		util.Effect("cpt_muzzle",effectdata)
 		self.NextFireT = CurTime() +0.001
 	end
 end

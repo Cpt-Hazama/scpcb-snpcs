@@ -39,7 +39,7 @@ function ENT:SetInit()
 	self.NextIdleLoopT = 0
 	self.NextDoorT = 0
 	if self.WasInfected then
-		timer.Simple(self:AnimationLength("resurrect"),function()
+		timer.Simple(self:CPT_AnimationLength("resurrect"),function()
 			if IsValid(self) then
 				self.WasInfected = false
 				self.CanWander = true
@@ -50,7 +50,7 @@ function ENT:SetInit()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnResurrected()
-	self:PlaySequence("resurrect",1)
+	self:CPT_PlaySequence("resurrect",1)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleEvents(...)
@@ -66,7 +66,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 		end
 		return true
 	end
@@ -109,7 +109,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 					v:SendLua("surface.PlaySound('cpthazama/scp/music/Room049.mp3')")
 					v:ChatPrint("Blood begins to pour from your mouth and ears..")
 					for i = 1,3 do
-						ParticleEffect("blood_impact_red_01",v:GetAttachment(2).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
+						CPT_ParticleEffect("blood_impact_red_01",v:GetAttachment(2).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
 					end
 				end
 			end)
@@ -162,16 +162,16 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

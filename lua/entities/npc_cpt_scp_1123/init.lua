@@ -36,7 +36,7 @@ function ENT:OnInputAccepted(event,activator)
 					if IsValid(activator) && activator:Alive() then
 						activator:EmitSound("cpthazama/scp/1123/Gunshot.mp3",90,100)
 						if activator:GetAttachment(activator:LookupAttachment("eyes")) != nil then
-							ParticleEffect("blood_impact_red_01",activator:GetAttachment(activator:LookupAttachment("eyes")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
+							CPT_ParticleEffect("blood_impact_red_01",activator:GetAttachment(activator:LookupAttachment("eyes")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)))
 						end
 						activator:ChatPrint("The events that happened forced you to kill yourself..")
 						activator:Kill()
@@ -59,12 +59,12 @@ function ENT:OnInputAccepted(event,activator)
 				end
 			end)
 			timer.Simple(2.4,function()
-				if IsValid(activator) && activator:Alive() && !ply:GetNWBool("SCP_Touched1123") then
+				if IsValid(activator) && activator:Alive() && !activator:GetNWBool("SCP_Touched1123") then
 					activator:EmitSound("cpthazama/scp/D9341/breath1.mp3",60,100)
 				end
 			end)
 			timer.Simple(3.5,function()
-				if IsValid(activator) && activator:Alive() && !ply:GetNWBool("SCP_Touched1123") then
+				if IsValid(activator) && activator:Alive() && !activator:GetNWBool("SCP_Touched1123") then
 					activator:EmitSound("cpthazama/scp/D9341/breath0.mp3",60,100)
 				end
 			end)

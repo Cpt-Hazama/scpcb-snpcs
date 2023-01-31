@@ -81,19 +81,19 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Teleport(pos)
 	if self.IsContained then return end
-	self:StopCompletely()
-	self:PlayAnimation("Teleport",2)
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Teleport",2)
 	local tr = util.TraceLine({
 		start = self:GetPos(),
 		endpos = self:GetPos() -Vector(0,0,10),
 		filter = self,
 		mask = MASK_NPCWORLDSTATIC
 	})
-	ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+	CPT_ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
 	for i = 0,self:GetBoneCount() -1 do
-		ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+		CPT_ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 	end
-	-- self:SetClearPos(pos)
+	-- self:CPT_SetClearPos(pos)
 	self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 	self:SetPos(pos)
 	timer.Simple(0.5,function()
@@ -101,43 +101,43 @@ function ENT:Teleport(pos)
 			self:SetCollisionGroup(COLLISION_GROUP_NPC)
 		end
 	end)
-	self:PlaySound("Decay",100)
+	self:CPT_PlaySound("Decay",100)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:BeContained()
-	self:PlayAnimation("Teleport",2)
+	self:CPT_PlayAnimation("Teleport",2)
 	local tr = util.TraceLine({
 		start = self:GetPos(),
 		endpos = self:GetPos() -Vector(0,0,10),
 		filter = self,
 		mask = MASK_NPCWORLDSTATIC
 	})
-	ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+	CPT_ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
 	for i = 0,self:GetBoneCount() -1 do
-		ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+		CPT_ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 	end
 	if util.GetSCPMapData(FEMURBREAKER) != nil then
 		self:SetPos(util.GetSCPMapData(FEMURBREAKER) +self:GetUp() *15)
 	end
 	self:EmitSound("cpthazama/scp/106/Corrosion" .. math.random(1,3) .. ".mp3",70,100)
-	self:PlaySound("Decay",100)
-	ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
+	self:CPT_PlaySound("Decay",100)
+	CPT_ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Possess_Secondary(possessor)
 	if self.IsContained then return end
 	if self.P_TeleportSpot != Vector(0,0,0) then
 		if CurTime() > self.P_NextTeleportT then
-			self:PlayAnimation("Teleport",2)
+			self:CPT_PlayAnimation("Teleport",2)
 			local tr = util.TraceLine({
 				start = self:GetPos(),
 				endpos = self:GetPos() -Vector(0,0,10),
 				filter = self,
 				mask = MASK_NPCWORLDSTATIC
 			})
-			ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+			CPT_ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
 			for i = 0,self:GetBoneCount() -1 do
-				ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+				CPT_ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 			end
 			self:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 			self:SetPos(self.P_TeleportSpot)
@@ -146,9 +146,9 @@ function ENT:Possess_Secondary(possessor)
 					self:SetCollisionGroup(COLLISION_GROUP_NPC)
 				end
 			end)
-			self:PlaySound("Decay",100)
+			self:CPT_PlaySound("Decay",100)
 			if CurTime() > self.P_NextTeleportParticleT then
-				ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
+				CPT_ParticleEffect("scp_decay",self:GetPos(),Angle(0,0,0),nil)
 				self.P_NextTeleportParticleT = CurTime() +140
 			end
 			self.P_NextTeleportT = CurTime() +10
@@ -161,7 +161,7 @@ end
 function ENT:Possess_Reload(possessor)
 	if self.IsContained then return end
 	if CurTime() > self.P_NextSetTeleportSpotT then
-		self:PlaySound("Decay",100)
+		self:CPT_PlaySound("Decay",100)
 		possessor:ChatPrint("Teleport spot set.")
 		local tr = util.TraceLine({
 			start = self:GetPos(),
@@ -169,7 +169,7 @@ function ENT:Possess_Reload(possessor)
 			filter = self,
 			mask = MASK_NPCWORLDSTATIC
 		})
-		ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+		CPT_ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
 		if self.point != nil then self.point:Remove() end
 		self.point = ents.Create("prop_physics")
 		self.point:SetModel("models/hunter/tubes/circle2x2.mdl")
@@ -239,17 +239,17 @@ function ENT:HandleEvents(...)
 			filter = self,
 			mask = MASK_NPCWORLDSTATIC
 		})
-		ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
+		CPT_ParticleEffect("scp_decay",tr.HitPos,Angle(0,0,0),nil)
 		return true
 	end
 	if(event == "emit") then
 		if(arg1 == "step_left") then
 			if self:IsOnGround() then
-				self:PlaySound("FootStep",75,90,100,true)
+				self:CPT_PlaySound("FootStep",75,90,100,true)
 			end
 		elseif(arg1 == "step_right") then
 			if self:IsOnGround() then
-				self:PlaySound("FootStep",75,90,100,true)
+				self:CPT_PlaySound("FootStep",75,90,100,true)
 			end
 		end
 		return true
@@ -266,7 +266,7 @@ function ENT:OnHitEntity(hitents,hitpos)
 		if v:IsValid() then
 			for i = 0,v:GetBoneCount() -1 do
 				if math.random(1,3) == 1 then
-					ParticleEffect("blood_impact_black",v:GetBonePosition(i),Angle(0,0,0),nil)
+					CPT_ParticleEffect("blood_impact_black",v:GetBonePosition(i),Angle(0,0,0),nil)
 					v:EmitSound("cpthazama/scp/106/Decay" .. math.random(0,3) .. ".mp3",35,200)
 				end
 			end
@@ -396,16 +396,16 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

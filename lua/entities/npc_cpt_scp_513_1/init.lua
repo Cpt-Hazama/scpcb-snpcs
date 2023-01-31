@@ -73,8 +73,8 @@ function ENT:HandleEvents(...)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Teleport(ent)
-	self:SetClearPos(ent:GetPos() +ent:GetForward() *70)
-	-- self:PlaySound("Alert",100)
+	self:CPT_SetClearPos(ent:GetPos() +ent:GetForward() *70)
+	-- self:CPT_PlaySound("Alert",100)
 	sound.Play("cpthazama/scp/513/Bell" .. math.random(1,3) .. ".mp3",ent:GetPos(),180,100)
 	ent:TakeDamage(15,self)
 	util.ShakeWorld(ent:GetPos(),16,3,100)

@@ -72,7 +72,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 		end
 		return true
 	end
@@ -86,8 +86,8 @@ function ENT:OnHitEntity(hitents,hitpos)
 	end
 	for _,v in ipairs(hitents) do
 		if v:IsValid() && v:IsPlayer() then
-			v:Freeze(true)
-			timer.Simple(0.5,function() if v:IsValid() then v:Freeze(false) end end)
+			v:CPT_Freeze(true)
+			timer.Simple(0.5,function() if v:IsValid() then v:CPT_Freeze(false) end end)
 		end
 	end
 end
@@ -116,7 +116,7 @@ function ENT:OnThink()
 		if self.IsTriggered && self.CanAttack then
 			for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance +40)) do
 				if v:IsValid() && ((v:GetClass() == "prop_dynamic" && v:GetSequenceName(v:GetSequence()) == "idle") || v:GetClass() == "func_door" || v:GetClass() == "func_door_rotating") then
-					ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
+					CPT_ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
 					v:Remove()
 				end
 			end
@@ -218,7 +218,7 @@ function ENT:ResetTrigger()
 	self.CanChaseEnemy = false
 	self.CanSetEnemy = false
 	self.HasReset = true
-	self:StopProcessing()
+	self:CPT_StopProcessing()
 	self:SetIdleAnimation(ACT_IDLE)
 	self:UpdateCollision(self.CollisionBounds)
 end
@@ -240,7 +240,7 @@ function ENT:FindFaceLookers()
 	for _,v in ipairs(ents.GetAll()) do
 		if v:IsValid() then
 			if v:IsPlayer() then
-				local dist = self:FindDistanceToPos(facepos,v:GetEyeTrace().HitPos)
+				local dist = self:CPT_FindDistanceToPos(facepos,v:GetEyeTrace().HitPos)
 				if self.IsTriggered == false && dist <= 55 && GetConVarNumber("ai_ignoreplayers") == 0 && self:Disposition(v) != D_LI && v:Visible(self) && (self:GetForward():Dot(((v:GetPos() +v:OBBCenter()) -self:GetPos() +self:OBBCenter()):GetNormalized()) > math.cos(math.rad(SCP_SightAngle +20))) then
 					self.IsTriggered = true
 					self.TriggeredEntity = v
@@ -295,7 +295,7 @@ function ENT:OnKilledEnemy(v)
 		timer.Simple(8,function()
 			if self:IsValid() then
 				self:ResetTrigger()
-				self:StopCompletely()
+				self:CPT_StopCompletely()
 			end
 		end)
 	end
@@ -311,17 +311,17 @@ function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if self.CanAttack == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if self.CanAttack == false then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

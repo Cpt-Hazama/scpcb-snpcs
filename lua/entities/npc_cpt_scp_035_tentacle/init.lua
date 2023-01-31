@@ -42,7 +42,7 @@ function ENT:SetInit()
 		if IsValid(self) then
 			self:SetNoDraw(false)
 			self:EmitSound(Sound("cpthazama/scp/035_tentacle/TentacleSpawn.mp3"),75,100)
-			self:PlaySequence("rise",1)
+			self:CPT_PlaySequence("rise",1)
 		end
 	end)
 end
@@ -57,7 +57,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnDeath(dmg,dmginfo,hitbox)
 	for i = 0,self:GetBoneCount() -1 do
-		ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
+		CPT_ParticleEffect("blood_impact_black",self:GetBonePosition(i),Angle(0,0,0),nil)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -68,22 +68,22 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
 	timer.Simple(0.3,function()
 		if self:IsValid() then
 			self:DoDamage(self.MeleeAttackDamageDistance,self.MeleeAttackDamage,self.MeleeAttackType)
 		end
 	end)
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
 		self:SetAngles(Angle(0,(enemy:GetPos() -self:GetPos()):Angle().y,0))
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 	end

@@ -36,7 +36,7 @@ function ENT:Possess_Secondary(possessor)
 	if IsSeen then return end
 	local tb = {}
 	for _,v in ipairs(ents.GetAll()) do
-		if IsValid(v) && ((v:IsNPC() && v != self && !self:IsFriendlyToMe(v)) || v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
+		if IsValid(v) && ((v:IsNPC() && v != self && !self:CPT_IsFriendlyToMe(v)) || v:IsPlayer() && v:Alive() && !v:GetNWBool("CPTBase_IsPossessing")) then
 			table.insert(tb,v)
 		end
 	end
@@ -54,7 +54,7 @@ function ENT:SetInit()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Teleport(pos)
-	self:SetClearPos(pos)
+	self:CPT_SetClearPos(pos)
 	local tblIdle = {
 		"scare1",
 		"scare2",
@@ -70,9 +70,9 @@ function ENT:OnThink()
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then
 		self.Possessor_CanMove = false
 		self:SetMaxYawSpeed(0)
-		self:StopProcessing()
-		self:StopProcessing()
-		self:StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
 		self.IsRangeAttacking = true
 	else
 		self.Possessor_CanMove = true

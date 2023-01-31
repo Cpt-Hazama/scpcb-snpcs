@@ -109,7 +109,7 @@ function ENT:HandleEvents(...)
 	if(event == "emit") then
 		if(arg1 == "step_left") then
 			if self:IsOnGround() then
-				self:PlaySound("FootStep",75,90,100,true)
+				self:CPT_PlaySound("FootStep",75,90,100,true)
 				local tr = util.TraceLine({
 					start = self:GetBonePosition(11),
 					endpos = self:GetBonePosition(11) -Vector(0,0,10),
@@ -133,7 +133,7 @@ function ENT:HandleEvents(...)
 			end
 		elseif(arg1 == "step_right") then
 			if self:IsOnGround() then
-				self:PlaySound("FootStep",75,90,100,true)
+				self:CPT_PlaySound("FootStep",75,90,100,true)
 				local tr = util.TraceLine({
 					start = self:GetBonePosition(7),
 					endpos = self:GetBonePosition(7) -Vector(0,0,10),
@@ -238,16 +238,16 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

@@ -47,10 +47,10 @@ function ENT:OnThink()
 		if self.NTFOwner:GetPos():Distance(self:GetPos()) > 125 then
 			self:ChaseTarget(self.NTFOwner,true)
 		else
-			self:StopCompletely()
+			self:CPT_StopCompletely()
 		end
 	else
-		self:StopCompletely()
+		self:CPT_StopCompletely()
 	end
 	if IsValid(self.SCP) then
 		self.SCP.IsContained = true
@@ -61,7 +61,7 @@ function ENT:OnThink()
 		self.SCP.CanWander = false
 		self.SCP.CanSetEnemy = false
 		self.SCP.CanChaseEnemy = false
-		self.SCP:StopCompletely()
+		self.SCP:CPT_StopCompletely()
 		self.SCP:SetPos(self:GetAttachment(self:LookupAttachment("173")).Pos)
 		self.SCP:SetAngles(self:GetAngles())
 	else

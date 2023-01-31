@@ -234,7 +234,7 @@ function ENT:SCP079AI()
 			end
 			if CurTime() > self.NextCameraMoveT then
 				local randpos = self:GetCurrentCamera():GetPos() +self:GetCurrentCamera():GetForward() *800 +self:GetCurrentCamera():GetRight() *math.Rand(-250,250) +self:GetCurrentCamera():GetUp() *math.Rand(-250,250)
-				self:GetCurrentCamera():LookAtPosition(randpos,{"aim_pitch","aim_yaw"},10,self.ReversePoseParameters)
+				self:GetCurrentCamera():CPT_LookAtPosition(randpos,{"aim_pitch","aim_yaw"},10,self.ReversePoseParameters)
 				self.NextCameraMoveT = CurTime() +math.Rand(self:SetAggressionValue(4),self:SetAggressionValue(6))
 			end
 		elseif IsValid(self:GetEnemy()) then
@@ -504,7 +504,7 @@ function ENT:GetEntitiesByDistance_079(tbl,ply)
 	local disttbl = {}
 	for _,v in ipairs(tbl) do
 		if v:IsValid() then
-			disttbl[v] = ply:FindCenterDistance(v)
+			disttbl[v] = ply:CPT_FindCenterDistance(v)
 		end
 	end
 	return table.SortByKey(disttbl,true)
@@ -526,7 +526,7 @@ function ENT:OnThink()
 		end
 	end
 	if self.HasBeenSpokenTo == true && self.IsTalking == false && self.CanBeSpokenTo == true then
-		self:PlaySound("Speech",80)
+		self:CPT_PlaySound("Speech",80)
 		timer.Simple(4.5,function()
 			if self:IsValid() then
 				self:SetSkin(1)

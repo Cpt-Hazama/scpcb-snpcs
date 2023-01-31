@@ -37,11 +37,16 @@ function ENT:OnThink()
 		self.IdleLoop:Play()
 		self.NextIdleLT = CurTime() +24
 	end
+
+	self:NextThink(CurTime() + (0.069696968793869 + FrameTime()))
+	
 	local tb = {}
 	for _,v in pairs(ents.FindInSphere(self:GetPos(),600)) do
 		if v:IsValid() && ((v:IsPlayer() && v:Alive() && GetConVarNumber("ai_ignoreplayers") == 0 && v.SCP_Has714 == false) || (v:IsNPC() && v != self && v:Disposition(self) != D_LI)) && v:Visible(self) then
 			if v:IsPlayer() then
-				v:SetEyeAngles((self:GetPos() -v:GetShootPos()):Angle())
+				local eyeAng = v:EyeAngles()
+				v.SCP_012_EyeAng = LerpAngle(FrameTime() *18,v.SCP_012_EyeAng or eyeAng,(self:GetPos() -v:GetShootPos()):Angle())
+				v:SetEyeAngles(Angle(v.SCP_012_EyeAng.x,v.SCP_012_EyeAng.y,eyeAng.z))
 				if v.SCP_513_CurrentTalk == nil then
 					v.SCP_513_CurrentTalk = 1
 				end
@@ -72,7 +77,7 @@ function ENT:OnThink()
 					if yesvapitation == nil then return end
 					yesvapitation:TakeDamage(15,self)
 					if yesvapitation:GetAttachment(yesvapitation:LookupAttachment("anim_attachment_LH")) != nil then
-						ParticleEffect("blood_impact_red_01",yesvapitation:GetAttachment(yesvapitation:LookupAttachment("anim_attachment_LH")).Pos,Angle(math.random(0,360),math.random(0,360),math.random(0,360)),false)
+						CPT_ParticleEffect("blood_impact_red_01",yesvapitation:GetAttachment(yesvapitation:LookupAttachment("anim_attachment_LH")).Pos,angle_0)
 					end
 				end
 				self.NextDamageT = CurTime() +8

@@ -50,7 +50,7 @@ hook.Add("PlayerUse","CPTBase_SCP_106Containtment",function(ply,ent)
 							if MN_FEMUR == true && FEMURACTIVATED == true then
 								for _,v in ipairs(ents.GetAll()) do
 									if v:IsNPC() && v:GetClass() == "npc_cpt_scp_106" then
-										v:StopCompletely()
+										v:CPT_StopCompletely()
 										v:BeContained()
 									end
 								end

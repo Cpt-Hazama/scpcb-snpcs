@@ -4,7 +4,7 @@ include('shared.lua')
 
 ENT.ModelTable = {"models/cpthazama/scp/682.mdl"}
 ENT.StartHealth = 5000000
-ENT.CollisionBounds = Vector(250,100,120)
+ENT.CollisionBounds = Vector(150,150,120)
 
 ENT.Faction = "FACTION_SCP_682"
 
@@ -103,7 +103,7 @@ function ENT:HandleEvents(...)
 	local event = select(1,...)
 	local arg1 = select(2,...)
 	if(event == "roar") then
-		self:PlaySound("Roar",125,100,140)
+		self:CPT_PlaySound("Roar",125,100,140)
 		util.ShakeWorld(self:GetPos(),16,4,4000,false)
 		return true
 	end
@@ -128,7 +128,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 			util.ShakeWorld(self:GetPos(),12,1,800,false)
 		end
 		return true
@@ -157,7 +157,7 @@ function ENT:OnThink()
 		if CurTime() > self.NextDoorT then
 			for _,v in ipairs(ents.FindInSphere(self:GetPos(),SCP_DoorOpenDistance)) do
 				if v:IsValid() && v:GetClass() == "func_door" /*&& v:GetSequenceName(v:GetSequence()) == "idle"*/ then
-					ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
+					CPT_ParticleEffect("door_pound_core",v:GetPos() +v:OBBCenter(),Angle(0,0,0),nil)
 					v:Remove()
 				end
 			end
@@ -174,11 +174,11 @@ function ENT:OnTakePain(dmg,dmginfo,hitbox)
 	self.tbl_Reduce[dtype] = self.tbl_Reduce[dtype] +0.05
 	if tb >= 20 && math.random(1,self.MutationAttackChance) == 1 then
 		if dtype == DMG_BURN || dtype == DMG_BLAST then
-			self:PlayAnimation("Roar")
+			self:CPT_PlayAnimation("Roar")
 			self.MutationAttack = "obj_cpt_scp_flame"
 		end
 		if dtype == DMG_POISON || dtype == DMG_RADIATION || dtype == DMG_NERVEGAS || dtype == DMG_ACID then
-			self:PlayAnimation("Roar")
+			self:CPT_PlayAnimation("Roar")
 			self.MutationAttack = "obj_cpt_scp_poisongas"
 		end
 	end
@@ -205,17 +205,17 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlaySound("Attack",90)
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlaySound("Attack",90)
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

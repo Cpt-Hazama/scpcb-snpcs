@@ -83,7 +83,7 @@ function ENT:OnHearSound(ent)
 		self:TASKFUNC_WALKLASTPOSITION()
 	end
 	if CurTime() > self.NextHearSoundT then
-		self:PlaySound("HearSound",78)
+		self:CPT_PlaySound("HearSound",78)
 		self.NextHearSoundT = CurTime() +16
 	end
 end
@@ -100,7 +100,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",75,90,100,true)
+			self:CPT_PlaySound("FootStep",75,90,100,true)
 		end
 		return true
 	end
@@ -219,7 +219,7 @@ function ENT:OnKilledEnemy(v)
 			end
 		end)
 	end
-	self:PlaySound("Infect",75)
+	self:CPT_PlaySound("Infect",75)
 	if v:IsNPC() then
 		local zombie
 		local setskin = false
@@ -273,7 +273,7 @@ function ENT:OnKilledEnemy(v)
 		undo.ReplaceEntity(v,zombie)
 		v.HasDeathRagdoll = false
 		v.HasDeathCorpse = false
-		self:PlaySequence("infect",1)
+		self:CPT_PlaySequence("infect",1)
 		v:Remove()
 	elseif v:IsPlayer() && v.SCP_Has714 == false then
 		v:ChatPrint("You lose consciousness and your body is turned into a walking corpse..")
@@ -289,7 +289,7 @@ function ENT:OnKilledEnemy(v)
 		v.CPTBase_SCP_Zombie = zombie
 		v:SetPos(zombie:GetPos() +zombie:OBBCenter())
 		v:GetRagdollEntity():Remove()
-		zombie:PlaySequence("resurrect",1)
+		zombie:CPT_PlaySequence("resurrect",1)
 		SCPSounds()
 	end
 	self.TotalInfections = self.TotalInfections +1
@@ -302,7 +302,7 @@ function ENT:Possess_Secondary(possessor)
 		if nearest <= self.MeleeAttackDistance then
 			if enemy.SCP_Has714 == true then
 				enemy.SCP_Has714 = false
-				self:PlaySound("714",75)
+				self:CPT_PlaySound("714",75)
 				enemy:ChatPrint("SCP-714 is removed from your finger by SCP-049..")
 			end
 		end
@@ -316,12 +316,12 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp)
 			if enemy.SCP_Has714 == true then
 				if math.random(1,160) == 1 then
 					enemy.SCP_Has714 = false
-					self:PlaySound("714",75)
+					self:CPT_PlaySound("714",75)
 					enemy:ChatPrint("SCP-714 is removed from your finger by SCP-049..")
 				end
 			end
 		end
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		-- if self:CanPerformProcess() then

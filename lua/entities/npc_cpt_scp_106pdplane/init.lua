@@ -53,10 +53,10 @@ function ENT:PlaneAI()
 		vel = self:GetForward() *1
 		if !self:DoCustomTrace(self:GetPos() +self:OBBCenter(),self:GetPos() +self:OBBCenter() +self:GetRight() *self.CheckForwardDistance,{self},true).Hit then
 			-- vel = self:GetRight() *1
-			self:TurnToDegree(self:GetMaxYawSpeed(),self:GetPos() +self:GetRight() *self.CheckForwardDistance,true,42)
+			self:CPT_TurnToDegree(self:GetMaxYawSpeed(),self:GetPos() +self:GetRight() *self.CheckForwardDistance,true,42)
 		else
 			-- vel = self:GetRight() *-1
-			self:TurnToDegree(self:GetMaxYawSpeed(),self:GetPos() +self:GetRight() *-self.CheckForwardDistance,true,42)
+			self:CPT_TurnToDegree(self:GetMaxYawSpeed(),self:GetPos() +self:GetRight() *-self.CheckForwardDistance,true,42)
 		end
 	end
 	self:SetLocalVelocity(((Vector(0,0,0) +vel) +self:GetVelocity():GetNormal()) *self:GetFlySpeed())

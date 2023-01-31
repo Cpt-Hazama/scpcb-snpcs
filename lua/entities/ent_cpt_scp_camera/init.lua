@@ -24,7 +24,7 @@ function ENT:FindAllEnemies079()
 		if IsValid(v) && (v:IsNPC() && v != self && v:GetClass() != "npc_cpt_scp_079" || v:IsPlayer() && GetConVarNumber("ai_ignoreplayers") == 0 && self.FriendlyToPlayers == false && v.IsPossessing == false) then
 			if v.Faction == "FACTION_NOTARGET" then return end
 			if v.UseNotarget then return end
-			if v:Health() > 0 && self:CheckCanSee(v,90) && v.Faction != self:GetCameraOwner().Faction then
+			if v:Health() > 0 && self:CPT_CheckCanSee(v,90) && v.Faction != self:GetCameraOwner().Faction then
 				return v
 			end
 		end
@@ -85,10 +85,10 @@ function ENT:PoseParameters()
 	local pp = self.DefaultPoseParameters
 	local pp_speed = self.DefaultPoseParamaterSpeed
 	if self:GetCameraOwner().IsPossessed then
-		self:LookAtPosition(self:Possess_EyeTrace(self:GetCameraOwner().Possessor).HitPos,self.DefaultPoseParameters,pp_speed,self.ReversePoseParameters)
+		self:CPT_LookAtPosition(self:Possess_EyeTrace(self:GetCameraOwner().Possessor).HitPos,self.DefaultPoseParameters,pp_speed,self.ReversePoseParameters)
 	else
 		if IsValid(self:GetCameraOwner()) && IsValid(self:GetCameraOwner():GetEnemy()) then
-			self:LookAtPosition(self:FindCenter(self:GetCameraOwner():GetEnemy()),pp,3,self.ReversePoseParameters)
+			self:CPT_LookAtPosition(self:CPT_FindCenter(self:GetCameraOwner():GetEnemy()),pp,3,self.ReversePoseParameters)
 		end
 	end
 end

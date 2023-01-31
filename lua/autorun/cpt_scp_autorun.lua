@@ -399,7 +399,7 @@ if CLIENT then
 			-- if CLIENT_SCP_178 then
 				-- if CurTime() > CLIENT_SCP_178SPAWNTIME && CLIENT_SCP_178SPAWNAMOUNT <= 10 then
 					-- local ent = ents.Create("npc_cpt_scp_178")
-					-- local pos = ent:SetClearPos(VectorRand())
+					-- local pos = ent:CPT_SetClearPos(VectorRand())
 					-- if util.IsInWorld(pos) then
 						-- ent:Spawn()
 						-- CLIENT_SCP_178SPAWNAMOUNT = CLIENT_SCP_178SPAWNAMOUNT +1

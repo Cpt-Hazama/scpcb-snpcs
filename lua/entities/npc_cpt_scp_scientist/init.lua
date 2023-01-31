@@ -59,13 +59,13 @@ function ENT:OnThink()
 			end
 			if !IsValid(self:GetEnemy()) then
 				if dist <= self.MinFollowDistance && self.NTFOwner:Visible(self) then
-					self:StopCompletely()
+					self:CPT_StopCompletely()
 					self:FaceOwner(self.NTFOwner)
 				end
 			else
 				if dist <= self.MinFollowDistance && (string.find(self:GetEnemy():GetClass(),"173") || self:GetEnemy():GetClass() == "npc_cpt_scp_087_b") && self:GetEnemy():Visible(self) then
 					if self:IsMoving() then
-						self:StopCompletely()
+						self:CPT_StopCompletely()
 					end
 					self:FaceEnemy()
 				end

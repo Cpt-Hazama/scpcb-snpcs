@@ -36,7 +36,7 @@ function ENT:SetInit()
 	self.NextEarRapeT = 0
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:OnDoIdle() self:PlaySound("OnIdle",75) end
+function ENT:OnDoIdle() self:CPT_PlaySound("OnIdle",75) end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
 	if !self.IsPossessed then

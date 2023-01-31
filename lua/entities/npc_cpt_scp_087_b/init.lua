@@ -65,7 +65,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",90,90,100,true)
+			self:CPT_PlaySound("FootStep",90,90,100,true)
 		end
 		return true
 	end
@@ -81,7 +81,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnSeen()
 	if IsValid(self:GetEnemy()) && self:GetClosestPoint(self:GetEnemy()) < 130 then
-		self:PlaySound("Horror",100)
+		self:CPT_PlaySound("Horror",100)
 		util.ShakeWorld(self:GetEnemy():GetPos(),14,2,60)
 	end
 end
@@ -92,9 +92,9 @@ function ENT:OnThink()
 			self:OnSeen()
 			self.WasSeen = true
 		end
-		self:StopProcessing()
-		self:StopProcessing()
-		self:StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
 		if CurTime() > self.NextIdleLoopT then
 			self.IdleLoop:Stop()
 			self.IdleLoop:Play()
@@ -144,17 +144,17 @@ function ENT:DoAttack()
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) != true then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) != true then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) != true then

@@ -8,7 +8,7 @@ function ENT:OnSeen()
 	if GetConVarNumber("ai_ignoreplayers") == 1 then return end
 	if self.IsContained then return end
 	if CurTime() > self.NextAlertSoundShitT then
-		-- self:PlaySound("Horror",100)
+		-- self:CPT_PlaySound("Horror",100)
 		for _,v in ipairs(self:SCP_CanBeSeenData()) do
 			if IsValid(v) then
 				v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Horror"]),0.2,100)
@@ -30,9 +30,9 @@ function ENT:DoAttack()
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
 	self:DoDamage(self.MeleeAttackDamageDistance,self.MeleeAttackDamage,self.MeleeAttackType)
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end

@@ -186,7 +186,7 @@ function ENT:OnSeen()
 	if GetConVarNumber("ai_ignoreplayers") == 1 then return end
 	if self.IsContained then return end
 	if CurTime() > self.NextAlertSoundShitT then
-		-- self:PlaySound("Horror",100)
+		-- self:CPT_PlaySound("Horror",100)
 		for _,v in ipairs(self:SCP_CanBeSeenData()) do
 			if IsValid(v) then
 				v:EmitSound(self:SelectFromTable(self.tbl_Sounds["Horror"]),0.2,100)
@@ -234,9 +234,9 @@ function ENT:OnThink()
 		self.Possessor_CanMove = false
 		self:SetMaxYawSpeed(0)
 		self.IdleMoveSound:Stop()
-		self:StopProcessing()
-		self:StopProcessing()
-		self:StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
+		self:CPT_StopProcessing()
 		self.IsRangeAttacking = true
 		self.WanderChance = 0
 		self.MeleeAttackDistance = -100
@@ -274,19 +274,19 @@ function ENT:OnThink()
 				if math.random(1,2000) == 1 then
 					if SERVER then
 						local ent = ents.Create(self:GetClass())
-						ent:SetClearPos(self:GetPos() +Vector(math.Rand(-25,25),math.Rand(-25,25),0))
+						ent:CPT_SetClearPos(self:GetPos() +Vector(math.Rand(-25,25),math.Rand(-25,25),0))
 						ent:SetAngles(self:GetAngles())
 						ent:Spawn()
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *0,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *5,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *10,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *15,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *20,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *25,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *30,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *35,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *40,Angle(0,0,0),nil)
-						ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *45,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *0,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *5,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *10,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *15,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *20,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *25,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *30,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *35,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *40,Angle(0,0,0),nil)
+						CPT_ParticleEffect("blood_impact_red",ent:GetPos() +ent:GetUp() *45,Angle(0,0,0),nil)
 					end
 					self.NextSplitT = CurTime() +math.Rand(8,20)
 				end
@@ -327,9 +327,9 @@ function ENT:DoAttack()
 	if (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then return end
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:PlayAnimation("Attack")
+	self:CPT_PlayAnimation("Attack")
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnHitEntity(hitents,hitpos)
@@ -352,7 +352,7 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp)
 		if self:CanPerformProcess() && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) != true then
 			self:ChaseEnemy()
 		elseif self:CanPerformProcess() && (self:SCP_CanBeSeen() || self:SCP_CanBeSeen_NPC()) == true then
-			self:StopProcessing()
+			self:CPT_StopProcessing()
 		end
 	end
 end

@@ -35,7 +35,7 @@ function ENT:OnThink()
 		end
 	end
 	if(self:GetState() == NPC_STATE_COMBAT || self:GetState() == NPC_STATE_ALERT) then
-		self:SetIdleAnimation(self:TranslateStringToNumber("idle_panic"))
+		self:SetIdleAnimation(self:CPT_TranslateStringToNumber("idle_panic"))
 	else
 		self:SetIdleAnimation(ACT_IDLE)
 	end

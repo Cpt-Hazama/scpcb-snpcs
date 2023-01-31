@@ -55,7 +55,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",75,90,100,true)
+			self:CPT_PlaySound("FootStep",75,90,100,true)
 		end
 		return true
 	end
@@ -101,14 +101,14 @@ function ENT:OnThink()
 			if self:Visible(ent) then
 				if ent:IsPlayer() then
 					util.ShakeWorld(ent:GetPos(),16,ti,40,false)
-					ent:Freeze(true)
+					ent:CPT_Freeze(true)
 					ent:SetNWBool("CPTBase_SCP303",true)
-					timer.Simple(ti,function() if IsValid(ent) then ent:SetNWBool("CPTBase_SCP303",false); ent:EmitSound("cpthazama/scp/D9341/breath1.mp3",55,100) ent:Freeze(false) end end)
+					timer.Simple(ti,function() if IsValid(ent) then ent:SetNWBool("CPTBase_SCP303",false); ent:EmitSound("cpthazama/scp/D9341/breath1.mp3",55,100) ent:CPT_Freeze(false) end end)
 					ent:EmitSound("cpthazama/scp/D9341/Heartbeat.mp3",30,110)
 					ent:EmitSound("cpthazama/scp/music/Horror15.mp3",0.2,105)
 					ent:ChatPrint("SCP-303's presence sends your whole body into complete shock")
 				else
-					ent:Freeze(ti)
+					ent:CPT_Freeze(ti)
 				end
 			end
 			-- self:SetPos(v:GetPos() +v:GetRight() *40)
@@ -143,14 +143,14 @@ function ENT:OnThink()
 			if self:Visible(ent) then
 				if ent:IsPlayer() then
 					util.ShakeWorld(ent:GetPos(),16,ti,40,false)
-					ent:Freeze(true)
+					ent:CPT_Freeze(true)
 					ent:SetNWBool("CPTBase_SCP303",true)
-					timer.Simple(ti,function() if IsValid(ent) then ent:SetNWBool("CPTBase_SCP303",false); ent:EmitSound("cpthazama/scp/D9341/breath1.mp3",55,100) ent:Freeze(false) end end)
+					timer.Simple(ti,function() if IsValid(ent) then ent:SetNWBool("CPTBase_SCP303",false); ent:EmitSound("cpthazama/scp/D9341/breath1.mp3",55,100) ent:CPT_Freeze(false) end end)
 					ent:EmitSound("cpthazama/scp/D9341/Heartbeat.mp3",30,110)
 					ent:EmitSound("cpthazama/scp/music/Horror15.mp3",0.2,105)
 					ent:ChatPrint("SCP-303's presence sends your whole body into complete shock")
 				else
-					ent:Freeze(ti)
+					ent:CPT_Freeze(ti)
 				end
 			end
 			-- self:SetPos(v:GetPos() +v:GetRight() *40)
@@ -199,16 +199,16 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if (!self.IsPossessed && IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack",2)
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack",2)
 	self.IsAttacking = true
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.MeleeAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.MeleeAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

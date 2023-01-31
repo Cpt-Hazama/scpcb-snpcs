@@ -34,7 +34,7 @@ function ENT:SetInit()
 	self:EmitSound("cpthazama/scp/035/GetUp.mp3",85,100)
 	timer.Simple(0.02,function()
 		if IsValid(self) then
-			self:PlaySequence("standup",1)
+			self:CPT_PlaySequence("standup",1)
 		end
 	end)
 	if SERVER then
@@ -67,7 +67,7 @@ function ENT:HandleEvents(...)
 			for i = 1,3 do
 				if self.TentacleAmount >= 9 then return true end
 				local tentacle = ents.Create("npc_cpt_scp_035_tentacle")
-				tentacle:SetClearPos(self:GetPos() +self:GetRight() *math.random(-150,150) +self:GetForward() *math.random(-150,150))
+				tentacle:CPT_SetClearPos(self:GetPos() +self:GetRight() *math.random(-150,150) +self:GetForward() *math.random(-150,150))
 				tentacle.TentacleOwner = self
 				tentacle:Spawn()
 				tentacle:Activate()
@@ -89,7 +89,7 @@ function ENT:HandleEvents(...)
 	end
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",45,90,250,true)
+			self:CPT_PlaySound("FootStep",45,90,250,true)
 		end
 		return true
 	end
@@ -121,8 +121,8 @@ function ENT:DoAttack()
 		if self:CanPerformProcess() == false then return end
 		if !self.IsPossessed && (IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
 		if !self:CanSummon() then return end
-		self:StopCompletely()
-		self:PlayAnimation("Summon",2)
+		self:CPT_StopCompletely()
+		self:CPT_PlayAnimation("Summon",2)
 		self.NextSummonT = CurTime() +math.Rand(15,30)
 	end
 end
@@ -130,7 +130,7 @@ end
 function ENT:HandleSchedules(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if(disp == D_HT) then
-		if nearest <= self.SummonAttackDistance && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= self.SummonAttackDistance && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 		if self:CanPerformProcess() then

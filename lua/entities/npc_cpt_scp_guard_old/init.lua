@@ -191,8 +191,8 @@ function ENT:IdleSounds()
 					end)
 					self.MTF_Partner.MTF_PartnerStarter = false
 					local conv = math.random(1,5)
-					self:PlaySound("Conversation" .. conv .. "_Start",self.IdleSoundVolume,90,self.IdleSoundPitch)
-					self.MTF_Partner:PlaySound("Conversation" .. conv .. "_Partner",self.MTF_Partner.IdleSoundVolume,90,self.MTF_Partner.IdleSoundPitch)
+					self:CPT_PlaySound("Conversation" .. conv .. "_Start",self.IdleSoundVolume,90,self.IdleSoundPitch)
+					self.MTF_Partner:CPT_PlaySound("Conversation" .. conv .. "_Partner",self.MTF_Partner.IdleSoundVolume,90,self.MTF_Partner.IdleSoundPitch)
 					self:DoPlaySound("Conversation" .. conv .. "_Start")
 					self.MTF_Partner:DoPlaySound("Conversation" .. conv .. "_Partner")
 					-- if self.CurrentSound != nil then
@@ -230,8 +230,8 @@ function ENT:IdleSounds()
 				end)
 				self.MTF_Partner.MTF_PartnerStarter = false
 				local conv = math.random(1,5)
-				self:PlaySound("Conversation" .. conv .. "_Start",self.IdleSoundVolume,90,self.IdleSoundPitch)
-				self.MTF_Partner:PlaySound("Conversation" .. conv .. "_Partner",self.MTF_Partner.IdleSoundVolume,90,self.MTF_Partner.IdleSoundPitch)
+				self:CPT_PlaySound("Conversation" .. conv .. "_Start",self.IdleSoundVolume,90,self.IdleSoundPitch)
+				self.MTF_Partner:CPT_PlaySound("Conversation" .. conv .. "_Partner",self.MTF_Partner.IdleSoundVolume,90,self.MTF_Partner.IdleSoundPitch)
 				self:DoPlaySound("Conversation" .. conv .. "_Start")
 				self.MTF_Partner:DoPlaySound("Conversation" .. conv .. "_Partner")
 				-- if self.CurrentSound != nil then
@@ -259,13 +259,13 @@ function ENT:OnEnemyChanged(ent)
 		if ent:IsNPC() then
 			local class = ent:GetClass()
 			if class == "npc_cpt_scp_dclass" then
-				self:PlaySound("Spot_DClass",80)
+				self:CPT_PlaySound("Spot_DClass",80)
 			end
 			if string.find(class,"scp") && (class != "npc_cpt_scp_dclass" || class != "npc_cpt_scp_ntf" || class != "npc_cpt_scp_lambda" || class != "npc_cpt_scp_nu" || class != "npc_cpt_scp_scientist") then
-				self:PlaySound("Spot_SCP",80)
+				self:CPT_PlaySound("Spot_SCP",80)
 			end
 		elseif ent:IsPlayer() && self:Disposition(ent) == D_LI then
-			self:PlaySound("Spot_Player",80)
+			self:CPT_PlaySound("Spot_Player",80)
 		end
 		self.NextSpotT = CurTime() +8
 	end
@@ -276,7 +276,7 @@ function ENT:HandleEvents(...)
 	local arg1 = select(2,...)
 	if(event == "emit") then
 		if arg1 == "step" then
-			self:PlaySound("FootStep",75,90,100,true)
+			self:CPT_PlaySound("FootStep",75,90,100,true)
 		end
 		return true
 	end
@@ -289,7 +289,7 @@ function ENT:Boss(ent)
 		self.Bossed.Faction = "FACTION_PLAYER"
 		self.Bossed:SetNWString("CPTBase_NPCFaction","FACTION_PLAYER")
 		self.Bossed = NULL
-		self:PlaySound("BecomeEnemy",78)
+		self:CPT_PlaySound("BecomeEnemy",78)
 		self.WanderChance = 60
 		self.FindBossedT = CurTime() +30
 	end
@@ -298,7 +298,7 @@ function ENT:Boss(ent)
 			ent.IsBeingBossed = false
 			self.IsBossing = false
 			self.Bossed = NULL
-			self:PlaySound("EndEscort",78)
+			self:CPT_PlaySound("EndEscort",78)
 			self.WanderChance = 60
 			self.FindBossedT = CurTime() +30
 		end
@@ -306,13 +306,13 @@ function ENT:Boss(ent)
 		if CurTime() > self.NextThresholdT && dist > 300 then // too far
 			self.Threshold = self.Threshold +1
 			if self.Threshold <= 1 then
-				self:PlaySound("MoveTooFar",78)
+				self:CPT_PlaySound("MoveTooFar",78)
 			else
-				self:PlaySound("PissOff",78)
+				self:CPT_PlaySound("PissOff",78)
 			end
-			self:LookAtPosition(self:FindCenter(ent),pp,pp_speed,self.ReversePoseParameters)
+			self:CPT_LookAtPosition(self:CPT_FindCenter(ent),pp,pp_speed,self.ReversePoseParameters)
 			self:SetAngles(Angle(0,(ent:GetPos() -self:GetPos()):Angle().y,0))
-			self:StopCompletely()
+			self:CPT_StopCompletely()
 			self.NextThresholdT = CurTime() +8
 		end
 	end
@@ -352,10 +352,10 @@ function ENT:OnThink()
 					self.IsBossing = true
 					self.NextEndEscort = CurTime() +60
 					v:ChatPrint("Follow the MTF Guard for the next 60 seconds or you will be terminated.")
-					self:PlaySound("ExitCell",78)
-					self:LookAtPosition(self:FindCenter(v),pp,pp_speed,self.ReversePoseParameters)
+					self:CPT_PlaySound("ExitCell",78)
+					self:CPT_LookAtPosition(self:CPT_FindCenter(v),pp,pp_speed,self.ReversePoseParameters)
 					self:SetAngles(Angle(0,(v:GetPos() -self:GetPos()):Angle().y,0))
-					self:StopCompletely()
+					self:CPT_StopCompletely()
 					self.WanderChance = 1
 				end
 				self.FindBossedT = CurTime() +5
@@ -367,10 +367,10 @@ function ENT:OnThink()
 				if self.IsSpeaking && !self.IsBossing then
 					local pp = self.DefaultPoseParameters
 					local pp_speed = self.DefaultPoseParamaterSpeed
-					self:LookAtPosition(self:FindCenter(self.MTF_Partner),pp,pp_speed,self.ReversePoseParameters)
+					self:CPT_LookAtPosition(self:CPT_FindCenter(self.MTF_Partner),pp,pp_speed,self.ReversePoseParameters)
 					self.WanderChance = 0
 					self:SetAngles(Angle(0,(self.MTF_Partner:GetPos() -self:GetPos()):Angle().y,0))
-					self:StopCompletely()
+					self:CPT_StopCompletely()
 				end
 			else
 				self.WanderChance = 60
@@ -427,16 +427,17 @@ function ENT:DoRangeAttack()
 		bullet.Damage = 13
 		bullet.AmmoType = "SMG"
 		self:FireBullets(bullet)
-		self:SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
+		self:CPT_SoundCreate(self:SelectFromTable(self.tbl_Sounds["Fire"]),95)
 		local effectdata = EffectData()
-		effectdata:SetStart(muzzle.Pos)
+		effectdata:SetEntity(self)
 		effectdata:SetOrigin(muzzle.Pos)
-		effectdata:SetScale(1)
-		effectdata:SetAngles(muzzle.Ang)
-		util.Effect("MuzzleEffect",effectdata)
+		effectdata:SetNormal(bullet.Dir)
+		effectdata:SetAttachment(self:LookupAttachment("muzzle"))
+		util.Effect("cpt_muzzle",effectdata)
+
 		if !self.IsPossessed then
 			self.IsRangeAttacking = true
-			self:StopCompletely()
+			self:CPT_StopCompletely()
 		end
 		timer.Simple(self.FireRate -0.01,function() if self:IsValid() then self.IsRangeAttacking = false end end)
 		self.NextFireT = CurTime() +self.FireRate
@@ -461,24 +462,24 @@ function ENT:HandleSchedules(enemy,dist,nearest,disp,time)
 			if enemy:GetClass() == "npc_cpt_scp_049" then self:Hide("Run") return end
 		end
 		if nearest <= self.RangeAttackDistance && self.CanShoot == true then
-			if self:FindInCone(enemy,30) && self:Visible(enemy) then
+			if self:CPT_FindInCone(enemy,30) && self:Visible(enemy) then
 				if self:CanShootEnemy() then
 					self:SetAngles(Angle(0,(enemy:GetPos() -self:GetPos()):Angle().y,0))
 					self:DoRangeAttack()
 					if self:GetSequence() != ACT_IDLE_ANGRY then
-						self:StopProcessing()
+						self:CPT_StopProcessing()
 						self:SetIdleAnimation(ACT_IDLE_ANGRY)
 					end
 				end
-			elseif !self:FindInCone(enemy,30) && self:Visible(enemy) then
+			elseif !self:CPT_FindInCone(enemy,30) && self:Visible(enemy) then
 				self:SetAngles(Angle(0,(enemy:GetPos() -self:GetPos()):Angle().y,0))
-				self:StopCompletely()
+				self:CPT_StopCompletely()
 				self:SetIdleAnimation(ACT_IDLE_ANGRY)
 			end
 		end
 		if self:CanPerformProcess() then
 			if !self:Visible(enemy) || (nearest > self.RangeAttackDistance && self:Visible(enemy)) then
-				if self.IsRangeAttacking == true then self:StopCompletely() return end
+				if self.IsRangeAttacking == true then self:CPT_StopCompletely() return end
 				self:ChaseEnemy()
 			-- else
 				-- self:FaceEnemy()

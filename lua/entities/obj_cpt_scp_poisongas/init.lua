@@ -52,7 +52,7 @@ function ENT:OnTouch(data,phys)
 			end
 			util.AddAttackEffect(self:GetEntityOwner(),self:GetHitEntity(),5,DMG_POI,1,10)
 		end
-		ParticleEffect("antlion_gib_02_gas",self:GetPos(),Angle(0,0,0),self)
+		CPT_ParticleEffect("antlion_gib_02_gas",self:GetPos(),Angle(0,0,0),self)
 		-- self:EmitSound(Sound(self:GetImpactSound()),self.ImpactSoundVolume,self.ImpactSoundPitch)
 		self:Remove()
 	end

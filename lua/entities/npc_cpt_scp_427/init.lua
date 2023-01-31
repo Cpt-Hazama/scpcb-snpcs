@@ -50,7 +50,7 @@ function ENT:OnThink()
 				end
 			end
 		else
-			self:SetClearPos(self:GetPos())
+			self:CPT_SetClearPos(self:GetPos())
 			self.IsPickedUp = false
 			self:SetNoDraw(false)
 			self:SetCollisionGroup(COLLISION_GROUP_NPC)

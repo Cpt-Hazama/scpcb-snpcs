@@ -40,22 +40,22 @@ end
 function ENT:DoAttack()
 	if self:CanPerformProcess() == false then return end
 	if !self.IsPossessed && (IsValid(self:GetEnemy()) && !self:GetEnemy():Visible(self)) then return end
-	self:StopCompletely()
-	self:PlayAnimation("Attack",2)
-	self:PlaySound("Attack")
+	self:CPT_StopCompletely()
+	self:CPT_PlayAnimation("Attack",2)
+	self:CPT_PlaySound("Attack")
 	self.IsAttacking = true
 	timer.Simple(self.MeleeAttackHitTime,function()
 		if self:IsValid() then
 			self:DoDamage(self.MeleeAttackDamageDistance,self.MeleeAttackDamage,self.MeleeAttackType)
 		end
 	end)
-	self:AttackFinish()
+	self:CPT_AttackFinish()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:HandleSchedules_Fly(enemy,dist,nearest,disp)
 	if self.IsPossessed then return end
 	if disp == D_HT then
-		if nearest <= 70 && self:FindInCone(enemy,self.MeleeAngle) then
+		if nearest <= 70 && self:CPT_FindInCone(enemy,self.MeleeAngle) then
 			self:DoAttack()
 		end
 	end
