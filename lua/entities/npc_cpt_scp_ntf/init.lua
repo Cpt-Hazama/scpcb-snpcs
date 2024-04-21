@@ -414,8 +414,9 @@ function ENT:OnThink()
 					end
 					if self.IsContainingSCP == true then
 						self:ChaseTarget(ent,false)
-						if dist <= 80 && !self.IsContained then
+						if dist <= 80 && !ent.IsContained then
 							ent:ContainSCP(self)
+							self:RemoveFromMemory(ent,D_NU)
 							self:CPT_StopProcessing()
 							self:CheckPoseParameters()
 							self.CanShoot = true

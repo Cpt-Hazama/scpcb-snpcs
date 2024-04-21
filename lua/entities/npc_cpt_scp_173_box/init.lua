@@ -15,8 +15,8 @@ ENT.CanSetEnemy = false
 ENT.ReactsToSound = false
 ENT.TurnsOnDamage = false
 
--- ENT.Faction = "FACTION_SCP_NTF"
-ENT.Faction = "FACTION_NONE"
+ENT.Faction = "FACTION_SCP_NTF"
+-- ENT.Faction = "FACTION_NONE"
 
 ENT.Bleeds = false
 
@@ -40,6 +40,14 @@ function ENT:SecureBox(scp173,owner)
 	self.NTFOwner = owner
 	self.NTFOwner.IsTakingSCP_Box = self
 	self.NTFOwner.IsTakingSCP = true
+	scp173:AddFlags(FL_NOTARGET)
+	-- if att then
+	-- 	scp173:SetPos(att.Pos)
+	-- end
+	-- scp173:SetAngles(self:GetAngles())
+	-- scp173:SetParent(self)
+	-- scp173:Fire("SetParentAttachment","173",0)
+	-- scp173:SetLocalAngles(Angle(0,90,0))
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:OnThink()
@@ -67,6 +75,8 @@ function ENT:OnThink()
 	else
 		self:Remove()
 	end
+
+	self:NextThink(CurTime())
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:WhenRemoved()
